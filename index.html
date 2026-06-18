@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; width: 100%; height: 600px; overflow: hidden; position: relative; }
+
+#boot {
+  position: absolute; inset: 0; z-index: 9999;
+  background: #000; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0;
+  transition: opacity 0.6s;
+}
+#boot-logo { font-size: 42px; font-weight: 800; color: #a78bfa; letter-spacing: -1px; margin-bottom: 6px; }
+#boot-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 48px; }
+#boot-bar-wrap { width: 160px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+#boot-bar { height: 100%; width: 0; background: #a78bfa; border-radius: 2px; transition: width 0.05s linear; }
+
+#wallpaper-picker {
+  position: absolute; inset: 0; z-index: 9998; display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  background: #0a0a14;
+}
+#wallpaper-picker h2 { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+#wallpaper-picker p { color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 28px; }
+.wp-grid { display: grid; grid-template-columns: repeat(4, 100px); gap: 12px; margin-bottom: 28px; }
+.wp-thumb {
+  width: 100px; height: 64px; border-radius: 10px; cursor: pointer;
+  border: 2px solid transparent; transition: border 0.15s, transform 0.15s;
+  position: relative; overflow: hidden;
+}
+.wp-thumb:hover { transform: scale(1.06); }
+.wp-thumb.selected { border-color: #a78bfa; }
+.wp-thumb span { position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font-size: 9px; color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.4); padding: 2px 0; }
+#pick-btn {
+  background: #7c3aed; color: #fff; border: none; border-radius: 10px;
+  padding: 10px 32px; font-size: 14px; cursor: pointer; font-weight: 500;
+  transition: background 0.15s;
+}
+#pick-btn:hover { background: #6d28d9; }
+
+#desktop { width: 100%; height: 600px; position: relative; overflow: hidden; display: none; }
+#desktop-bg { position: absolute; inset: 0; transition: background 0.5s; }
+
+.stars-layer { position: absolute; inset: 0; pointer-events: none; }
+
+#topbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 32px;
+  background: rgba(0,0,0,0.3); backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; z-index: 1000; color: #fff; font-size: 13px;
+}
+#topbar .logo { font-weight: 700; font-size: 14px; color: #a78bfa; }
+#topbar .right { display: flex; align-items: center; gap: 14px; font-size: 12px; color: rgba(255,255,255,0.75); }
+#clock { font-size: 12px; color: rgba(255,255,255,0.9); font-variant-numeric: tabular-nums; }
+#wallpaper-btn { cursor: pointer; font-size: 11px; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); border: 0.5px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 2px 8px; }
+#wallpaper-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+.win {
+  position: absolute; background: rgba(15,12,30,0.88);
+  border: 0.5px solid rgba(255,255,255,0.15); border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  min-width: 260px; min-height: 140px; overflow: hidden;
+  display: flex; flex-direction: column; backdrop-filter: blur(16px);
+}
+.win-titlebar {
+  height: 36px; background: rgba(255,255,255,0.05);
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; padding: 0 12px; gap: 8px;
+  cursor: move; flex-shrink: 0;
+}
+.win-btn { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; flex-shrink: 0; border: none; }
+.btn-close { background: #ff5f57; }
+.btn-min { background: #febc2e; }
+.btn-max { background: #28c840; }
+.win-title { font-size: 13px; color: rgba(255,255,255,0.6); margin-left: 4px; font-weight: 500; flex: 1; text-align: center; }
+.win-body { flex: 1; overflow-y: auto; padding: 16px; color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.6; }
+
+.dock {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  background: rgba(255,255,255,0.08); backdrop-filter: blur(16px);
+  border: 0.5px solid rgba(255,255,255,0.18); border-radius: 18px;
+  padding: 8px 16px; display: flex; gap: 12px; z-index: 1000;
+}
+.dock-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 22px; transition: transform 0.15s;
+  position: relative;
+}
+.dock-icon:hover { transform: translateY(-6px) scale(1.15); }
+.dock-icon .tip {
+  position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.8); color: #fff; font-size: 11px;
+  padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.15s;
+}
+.dock-icon:hover .tip { opacity: 1; }
+
+.tag { display: inline-block; background: rgba(167,139,250,0.2); color: #c4b5fd; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin: 2px; border: 0.5px solid rgba(167,139,250,0.3); }
+.project-card { background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+.project-card h4 { color: #a78bfa; font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.project-card p { color: rgba(255,255,255,0.5); font-size: 12px; }
+.skill-bar { margin-bottom: 10px; }
+.skill-bar .label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: rgba(255,255,255,0.7); }
+.skill-bar .track { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+.skill-bar .fill { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.contact-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid rgba(255,255,255,0.07); font-size: 13px; color: rgba(255,255,255,0.8); }
+.contact-row i { font-size: 16px; color: #a78bfa; width: 20px; }
+</style>
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+<div id="boot">
+  <div id="boot-logo">rinoOS</div>
+  <div id="boot-sub">by @officiallyrino</div>
+  <div id="boot-bar-wrap"><div id="boot-bar"></div></div>
+</div>
+
+<!-- WALLPAPER PICKER -->
+<div id="wallpaper-picker">
+  <h2>Choose your wallpaper</h2>
+  <p>Pick one to set the vibe for your desktop</p>
+  <div class="wp-grid" id="wp-grid"></div>
+  <button id="pick-btn" onclick="confirmWallpaper()">Set Wallpaper →</button>
+</div>
+
+<!-- DESKTOP -->
+<div id="desktop">
+  <div id="desktop-bg"></div>
+  <div class="stars-layer" id="stars-layer"></div>
+
+  <div id="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="logo">rinoOS</span>
+      <span style="color:rgba(255,255,255,0.35);font-size:12px;">@officiallyrino</span>
+    </div>
+    <div class="right">
+      <span id="wallpaper-btn" onclick="showPicker()">🖼 Wallpaper</span>
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <!-- ABOUT WINDOW -->
+  <div id="win-about" class="win" style="top:55px;left:24px;width:290px;">
+    <div class="win-titlebar" onmousedown="startDrag(event,'win-about')">
+      <button class="win-btn btn-close" onclick="closeWin('win-about')"></button>
+      <button class="win-btn btn-min"></button>
+      <button class="win-btn btn-max"></button>
+      <span class="win-title">About Rino</span>
+    </div>
+    <div class="win-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0;">R</div>
+        <div>
+          <div style="font-size:16px;font-weight:600;color:#fff;">Rivaan</div>
+          <div style="font-size:12px;color:#a78bfa;">@officiallyrino</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.7;">Aspiring ethical hacker & developer. Building cool things with Python, AI, and web tech. F1 fan. Always learning.</p>
+      <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:4px;">
+        <span class="tag">ethical hacking</span>
+        <span class="tag">python</span>
+        <span class="tag">AI tools</span>
+        <span class="tag">game dev</span>
+        <span class="tag">F1 🏎️</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS WINDOW -->
+  <div id="win-projects" class="win" style="top:55px;left:340px;width:290px;display:none;">
+    <div class="win-titlebar" onmousedown="startDrag(event,'win-projects')">
+      <button class="win-btn btn-close" onclick="closeWin('win-projects')"></button>
+      <button class="win-btn btn-min"></button>
+      <button class="win-btn btn-max"></button>
+      <span class="win-title">Projects</span>
+    </div>
+    <div class="win-body">
+      <div class="project-card"><h4>🤖 Jarvis AI</h4><p>Voice assistant with Whisper STT, Ollama/qwen, WhatsApp, screen control & wake word.</p></div>
+      <div class="project-card"><h4>🏎️ F1 Dashboard</h4><p>Real-time race leaderboard + telemetry via OpenF1, Streamlit & Playwright token harvester.</p></div>
+      <div class="project-card"><h4>🎮 Roblox CarGame</h4><p>Custom car controller welded over default character rig with size-agnostic alignment.</p></div>
+      <div class="project-card"><h4>🛡️ RAT</h4><p>Anti-hacking educational website.</p></div>
+    </div>
+  </div>
+
+  <!-- SKILLS WINDOW -->
+  <div id="win-skills" class="win" style="top:55px;left:340px;width:270px;display:none;">
+    <div class="win-titlebar" onmousedown="startDrag(event,'win-skills')">
+      <button class="win-btn btn-close" onclick="closeWin('win-skills')"></button>
+      <button class="win-btn btn-min"></button>
+      <button class="win-btn btn-max"></button>
+      <span class="win-title">Skills</span>
+    </div>
+    <div class="win-body">
+      <div class="skill-bar"><div class="label"><span>Python</span><span>90%</span></div><div class="track"><div class="fill" style="width:90%"></div></div></div>
+      <div class="skill-bar"><div class="label"><span>AI / LLMs</span><span>80%</span></div><div class="track"><div class="fill" style="width:80%"></div></div></div>
+      <div class="skill-bar"><div class="label"><span>Web Dev</span><span>75%</span></div><div class="track"><div class="fill" style="width:75%"></div></div></div>
+      <div class="skill-bar"><div class="label"><span>Ethical Hacking</span><span>65%</span></div><div class="track"><div class="fill" style="width:65%"></div></div></div>
+      <div class="skill-bar"><div class="label"><span>Lua / Roblox</span><span>60%</span></div><div class="track"><div class="fill" style="width:60%"></div></div></div>
+      <div class="skill-bar"><div class="label"><span>Game Dev</span><span>55%</span></div><div class="track"><div class="fill" style="width:55%"></div></div></div>
+      <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.35);">MacBook Air M1 · macOS · Terminal</div>
+    </div>
+  </div>
+
+  <!-- F1 WINDOW -->
+  <div id="win-f1" class="win" style="top:55px;left:340px;width:270px;display:none;">
+    <div class="win-titlebar" onmousedown="startDrag(event,'win-f1')">
+      <button class="win-btn btn-close" onclick="closeWin('win-f1')"></button>
+      <button class="win-btn btn-min"></button>
+      <button class="win-btn btn-max"></button>
+      <span class="win-title">F1 Fan Zone</span>
+    </div>
+    <div class="win-body">
+      <div style="text-align:center;font-size:36px;margin-bottom:8px;">🏎️</div>
+      <div style="text-align:center;font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">Formula 1 Enthusiast</div>
+      <div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:16px;">Follows every race. Built a live F1 dashboard.</div>
+      <div class="project-card"><h4>F1 Live Dashboard</h4><p>Streamlit + OpenF1 + Playwright bearer-token harvester. Live telemetry & leaderboard.</p></div>
+      <div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.35);text-align:center;">Lights out and away we go 🚦</div>
+    </div>
+  </div>
+
+  <!-- CONTACT WINDOW -->
+  <div id="win-contact" class="win" style="top:55px;left:340px;width:260px;display:none;">
+    <div class="win-titlebar" onmousedown="startDrag(event,'win-contact')">
+      <button class="win-btn btn-close" onclick="closeWin('win-contact')"></button>
+      <button class="win-btn btn-min"></button>
+      <button class="win-btn btn-max"></button>
+      <span class="win-title">Contact</span>
+    </div>
+    <div class="win-body">
+      <div class="contact-row"><i class="ti ti-brand-github" aria-hidden="true"></i><span>@officiallyrino</span></div>
+      <div class="contact-row"><i class="ti ti-device-laptop" aria-hidden="true"></i><span>MacBook Air M1</span></div>
+      <div class="contact-row"><i class="ti ti-flag" aria-hidden="true"></i><span>India 🇮🇳</span></div>
+      <div style="margin-top:16px;padding:12px;background:rgba(167,139,250,0.1);border-radius:8px;border:0.5px solid rgba(167,139,250,0.25);font-size:12px;color:#c4b5fd;text-align:center;">
+        Open to collabs & cool projects 🚀
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <div class="dock-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);" onclick="openWin('win-about')"><span>👤</span><span class="tip">About</span></div>
+    <div class="dock-icon" style="background:linear-gradient(135deg,#1d4ed8,#60a5fa);" onclick="openWin('win-projects')"><span>🗂️</span><span class="tip">Projects</span></div>
+    <div class="dock-icon" style="background:linear-gradient(135deg,#065f46,#34d399);" onclick="openWin('win-skills')"><span>⚡</span><span class="tip">Skills</span></div>
+    <div class="dock-icon" style="background:linear-gradient(135deg,#991b1b,#f87171);" onclick="openWin('win-f1')"><span>🏎️</span><span class="tip">F1</span></div>
+    <div class="dock-icon" style="background:linear-gradient(135deg,#92400e,#fcd34d);" onclick="openWin('win-contact')"><span>✉️</span><span class="tip">Contact</span></div>
+  </div>
+</div>
+
+<script>
+const wallpapers = [
+  { name: "Deep Space",    bg: "radial-gradient(ellipse at 30% 40%, #0f0c29 0%, #302b63 50%, #24243e 100%)", stars: true  },
+  { name: "Aurora",        bg: "linear-gradient(160deg, #0a0a14 0%, #0d3b2e 40%, #1a0a3e 70%, #0a0a14 100%)", stars: true  },
+  { name: "Sunset",        bg: "linear-gradient(180deg, #1a0533 0%, #6b1a3a 40%, #c2502a 75%, #e87c3e 100%)", stars: false },
+  { name: "Midnight Blue", bg: "linear-gradient(135deg, #020818 0%, #071a3e 50%, #0c2461 100%)", stars: true  },
+  { name: "Forest Night",  bg: "linear-gradient(160deg, #020c05 0%, #0a2010 50%, #112b16 100%)", stars: true  },
+  { name: "Crimson Dark",  bg: "linear-gradient(135deg, #0d0000 0%, #2d0a0a 50%, #4a1010 100%)", stars: false },
+  { name: "Violet Dream",  bg: "linear-gradient(135deg, #0d0020 0%, #2a0a5e 50%, #4a1a8a 100%)", stars: true  },
+  { name: "Ocean Deep",    bg: "linear-gradient(180deg, #010d1a 0%, #02234d 50%, #033a6b 100%)", stars: false },
+];
+
+let selectedWp = 0;
+const grid = document.getElementById('wp-grid');
+
+wallpapers.forEach((wp, i) => {
+  const d = document.createElement('div');
+  d.className = 'wp-thumb' + (i === 0 ? ' selected' : '');
+  d.style.background = wp.bg;
+  d.innerHTML = `<span>${wp.name}</span>`;
+  d.onclick = () => {
+    document.querySelectorAll('.wp-thumb').forEach(t => t.classList.remove('selected'));
+    d.classList.add('selected');
+    selectedWp = i;
+  };
+  grid.appendChild(d);
+});
+
+function applyWallpaper(idx) {
+  const wp = wallpapers[idx];
+  document.getElementById('desktop-bg').style.background = wp.bg;
+  const sl = document.getElementById('stars-layer');
+  sl.innerHTML = '';
+  if (wp.stars) {
+    for (let i = 0; i < 70; i++) {
+      const s = document.createElement('div');
+      const size = Math.random() * 2 + 1;
+      s.style.cssText = `position:absolute;background:white;border-radius:50%;width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;opacity:${0.2+Math.random()*0.8};animation:twinkle ${2+Math.random()*3}s ${Math.random()*3}s infinite alternate;`;
+      sl.appendChild(s);
+    }
+  }
+}
+
+const twinkleStyle = document.createElement('style');
+twinkleStyle.textContent = '@keyframes twinkle{0%{opacity:0.2}100%{opacity:1}}';
+document.head.appendChild(twinkleStyle);
+
+function showPicker() {
+  document.getElementById('desktop').style.display = 'none';
+  const picker = document.getElementById('wallpaper-picker');
+  picker.style.display = 'flex';
+}
+
+function confirmWallpaper() {
+  applyWallpaper(selectedWp);
+  document.getElementById('wallpaper-picker').style.display = 'none';
+  document.getElementById('desktop').style.display = 'block';
+}
+
+let bootProgress = 0;
+const bar = document.getElementById('boot-bar');
+const bootInterval = setInterval(() => {
+  bootProgress += Math.random() * 8 + 3;
+  if (bootProgress >= 100) {
+    bootProgress = 100;
+    bar.style.width = '100%';
+    clearInterval(bootInterval);
+    setTimeout(() => {
+      const boot = document.getElementById('boot');
+      boot.style.opacity = '0';
+      setTimeout(() => {
+        boot.style.display = 'none';
+        document.getElementById('wallpaper-picker').style.display = 'flex';
+      }, 600);
+    }, 300);
+  } else {
+    bar.style.width = bootProgress + '%';
+  }
+}, 80);
+
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+updateClock(); setInterval(updateClock, 1000);
+
+let dragging = null, ox = 0, oy = 0, zTop = 200;
+function startDrag(e, id) {
+  dragging = document.getElementById(id);
+  const r = dragging.getBoundingClientRect();
+  ox = e.clientX - r.left; oy = e.clientY - r.top;
+  dragging.style.zIndex = ++zTop;
+  e.preventDefault();
+}
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const p = dragging.parentElement.getBoundingClientRect();
+  let nx = e.clientX - p.left - ox;
+  let ny = e.clientY - p.top - oy;
+  dragging.style.left = Math.max(0, nx) + 'px';
+  dragging.style.top = Math.max(32, ny) + 'px';
+});
+document.addEventListener('mouseup', () => { dragging = null; });
+
+function closeWin(id) { document.getElementById(id).style.display = 'none'; }
+function openWin(id) {
+  const w = document.getElementById(id);
+  w.style.display = 'flex';
+  w.style.zIndex = ++zTop;
+  w.style.top = (60 + Math.random() * 80) + 'px';
+  w.style.left = (60 + Math.random() * 250) + 'px';
+}
+</script>
+</body>
+</html> a
