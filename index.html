@@ -98,11 +98,25 @@ html, body {
   position: absolute; background: rgba(10,8,24,0.92);
   border: 0.5px solid rgba(255,255,255,0.12); border-radius: 14px;
   box-shadow: 0 28px 90px rgba(0,0,0,0.65);
-  min-width: 260px; display: flex; flex-direction: column;
+  min-width: 260px; min-height: 160px;
+  display: flex; flex-direction: column;
   backdrop-filter: blur(24px);
   transition: box-shadow 0.2s;
 }
 .win.focused { box-shadow: 0 28px 90px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(167,139,250,0.3); }
+.win.resizing { transition: none !important; }
+.resize-handle {
+  position: absolute; width: 16px; height: 16px; bottom: 0; right: 0;
+  cursor: nwse-resize; z-index: 5;
+}
+.resize-handle::after {
+  content: ''; position: absolute; right: 4px; bottom: 4px;
+  width: 7px; height: 7px;
+  border-right: 2px solid rgba(255,255,255,0.25);
+  border-bottom: 2px solid rgba(255,255,255,0.25);
+  border-radius: 0 0 3px 0;
+}
+.win.maximized .resize-handle { display: none; }
 .win-tb {
   height: 38px; background: rgba(255,255,255,0.03);
   border-bottom: 0.5px solid rgba(255,255,255,0.07);
@@ -133,11 +147,14 @@ html, body {
 .crow-icon { font-size: 15px; width: 22px; text-align: center; }
 
 /* ── DOCK ── */
-#dock {
+#dock-row {
   position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: flex-end; gap: 14px; z-index: 1000;
+}
+#dock {
   background: rgba(255,255,255,0.06); backdrop-filter: blur(24px);
   border: 0.5px solid rgba(255,255,255,0.14); border-radius: 22px;
-  padding: 10px 18px; display: flex; gap: 12px; z-index: 1000;
+  padding: 10px 18px; display: flex; gap: 12px;
 }
 .di {
   width: 50px; height: 50px; border-radius: 14px;
@@ -160,7 +177,74 @@ html, body {
 }
 .di.open .dot { display: block; }
 
-/* terminal */
+.win.minimized {
+  transform: scale(0.05) translateY(600px);
+  opacity: 0;
+  pointer-events: none;
+}
+.win.maximized {
+  top: 34px !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - 34px) !important;
+  border-radius: 0;
+}
+.win.maximized .win-tb { border-radius: 0; }
+
+/* tray for minimized windows, sits in its own pill beside the dock */
+#min-tray {
+  display: flex; gap: 8px;
+  background: rgba(255,255,255,0.06); backdrop-filter: blur(24px);
+  border: 0.5px solid rgba(255,255,255,0.14); border-radius: 18px;
+  padding: 10px 12px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+#min-tray:empty { opacity: 0; transform: scale(0.9); pointer-events: none; padding: 0; border: none; }
+.min-tile {
+  width: 50px; height: 50px; border-radius: 12px;
+  background: rgba(255,255,255,0.07);
+  border: 0.5px solid rgba(255,255,255,0.16);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; cursor: pointer; position: relative;
+  animation: pop-in 0.3s cubic-bezier(.4,0,.2,1);
+  transition: transform 0.15s;
+}
+.min-tile:hover { transform: translateY(-6px) scale(1.1); }
+.min-tile::after {
+  content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%; background: #febc2e;
+}
+@keyframes pop-in { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.win { transition: box-shadow 0.2s; }
+.win.animating { transition: box-shadow 0.2s, top 0.25s, left 0.25s, width 0.25s, height 0.25s, transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s; }
+.win-tb { transition: border-radius 0.25s; }
+
+
+/* sticky notes */
+#notes-board { display: flex; flex-wrap: wrap; gap: 12px; padding: 4px; }
+.sticky {
+  width: 130px; height: 130px; background: #f4d35e; border-radius: 4px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35); padding: 10px; position: relative;
+  transform: rotate(-1deg);
+}
+.sticky:nth-child(2n) { background: #a78bfa; transform: rotate(1deg); }
+.sticky:nth-child(3n) { background: #6ee7b7; transform: rotate(-2deg); }
+.sticky textarea {
+  width: 100%; height: 92px; background: transparent; border: none; outline: none;
+  resize: none; font-family: -apple-system, sans-serif; font-size: 12px; color: #1a1a1a;
+  font-weight: 500; line-height: 1.4;
+}
+.sticky-del {
+  position: absolute; top: 4px; right: 6px; cursor: pointer; font-size: 13px;
+  color: rgba(0,0,0,0.4); border: none; background: none; padding: 0;
+}
+.sticky-del:hover { color: rgba(0,0,0,0.7); }
+#notes-add {
+  width: 130px; height: 130px; border: 1.5px dashed rgba(255,255,255,0.2); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+  color: rgba(255,255,255,0.25); cursor: pointer; transition: all 0.15s;
+}
+#notes-add:hover { border-color: #a78bfa; color: #a78bfa; }
 #term-body { background: #000; font-family: monospace; font-size: 13px; color: #a78bfa; padding: 14px; overflow-y: auto; flex: 1; }
 #term-body::-webkit-scrollbar { width: 4px; }
 #term-body::-webkit-scrollbar-thumb { background: rgba(167,139,250,0.2); }
@@ -213,10 +297,10 @@ html, body {
   </div>
 
   <!-- ABOUT -->
-  <div id="win-about" class="win" style="top:60px;left:28px;width:300px;">
+  <div id="win-about" class="win" style="top:60px;left:28px;width:300px;height:340px;">
     <div class="win-tb" onmousedown="drag(event,'win-about')">
       <button class="wb wbc" onclick="closeWin('win-about')"></button>
-      <button class="wb wbm"></button><button class="wb wbx"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-about')"></button><button class="wb wbx" onclick="toggleMaximize('win-about')"></button>
       <span class="wt">about rino</span>
     </div>
     <div class="win-body">
@@ -241,10 +325,10 @@ html, body {
   </div>
 
   <!-- PROJECTS -->
-  <div id="win-projects" class="win" style="top:60px;left:350px;width:305px;display:none;">
+  <div id="win-projects" class="win" style="top:60px;left:350px;width:305px;height:380px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-projects')">
       <button class="wb wbc" onclick="closeWin('win-projects')"></button>
-      <button class="wb wbm"></button><button class="wb wbx"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-projects')"></button><button class="wb wbx" onclick="toggleMaximize('win-projects')"></button>
       <span class="wt">projects</span>
     </div>
     <div class="win-body">
@@ -268,10 +352,10 @@ html, body {
   </div>
 
   <!-- SKILLS -->
-  <div id="win-skills" class="win" style="top:60px;left:350px;width:280px;display:none;">
+  <div id="win-skills" class="win" style="top:60px;left:350px;width:280px;height:320px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-skills')">
       <button class="wb wbc" onclick="closeWin('win-skills')"></button>
-      <button class="wb wbm"></button><button class="wb wbx"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-skills')"></button><button class="wb wbx" onclick="toggleMaximize('win-skills')"></button>
       <span class="wt">skills</span>
     </div>
     <div class="win-body">
@@ -285,10 +369,10 @@ html, body {
   </div>
 
   <!-- F1 -->
-  <div id="win-f1" class="win" style="top:60px;left:350px;width:285px;display:none;">
+  <div id="win-f1" class="win" style="top:60px;left:350px;width:285px;height:360px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-f1')">
       <button class="wb wbc" onclick="closeWin('win-f1')"></button>
-      <button class="wb wbm"></button><button class="wb wbx"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-f1')"></button><button class="wb wbx" onclick="toggleMaximize('win-f1')"></button>
       <span class="wt">F1 fan zone</span>
     </div>
     <div class="win-body">
@@ -301,10 +385,10 @@ html, body {
   </div>
 
   <!-- CONTACT -->
-  <div id="win-contact" class="win" style="top:60px;left:350px;width:265px;display:none;">
+  <div id="win-contact" class="win" style="top:60px;left:350px;width:265px;height:320px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-contact')">
       <button class="wb wbc" onclick="closeWin('win-contact')"></button>
-      <button class="wb wbm"></button><button class="wb wbx"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-contact')"></button><button class="wb wbx" onclick="toggleMaximize('win-contact')"></button>
       <span class="wt">contact</span>
     </div>
     <div class="win-body">
@@ -323,7 +407,7 @@ html, body {
   <div id="win-terminal" class="win" style="top:60px;left:350px;width:320px;height:300px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-terminal')">
       <button class="wb wbc" onclick="closeWin('win-terminal')"></button>
-      <button class="wb wbm"></button><button class="wb wbx"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-terminal')"></button><button class="wb wbx" onclick="toggleMaximize('win-terminal')"></button>
       <span class="wt">jarvis terminal</span>
     </div>
     <div id="term-body"></div>
@@ -333,16 +417,37 @@ html, body {
     </div>
   </div>
 
-  <!-- DOCK -->
-  <div id="dock">
-    <div class="di" id="di-about" style="background:linear-gradient(135deg,#6d28d9,#a78bfa);" onclick="openWin('win-about','di-about')"><span>👤</span><span class="tip">About</span><span class="dot"></span></div>
-    <div class="di" id="di-projects" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);" onclick="openWin('win-projects','di-projects')"><span>🗂️</span><span class="tip">Projects</span><span class="dot"></span></div>
-    <div class="di" id="di-skills" style="background:linear-gradient(135deg,#065f46,#34d399);" onclick="openWin('win-skills','di-skills')"><span>⚡</span><span class="tip">Skills</span><span class="dot"></span></div>
-    <div class="di" id="di-f1" style="background:linear-gradient(135deg,#991b1b,#f87171);" onclick="openWin('win-f1','di-f1')"><span>🏎️</span><span class="tip">F1</span><span class="dot"></span></div>
-    <div class="di" id="di-terminal" style="background:linear-gradient(135deg,#111,#333);" onclick="openWin('win-terminal','di-terminal')"><span>⌨️</span><span class="tip">Terminal</span><span class="dot"></span></div>
-    <div class="di" id="di-contact" style="background:linear-gradient(135deg,#92400e,#fbbf24);" onclick="openWin('win-contact','di-contact')"><span>✉️</span><span class="tip">Contact</span><span class="dot"></span></div>
+  <!-- STICKY NOTES -->
+  <div id="win-notes" class="win" style="top:60px;left:350px;width:330px;height:280px;display:none;">
+    <div class="win-tb" onmousedown="drag(event,'win-notes')">
+      <button class="wb wbc" onclick="closeWin('win-notes')"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-notes')"></button><button class="wb wbx" onclick="toggleMaximize('win-notes')"></button>
+      <span class="wt">sticky notes</span>
+    </div>
+    <div class="win-body">
+      <div id="notes-board">
+        <div id="notes-add" onclick="addNote()">+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCK + minimized tray, sit side by side -->
+  <div id="dock-row">
+    <div id="dock">
+      <div class="di" id="di-about" style="background:linear-gradient(135deg,#6d28d9,#a78bfa);" onclick="openWin('win-about','di-about')"><span>👤</span><span class="tip">About</span><span class="dot"></span></div>
+      <div class="di" id="di-projects" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);" onclick="openWin('win-projects','di-projects')"><span>🗂️</span><span class="tip">Projects</span><span class="dot"></span></div>
+      <div class="di" id="di-skills" style="background:linear-gradient(135deg,#065f46,#34d399);" onclick="openWin('win-skills','di-skills')"><span>⚡</span><span class="tip">Skills</span><span class="dot"></span></div>
+      <div class="di" id="di-f1" style="background:linear-gradient(135deg,#991b1b,#f87171);" onclick="openWin('win-f1','di-f1')"><span>🏎️</span><span class="tip">F1</span><span class="dot"></span></div>
+      <div class="di" id="di-notes" style="background:linear-gradient(135deg,#b45309,#f4d35e);" onclick="openWin('win-notes','di-notes')"><span>📝</span><span class="tip">Notes</span><span class="dot"></span></div>
+      <div class="di" id="di-terminal" style="background:linear-gradient(135deg,#111,#333);" onclick="openWin('win-terminal','di-terminal')"><span>⌨️</span><span class="tip">Terminal</span><span class="dot"></span></div>
+      <div class="di" id="di-contact" style="background:linear-gradient(135deg,#92400e,#fbbf24);" onclick="openWin('win-contact','di-contact')"><span>✉️</span><span class="tip">Contact</span><span class="dot"></span></div>
+    </div>
+
+    <!-- minimized windows land here as small tiles -->
+    <div id="min-tray"></div>
   </div>
 </div>
+
 
 <script>
 // wallpapers
@@ -468,12 +573,16 @@ function tick() {
 tick()
 setInterval(tick, 1000)
 
-// window dragging
+// window dragging + resizing share one mousemove/mouseup pair
+// so they can never both be active at once and fight over the cursor
 let dragging = null
+let resizing = null
 let ox = 0, oy = 0
+let startW = 0, startH = 0, startX = 0, startY = 0
 let zt = 200
 
 function drag(e, id) {
+  if (resizing) return
   dragging = document.getElementById(id)
   document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'))
   dragging.classList.add('focused')
@@ -484,13 +593,136 @@ function drag(e, id) {
   e.preventDefault()
 }
 
-document.addEventListener('mousemove', e => {
-  if (!dragging) return
-  dragging.style.left = Math.max(0, e.clientX - ox) + 'px'
-  dragging.style.top = Math.max(34, e.clientY - oy) + 'px'
+// give every window a resize handle in its bottom-right corner
+document.querySelectorAll('.win').forEach(w => {
+  const handle = document.createElement('div')
+  handle.className = 'resize-handle'
+  handle.addEventListener('mousedown', e => {
+    if (dragging) return
+    resizing = w
+    const r = w.getBoundingClientRect()
+    startW = r.width
+    startH = r.height
+    startX = e.clientX
+    startY = e.clientY
+    w.classList.add('resizing', 'focused')
+    document.querySelectorAll('.win').forEach(x => { if (x !== w) x.classList.remove('focused') })
+    w.style.zIndex = ++zt
+    e.preventDefault()
+    e.stopPropagation()
+  })
+  w.appendChild(handle)
 })
 
-document.addEventListener('mouseup', () => dragging = null)
+document.addEventListener('mousemove', e => {
+  if (dragging) {
+    dragging.style.left = Math.max(0, e.clientX - ox) + 'px'
+    dragging.style.top = Math.max(34, e.clientY - oy) + 'px'
+  } else if (resizing) {
+    const newW = Math.max(260, startW + (e.clientX - startX))
+    const newH = Math.max(160, startH + (e.clientY - startY))
+    resizing.style.width = newW + 'px'
+    resizing.style.height = newH + 'px'
+  }
+})
+
+document.addEventListener('mouseup', () => {
+  dragging = null
+  if (resizing) resizing.classList.remove('resizing')
+  resizing = null
+})
+
+// minimize / maximize
+const winIcons = {
+  'win-about':    '👤',
+  'win-projects': '🗂️',
+  'win-skills':   '⚡',
+  'win-f1':       '🏎️',
+  'win-notes':    '📝',
+  'win-terminal': '⌨️',
+  'win-contact':  '✉️',
+}
+
+function minimizeWin(id) {
+  const w = document.getElementById(id)
+  w.classList.add('minimized')
+
+  // actually hide it once the shrink animation finishes, so it
+  // doesn't sit there invisible but still blocking clicks
+  setTimeout(() => {
+    w.style.display = 'none'
+    w.classList.remove('minimized')
+    addTrayTile(id)
+  }, 350)
+}
+
+function addTrayTile(id) {
+  // don't double up if it's already minimized somehow
+  if (document.getElementById('tray-' + id)) return
+
+  const tray = document.getElementById('min-tray')
+  const tile = document.createElement('div')
+  tile.className = 'min-tile'
+  tile.id = 'tray-' + id
+  tile.textContent = winIcons[id] || '🪟'
+  tile.onclick = () => restoreFromTray(id)
+  tray.appendChild(tile)
+}
+
+function restoreFromTray(id) {
+  const tile = document.getElementById('tray-' + id)
+  if (tile) tile.remove()
+
+  const w = document.getElementById(id)
+  w.style.display = 'flex'
+  w.style.zIndex = ++zt
+
+  document.querySelectorAll('.win').forEach(x => x.classList.remove('focused'))
+  w.classList.add('focused')
+}
+
+function toggleMaximize(id) {
+  const w = document.getElementById(id)
+
+  // briefly enable the smooth transition just for this snap, then
+  // turn it back off so dragging/resizing stays instant and 1:1
+  w.classList.add('animating')
+  setTimeout(() => w.classList.remove('animating'), 260)
+
+  if (w.classList.contains('maximized')) {
+    // restore back to whatever it was before
+    w.classList.remove('maximized')
+    w.style.top = w.dataset.prevTop || '70px'
+    w.style.left = w.dataset.prevLeft || '100px'
+    w.style.width = w.dataset.prevWidth || ''
+    w.style.height = w.dataset.prevHeight || ''
+  } else {
+    // remember where it was so we can put it back later
+    w.dataset.prevTop = w.style.top
+    w.dataset.prevLeft = w.style.left
+    w.dataset.prevWidth = w.style.width
+    w.dataset.prevHeight = w.style.height
+    w.classList.add('maximized')
+  }
+}
+
+// sticky notes — kept in memory only, resets on reload
+let noteCount = 0
+
+function addNote() {
+  noteCount++
+  const board = document.getElementById('notes-board')
+  const addBtn = document.getElementById('notes-add')
+
+  const note = document.createElement('div')
+  note.className = 'sticky'
+  note.innerHTML = `
+    <button class="sticky-del" onclick="this.parentElement.remove()">✕</button>
+    <textarea placeholder="write something...">${''}</textarea>
+  `
+  // insert before the + button so it always stays last
+  board.insertBefore(note, addBtn)
+}
 
 // open / close windows
 const winToDock = {}
@@ -502,6 +734,10 @@ function closeWin(id) {
 
 function openWin(id, di) {
   if (di) winToDock[id] = di
+
+  // if it's sitting minimized in the tray, just restore it instead
+  const trayTile = document.getElementById('tray-' + id)
+  if (trayTile) trayTile.remove()
 
   const w = document.getElementById(id)
   w.style.display = 'flex'
