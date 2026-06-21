@@ -25,9 +25,9 @@ html, body {
 }
 #boot-logo { font-size: 56px; font-weight: 900; color: #a78bfa; letter-spacing: -3px; margin-bottom: 4px; }
 #boot-tagline { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 52px; opacity: 0; transition: opacity 1s; }
-#boot-status { font-size: 12px; color: #a78bfa; margin-bottom: 14px; font-family: monospace; min-height: 16px; }
+#boot-status { font-size: 12px; color: #a78bfa; margin-bottom: 14px; font-family: monospace; min-height: 16px; transition: opacity 0.15s; }
 #boot-bar-wrap { width: 200px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
-#boot-bar { height: 100%; width: 0%; background: linear-gradient(90deg,#6d28d9,#a78bfa); transition: width 0.06s linear; }
+#boot-bar { height: 100%; width: 0%; background: linear-gradient(90deg,#6d28d9,#a78bfa); }
 
 /* ── TAGLINE SPLASH ── */
 #splash {
@@ -144,6 +144,23 @@ html, body {
 .st { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; }
 .sf { height: 5px; border-radius: 3px; background: linear-gradient(90deg, #6d28d9, #a78bfa); }
 .crow { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); font-size: 13px; color: rgba(255,255,255,0.75); }
+
+.guide-step {
+  display: flex; gap: 12px; background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.08); border-radius: 10px;
+  padding: 12px 13px; margin-bottom: 10px;
+}
+.guide-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg,#6d28d9,#a78bfa); color: #fff;
+  font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.guide-step h4 { font-size: 13px; color: #fff; font-weight: 600; margin-bottom: 3px; }
+.guide-step p { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.55; }
+.guide-step code {
+  background: rgba(167,139,250,0.15); color: #c4b5fd; padding: 1px 6px;
+  border-radius: 4px; font-size: 11px; font-family: monospace;
+}
 .crow-icon { font-size: 15px; width: 22px; text-align: center; }
 
 /* ── DOCK ── */
@@ -245,6 +262,51 @@ html, body {
   color: rgba(255,255,255,0.25); cursor: pointer; transition: all 0.15s;
 }
 #notes-add:hover { border-color: #a78bfa; color: #a78bfa; }
+
+/* right click context menu */
+#ctx-menu {
+  position: fixed; display: none; z-index: 5000;
+  background: rgba(18,15,32,0.95); backdrop-filter: blur(20px);
+  border: 0.5px solid rgba(255,255,255,0.14); border-radius: 10px;
+  padding: 6px; min-width: 180px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.ctx-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: 7px; cursor: pointer;
+  font-size: 13px; color: rgba(255,255,255,0.8);
+}
+.ctx-item:hover { background: rgba(167,139,250,0.15); color: #fff; }
+.ctx-item span.ic { font-size: 15px; width: 18px; text-align: center; }
+.ctx-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 5px 4px; }
+
+/* guide hint bubble pointing at the dock icon */
+#guide-hint {
+  position: fixed; bottom: 78px; left: 0;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(167,139,250,0.95); color: #fff;
+  font-size: 12.5px; font-weight: 600; padding: 9px 14px;
+  border-radius: 10px; white-space: nowrap; z-index: 1001;
+  box-shadow: 0 10px 30px rgba(109,40,217,0.4);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s, transform 0.4s, left 0.2s;
+}
+#guide-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+#guide-hint::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: rgba(167,139,250,0.95);
+}
+#guide-hint .close-hint {
+  margin-left: 8px; cursor: pointer; opacity: 0.7; font-weight: 400;
+}
+#guide-hint .close-hint:hover { opacity: 1; }
+
+@keyframes guide-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(167,139,250,0.5); }
+  50% { box-shadow: 0 0 0 10px rgba(167,139,250,0); }
+}
+.di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; }
+
 #term-body { background: #000; font-family: monospace; font-size: 13px; color: #a78bfa; padding: 14px; overflow-y: auto; flex: 1; }
 #term-body::-webkit-scrollbar { width: 4px; }
 #term-body::-webkit-scrollbar-thumb { background: rgba(167,139,250,0.2); }
@@ -431,9 +493,46 @@ html, body {
     </div>
   </div>
 
+  <!-- GUIDE -->
+  <div id="win-guide" class="win" style="top:50px;left:340px;width:330px;height:420px;display:none;">
+    <div class="win-tb" onmousedown="drag(event,'win-guide')">
+      <button class="wb wbc" onclick="closeWin('win-guide')"></button>
+      <button class="wb wbm" onclick="minimizeWin('win-guide')"></button><button class="wb wbx" onclick="toggleMaximize('win-guide')"></button>
+      <span class="wt">guide</span>
+    </div>
+    <div class="win-body">
+      <div class="guide-step">
+        <div class="guide-num">1</div>
+        <div><h4>open apps</h4><p>click any icon in the dock at the bottom to open a window, About, Projects, Skills, F1, Notes, Terminal, Contact.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">2</div>
+        <div><h4>move windows</h4><p>drag a window by its top bar to move it anywhere on the desktop.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">3</div>
+        <div><h4>resize windows</h4><p>drag the small corner in the bottom right of any window to make it bigger or smaller.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">4</div>
+        <div><h4>window controls</h4><p>red closes, yellow minimizes to the tray next to the dock, green makes it fullscreen.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">5</div>
+        <div><h4>right click the desktop</h4><p>right click anywhere on the empty desktop for quick shortcuts to open Terminal, Notes, and change your wallpaper.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">6</div>
+        <div><h4>talk to jarvis</h4><p>open Terminal and try <code>hey jarvis, help</code> for a list of voice style commands.</p></div>
+      </div>
+      <div style="margin-top:6px;font-size:11.5px;color:rgba(255,255,255,0.3);text-align:center;">that's the whole OS. have fun exploring 🟣</div>
+    </div>
+  </div>
+
   <!-- DOCK + minimized tray, sit side by side -->
   <div id="dock-row">
     <div id="dock">
+      <div class="di" id="di-guide" style="background:linear-gradient(135deg,#0e7490,#22d3ee);" onclick="openWin('win-guide','di-guide')"><span>🧭</span><span class="tip">Guide</span><span class="dot"></span></div>
       <div class="di" id="di-about" style="background:linear-gradient(135deg,#6d28d9,#a78bfa);" onclick="openWin('win-about','di-about')"><span>👤</span><span class="tip">About</span><span class="dot"></span></div>
       <div class="di" id="di-projects" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);" onclick="openWin('win-projects','di-projects')"><span>🗂️</span><span class="tip">Projects</span><span class="dot"></span></div>
       <div class="di" id="di-skills" style="background:linear-gradient(135deg,#065f46,#34d399);" onclick="openWin('win-skills','di-skills')"><span>⚡</span><span class="tip">Skills</span><span class="dot"></span></div>
@@ -445,6 +544,21 @@ html, body {
 
     <!-- minimized windows land here as small tiles -->
     <div id="min-tray"></div>
+  </div>
+
+  <!-- points up at the guide icon on first load, lives outside dock-row
+       so its position: fixed isn't broken by dock-row's transform -->
+  <div id="guide-hint">
+    👋 new here? click Guide to learn your way around <span class="close-hint" onclick="dismissGuideHint()">✕</span>
+  </div>
+
+  <!-- right click context menu -->
+  <div id="ctx-menu">
+    <div class="ctx-item" onclick="ctxAction('terminal')"><span class="ic">⌨️</span>open terminal</div>
+    <div class="ctx-item" onclick="ctxAction('notes')"><span class="ic">📝</span>new sticky note</div>
+    <div class="ctx-item" onclick="ctxAction('guide')"><span class="ic">🧭</span>open guide</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="ctxAction('wallpaper')"><span class="ic">🖼️</span>change wallpaper</div>
   </div>
 </div>
 
@@ -504,6 +618,10 @@ function confirmWallpaper() {
   applyWallpaper(selectedWp)
   document.getElementById('picker').style.display = 'none'
   document.getElementById('desktop').style.display = 'block'
+
+  // wait a beat after the desktop is actually visible so the dock
+  // has real layout dimensions before we try to point at it
+  setTimeout(showGuideHint, 900)
 }
 
 // boot sequence
@@ -514,7 +632,6 @@ const bootSteps = [
   'brewing chai... ☕',
   'rinoOS ready.',
 ];
-let prog = 0
 let step = 0
 const bar = document.getElementById('boot-bar')
 const status = document.getElementById('boot-status')
@@ -523,44 +640,57 @@ const tagline = document.getElementById('boot-tagline')
 // fade in the tagline after a beat
 setTimeout(() => tagline.style.opacity = '1', 400)
 
-const iv = setInterval(() => {
-  prog += Math.random() * 5 + 2
+// smooth boot bar, driven by actual elapsed time instead of random
+// jittery increments, so it always fills at a steady, consistent rate
+const bootDuration = 4200 // ms — slow enough that each message is actually readable
+const bootStart = performance.now()
 
-  if (prog >= 100) {
-    prog = 100
-    bar.style.width = '100%'
-    status.textContent = 'rinoOS ready.'
-    clearInterval(iv)
+function tickBoot(now) {
+  const elapsed = now - bootStart
+  const prog = Math.min(100, (elapsed / bootDuration) * 100)
+
+  bar.style.width = prog + '%'
+
+  const si = Math.floor((prog / 100) * bootSteps.length)
+  if (si !== step && si < bootSteps.length) {
+    step = si
+    // quick crossfade instead of an abrupt text swap
+    status.style.opacity = '0'
+    setTimeout(() => {
+      status.textContent = bootSteps[step]
+      status.style.opacity = '1'
+    }, 150)
+  }
+
+  if (prog < 100) {
+    requestAnimationFrame(tickBoot)
+    return
+  }
+
+  status.textContent = 'rinoOS ready.'
+
+  setTimeout(() => {
+    const b = document.getElementById('boot')
+    b.style.opacity = '0'
 
     setTimeout(() => {
-      const b = document.getElementById('boot')
-      b.style.opacity = '0'
+      b.style.display = 'none'
+      const sp = document.getElementById('splash')
+      sp.style.display = 'flex'
 
+      // show "live like rino" splash then go to picker
       setTimeout(() => {
-        b.style.display = 'none'
-        const sp = document.getElementById('splash')
-        sp.style.display = 'flex'
-
-        // show "live like rino" splash then go to picker
+        sp.style.opacity = '0'
         setTimeout(() => {
-          sp.style.opacity = '0'
-          setTimeout(() => {
-            sp.style.display = 'none'
-            document.getElementById('picker').style.display = 'flex'
-          }, 700)
-        }, 1600)
-      }, 800)
-    }, 500)
+          sp.style.display = 'none'
+          document.getElementById('picker').style.display = 'flex'
+        }, 700)
+      }, 1600)
+    }, 800)
+  }, 500)
+}
 
-  } else {
-    bar.style.width = prog + '%'
-    const si = Math.floor((prog / 100) * bootSteps.length)
-    if (si !== step && si < bootSteps.length) {
-      step = si
-      status.textContent = bootSteps[step]
-    }
-  }
-}, 90)
+requestAnimationFrame(tickBoot)
 
 // clock
 function tick() {
@@ -746,9 +876,12 @@ function openWin(id, di) {
   document.querySelectorAll('.win').forEach(x => x.classList.remove('focused'))
   w.classList.add('focused')
 
-  // scatter windows a bit so they don't all stack perfectly
-  w.style.top = (70 + Math.random() * 60) + 'px'
-  w.style.left = (60 + Math.random() * 250) + 'px'
+  // scatter windows a bit so they don't all stack perfectly,
+  // except the guide which keeps its nice centered starting spot
+  if (id !== 'win-guide') {
+    w.style.top = (70 + Math.random() * 60) + 'px'
+    w.style.left = (60 + Math.random() * 250) + 'px'
+  }
 
   if (di) document.getElementById(di)?.classList.add('open')
 
@@ -758,6 +891,9 @@ function openWin(id, di) {
       termPrint('output', 'type: help  or  hey jarvis, help')
     }, 200)
   }
+
+  // someone found the guide on their own, no need to keep pointing at it
+  if (id === 'win-guide') dismissGuideHint()
 }
 
 // ── TERMINAL ──
@@ -793,14 +929,16 @@ const jarvisCmds={
   'open f1':        ()=>{ openWin('win-f1','di-f1');             return['🏎️ opening f1 fan zone...']; },
   'open contact':   ()=>{ openWin('win-contact','di-contact');   return['✉️ opening contact...']; },
   'open terminal':  ()=>{ openWin('win-terminal','di-terminal'); return['⌨️ opening terminal...']; },
+  'open notes':     ()=>{ openWin('win-notes','di-notes');       return['📝 opening sticky notes...']; },
+  'open guide':     ()=>{ openWin('win-guide','di-guide');       return['🧭 opening the guide...']; },
   'play music':     ()=>['🎵 now playing: phonk.exe — vibe mode on'],
   'what time is it':()=>[`🕐 it's ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`],
   'next f1 race':   ()=>['🏎️ next race: checking calendar...','Canadian GP — Montreal'],
-  'close all':      ()=>{ ['win-about','win-projects','win-skills','win-f1','win-contact'].forEach(closeWin); return['✓ closed all windows']; },
+  'close all':      ()=>{ ['win-about','win-projects','win-skills','win-f1','win-contact','win-notes','win-guide'].forEach(closeWin); return['✓ closed all windows']; },
   'status':         ()=>['🟢 all systems nominal','jarvis: online','vibes: immaculate','chai: brewing'],
   'time debt':      ()=>['⏳ Time Debt — roblox game by rino','collect as much as possible before time runs out','available on roblox 🎮'],
   'hello':          ()=>['hey rino 👋 what do you need?'],
-  'help':           ()=>['jarvis commands:','  hey jarvis, open projects','  hey jarvis, open about','  hey jarvis, open skills','  hey jarvis, open f1','  hey jarvis, open contact','  hey jarvis, play music','  hey jarvis, what time is it','  hey jarvis, status','  hey jarvis, close all'],
+  'help':           ()=>['jarvis commands:','  hey jarvis, open projects','  hey jarvis, open about','  hey jarvis, open skills','  hey jarvis, open f1','  hey jarvis, open contact','  hey jarvis, open notes','  hey jarvis, open guide','  hey jarvis, play music','  hey jarvis, what time is it','  hey jarvis, status','  hey jarvis, close all'],
 };
 
 function termKey(e){
@@ -826,6 +964,67 @@ function termKey(e){
   if(fn){ const res=fn(); if(res) res.forEach(l=>termPrint('output',l)); }
   else { termPrint('output',`command not found: ${cmd}`); termPrint('output','type \'help\' or \'hey jarvis, help\''); }
 }
+
+// right click context menu
+const ctxMenu = document.getElementById('ctx-menu')
+
+document.getElementById('desktop').addEventListener('contextmenu', e => {
+  // only show our custom menu on empty desktop space, not on top of a window
+  if (e.target.closest('.win') || e.target.closest('#dock-row')) return
+  e.preventDefault()
+
+  ctxMenu.style.display = 'block'
+  // keep the menu on screen even if you right click near an edge
+  const menuW = 200, menuH = 160
+  const x = Math.min(e.clientX, window.innerWidth - menuW)
+  const y = Math.min(e.clientY, window.innerHeight - menuH)
+  ctxMenu.style.left = x + 'px'
+  ctxMenu.style.top = y + 'px'
+})
+
+document.addEventListener('click', () => { ctxMenu.style.display = 'none' })
+
+function ctxAction(type) {
+  ctxMenu.style.display = 'none'
+
+  if (type === 'terminal') openWin('win-terminal', 'di-terminal')
+  if (type === 'guide') openWin('win-guide', 'di-guide')
+  if (type === 'wallpaper') showPicker()
+
+  if (type === 'notes') {
+    openWin('win-notes', 'di-notes')
+    // give the window a moment to actually be visible before adding a note into it
+    setTimeout(addNote, 150)
+  }
+}
+
+// guide hint — points at the guide icon so first time visitors know
+// where to start, shows once per session then gets out of the way
+function positionGuideHint() {
+  const icon = document.getElementById('di-guide')
+  const hint = document.getElementById('guide-hint')
+  const r = icon.getBoundingClientRect()
+  // center the bubble horizontally over the actual icon, not the dock
+  hint.style.left = (r.left + r.width / 2) + 'px'
+}
+
+function showGuideHint() {
+  positionGuideHint()
+  document.getElementById('guide-hint').classList.add('show')
+  document.getElementById('di-guide').classList.add('guide-pulsing')
+}
+
+function dismissGuideHint() {
+  document.getElementById('guide-hint').classList.remove('show')
+  document.getElementById('di-guide').classList.remove('guide-pulsing')
+}
+
+// keep the hint lined up with the icon if the window resizes
+window.addEventListener('resize', () => {
+  if (document.getElementById('guide-hint').classList.contains('show')) {
+    positionGuideHint()
+  }
+})
 </script>
 </body>
 </html>
