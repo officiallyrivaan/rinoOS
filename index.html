@@ -6,316 +6,232 @@
 <title>rinoOS — live like rino</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-html, body {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #000;
-}
+html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courier New', Courier, monospace; background: #000; color: #39d353; }
 
 /* ── BOOT ── */
 #boot {
   position: fixed; inset: 0; z-index: 9999;
   background: #000; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  transition: opacity 0.8s;
+  transition: opacity 0.6s;
 }
-#boot-logo { font-size: 56px; font-weight: 900; color: #a78bfa; letter-spacing: -3px; margin-bottom: 4px; }
-#boot-tagline { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 52px; opacity: 0; transition: opacity 1s; }
-#boot-status { font-size: 12px; color: #a78bfa; margin-bottom: 14px; font-family: monospace; min-height: 16px; transition: opacity 0.15s; }
-#boot-bar-wrap { width: 200px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
-#boot-bar { height: 100%; width: 0%; background: linear-gradient(90deg,#6d28d9,#a78bfa); }
+#boot-logo {
+  font-size: 48px; font-weight: 900; color: #39d353;
+  letter-spacing: -2px; margin-bottom: 4px;
+  text-shadow: 0 0 20px #39d35388;
+}
+#boot-tagline { font-size: 12px; color: #39d35388; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; opacity: 0; transition: opacity 1s; }
+#boot-lines { font-family: monospace; font-size: 12px; color: #39d353; margin-bottom: 20px; min-height: 90px; text-align: left; width: 340px; }
+.boot-line { margin-bottom: 4px; opacity: 0; animation: fadein 0.3s forwards; }
+.boot-line .ok { color: #39d353; }
+.boot-line .warn { color: #f4d35e; }
+@keyframes fadein { to { opacity: 1; } }
+#boot-bar-wrap { width: 340px; height: 2px; background: #39d35322; border-radius: 1px; overflow: hidden; }
+#boot-bar { height: 100%; width: 0%; background: #39d353; box-shadow: 0 0 8px #39d353; }
 
-/* ── TAGLINE SPLASH ── */
+/* ── SPLASH ── */
 #splash {
   position: fixed; inset: 0; z-index: 9998; display: none;
   align-items: center; justify-content: center; background: #000;
-  transition: opacity 0.7s;
+  transition: opacity 0.6s;
 }
-#splash-text { font-size: 38px; font-weight: 900; color: #fff; letter-spacing: -1px; text-align: center; }
-#splash-text span { color: #a78bfa; }
+#splash-text { font-size: 36px; font-weight: 900; color: #39d353; letter-spacing: -1px; text-shadow: 0 0 30px #39d353; }
+#splash-text span { color: #fff; }
 
 /* ── WALLPAPER PICKER ── */
 #picker {
   position: fixed; inset: 0; z-index: 9997; display: none;
   flex-direction: column; align-items: center; justify-content: center;
-  background: #07060f;
+  background: #000;
 }
-#picker h2 { color: #fff; font-size: 22px; font-weight: 800; margin-bottom: 5px; letter-spacing: -0.5px; }
-#picker p { color: rgba(255,255,255,0.35); font-size: 13px; margin-bottom: 30px; }
-.wp-grid { display: grid; grid-template-columns: repeat(4, 130px); gap: 13px; margin-bottom: 30px; }
+#picker h2 { color: #39d353; font-size: 20px; font-weight: 700; margin-bottom: 4px; letter-spacing: 1px; font-family: monospace; }
+#picker h2::before { content: '> '; }
+#picker p { color: #39d35388; font-size: 12px; margin-bottom: 28px; font-family: monospace; }
+.wp-grid { display: grid; grid-template-columns: repeat(4, 120px); gap: 10px; margin-bottom: 28px; }
 .wp-thumb {
-  width: 130px; height: 82px; border-radius: 12px; cursor: pointer;
-  border: 2.5px solid transparent; transition: transform 0.15s, border-color 0.15s;
+  width: 120px; height: 76px; border-radius: 4px; cursor: pointer;
+  border: 1px solid #39d35344; transition: border-color 0.15s, transform 0.15s;
   position: relative; overflow: hidden;
 }
-.wp-thumb:hover { transform: scale(1.06); }
-.wp-thumb.selected { border-color: #a78bfa; }
+.wp-thumb:hover { border-color: #39d353; transform: scale(1.04); }
+.wp-thumb.selected { border-color: #39d353; box-shadow: 0 0 10px #39d35366; }
 .wp-thumb span {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  text-align: center; font-size: 10px; color: rgba(255,255,255,0.9);
-  background: rgba(0,0,0,0.55); padding: 4px 0;
+  position: absolute; bottom: 0; left: 0; right: 0; text-align: center;
+  font-size: 10px; color: #39d353; background: rgba(0,0,0,0.7); padding: 3px 0;
+  font-family: monospace;
 }
 #pick-btn {
-  background: linear-gradient(135deg,#6d28d9,#a78bfa); color: #fff; border: none;
-  border-radius: 12px; padding: 13px 44px; font-size: 15px; cursor: pointer;
-  font-weight: 700; letter-spacing: -0.2px; transition: opacity 0.15s;
+  background: transparent; color: #39d353; border: 1px solid #39d353;
+  border-radius: 3px; padding: 10px 36px; font-size: 13px; cursor: pointer;
+  font-family: monospace; font-weight: 700; transition: all 0.15s;
+  letter-spacing: 1px;
 }
-#pick-btn:hover { opacity: 0.88; }
+#pick-btn::before { content: '> '; }
+#pick-btn:hover { background: #39d353; color: #000; box-shadow: 0 0 16px #39d35366; }
 
 /* ── DESKTOP ── */
 #desktop { position: fixed; inset: 0; display: none; overflow: hidden; }
-#desktop-bg { position: absolute; inset: 0; transition: background 1s; }
-.stars-layer { position: absolute; inset: 0; pointer-events: none; }
-@keyframes twinkle { 0%{opacity:0.1} 100%{opacity:1} }
+#desktop-bg { position: absolute; inset: 0; background: #000; }
+#matrix-canvas { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+.scanline-overlay {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+}
 
 /* ── TOPBAR ── */
 #topbar {
   position: absolute; top: 0; left: 0; right: 0; height: 34px;
-  background: rgba(0,0,0,0.4); backdrop-filter: blur(20px);
-  border-bottom: 0.5px solid rgba(255,255,255,0.1);
+  background: #000; border-bottom: 1px solid #39d35344;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 18px; z-index: 1000;
+  padding: 0 16px; z-index: 1000; font-family: monospace;
 }
-.tl { display: flex; align-items: center; gap: 14px; }
-.tlogo { font-weight: 900; font-size: 15px; color: #a78bfa; letter-spacing: -0.5px; }
-.thandle { font-size: 12px; color: rgba(255,255,255,0.3); }
-.tagline-top { font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 1.5px; text-transform: uppercase; }
-.tr { display: flex; align-items: center; gap: 12px; }
-#clock { font-size: 12px; color: rgba(255,255,255,0.8); font-variant-numeric: tabular-nums; font-family: monospace; }
+.tl { display: flex; align-items: center; gap: 16px; }
+.tlogo { font-weight: 900; font-size: 14px; color: #39d353; text-shadow: 0 0 8px #39d35388; }
+.tlogo::before { content: '~/'; color: #39d35388; font-size: 11px; }
+.thandle { font-size: 11px; color: #39d35366; }
+.tr { display: flex; align-items: center; gap: 14px; }
+#clock { font-size: 11px; color: #39d35388; font-family: monospace; }
 .tbtn {
-  font-size: 11px; color: rgba(255,255,255,0.45);
-  background: rgba(255,255,255,0.07); border: 0.5px solid rgba(255,255,255,0.13);
-  border-radius: 7px; padding: 3px 10px; cursor: pointer; transition: all 0.15s;
+  font-size: 11px; color: #39d35388; border: 1px solid #39d35333;
+  background: transparent; padding: 2px 8px; cursor: pointer;
+  font-family: monospace; transition: all 0.15s; border-radius: 2px;
 }
-.tbtn:hover { background: rgba(255,255,255,0.13); color: #fff; }
+.tbtn::before { content: '['; } .tbtn::after { content: ']'; }
+.tbtn:hover { color: #39d353; border-color: #39d353; box-shadow: 0 0 6px #39d35344; }
 
 /* ── WINDOWS ── */
 .win {
-  position: absolute; background: rgba(10,8,24,0.92);
-  border: 0.5px solid rgba(255,255,255,0.12); border-radius: 14px;
-  box-shadow: 0 28px 90px rgba(0,0,0,0.65);
+  position: absolute; background: #000;
+  border: 1px solid #39d35366; border-radius: 3px;
+  box-shadow: 0 0 20px #39d35322, inset 0 0 40px rgba(0,0,0,0.8);
   min-width: 260px; min-height: 160px;
   display: flex; flex-direction: column;
-  backdrop-filter: blur(24px);
-  transition: box-shadow 0.2s;
 }
-.win.focused { box-shadow: 0 28px 90px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(167,139,250,0.3); }
+.win.focused { border-color: #39d353; box-shadow: 0 0 24px #39d35344; }
 .win.resizing { transition: none !important; }
-.resize-handle {
-  position: absolute; width: 16px; height: 16px; bottom: 0; right: 0;
-  cursor: nwse-resize; z-index: 5;
-}
-.resize-handle::after {
-  content: ''; position: absolute; right: 4px; bottom: 4px;
-  width: 7px; height: 7px;
-  border-right: 2px solid rgba(255,255,255,0.25);
-  border-bottom: 2px solid rgba(255,255,255,0.25);
-  border-radius: 0 0 3px 0;
-}
-.win.maximized .resize-handle { display: none; }
 .win-tb {
-  height: 38px; background: rgba(255,255,255,0.03);
-  border-bottom: 0.5px solid rgba(255,255,255,0.07);
-  display: flex; align-items: center; padding: 0 14px; gap: 8px;
-  cursor: move; flex-shrink: 0; border-radius: 14px 14px 0 0;
+  height: 32px; background: #0a0a0a; border-bottom: 1px solid #39d35333;
+  display: flex; align-items: center; padding: 0 10px; gap: 8px;
+  cursor: move; flex-shrink: 0; border-radius: 3px 3px 0 0;
 }
-.wb { width: 13px; height: 13px; border-radius: 50%; cursor: pointer; border: none; flex-shrink: 0; transition: filter 0.15s; }
-.wb:hover { filter: brightness(1.3); }
+.wb { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; border: none; flex-shrink: 0; }
 .wbc { background: #ff5f57; } .wbm { background: #febc2e; } .wbx { background: #28c840; }
-.wt { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500; flex: 1; text-align: center; }
-.wb { cursor: pointer; }
-.win-body { flex: 1; overflow-y: auto; padding: 18px; color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.65; }
+.wt { font-size: 11px; color: #39d35388; font-weight: 400; flex: 1; text-align: center; font-family: monospace; letter-spacing: 1px; }
+.wt::before { content: '── '; } .wt::after { content: ' ──'; }
+.win-body { flex: 1; overflow-y: auto; padding: 16px; color: #39d353; font-size: 12px; line-height: 1.7; font-family: monospace; }
 .win-body::-webkit-scrollbar { width: 4px; }
-.win-body::-webkit-scrollbar-track { background: transparent; }
-.win-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+.win-body::-webkit-scrollbar-thumb { background: #39d35333; }
 
 /* ── COMPONENTS ── */
-.tag { display: inline-block; background: rgba(167,139,250,0.12); color: #c4b5fd; font-size: 11px; padding: 3px 9px; border-radius: 20px; margin: 2px; border: 0.5px solid rgba(167,139,250,0.25); }
-.pcard { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; transition: background 0.15s; cursor: default; }
-.pcard:hover { background: rgba(255,255,255,0.06); }
-.pcard h4 { color: #a78bfa; font-size: 13px; font-weight: 600; margin-bottom: 3px; }
-.pcard p { color: rgba(255,255,255,0.42); font-size: 12px; line-height: 1.6; }
-.sbar { margin-bottom: 12px; }
-.sl { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: rgba(255,255,255,0.6); }
-.st { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; }
-.sf { height: 5px; border-radius: 3px; background: linear-gradient(90deg, #6d28d9, #a78bfa); }
-.crow { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); font-size: 13px; color: rgba(255,255,255,0.75); }
+.tag { display: inline-block; background: transparent; color: #39d353; font-size: 11px; padding: 2px 8px; margin: 2px; border: 1px solid #39d35344; font-family: monospace; }
+.tag::before { content: '['; } .tag::after { content: ']'; }
+.pcard { background: #0a0a0a; border: 1px solid #39d35333; border-left: 3px solid #39d353; padding: 10px 12px; margin-bottom: 8px; transition: border-color 0.15s; }
+.pcard:hover { border-color: #39d353; }
+.pcard h4 { color: #39d353; font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.pcard h4::before { content: '> '; color: #39d35388; }
+.pcard p { color: #39d35388; font-size: 11px; line-height: 1.6; }
+.sbar { margin-bottom: 10px; }
+.sl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; color: #39d35388; }
+.st { height: 4px; background: #39d35322; border-radius: 0; }
+.sf { height: 4px; background: #39d353; box-shadow: 0 0 4px #39d35388; }
+.crow { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid #39d35322; font-size: 12px; color: #39d35388; }
+.crow::before { content: '$'; color: #39d35366; font-family: monospace; }
 
-.guide-step {
-  display: flex; gap: 12px; background: rgba(255,255,255,0.03);
-  border: 0.5px solid rgba(255,255,255,0.08); border-radius: 10px;
-  padding: 12px 13px; margin-bottom: 10px;
-}
-.guide-num {
-  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
-  background: linear-gradient(135deg,#6d28d9,#a78bfa); color: #fff;
-  font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
-}
-.guide-step h4 { font-size: 13px; color: #fff; font-weight: 600; margin-bottom: 3px; }
-.guide-step p { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.55; }
-.guide-step code {
-  background: rgba(167,139,250,0.15); color: #c4b5fd; padding: 1px 6px;
-  border-radius: 4px; font-size: 11px; font-family: monospace;
-}
-.crow-icon { font-size: 15px; width: 22px; text-align: center; }
-
-/* ── DOCK ── */
-#dock-row {
-  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-  display: flex; align-items: flex-end; gap: 14px; z-index: 1000;
-}
-#dock {
-  background: rgba(255,255,255,0.06); backdrop-filter: blur(24px);
-  border: 0.5px solid rgba(255,255,255,0.14); border-radius: 22px;
-  padding: 10px 18px; display: flex; gap: 12px;
-}
-.di {
-  width: 50px; height: 50px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 25px; transition: transform 0.15s;
-  position: relative;
-}
-.di:hover { transform: translateY(-9px) scale(1.2); }
-.di .tip {
-  position: absolute; bottom: 62px; left: 50%; transform: translateX(-50%);
-  background: rgba(0,0,0,0.85); color: #fff; font-size: 11px;
-  padding: 3px 9px; border-radius: 7px; white-space: nowrap;
-  opacity: 0; pointer-events: none; transition: opacity 0.15s;
-}
-.di:hover .tip { opacity: 1; }
-.di .dot {
-  position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%; background: #a78bfa;
-  display: none;
-}
-.di.open .dot { display: block; }
-
-.win.minimized {
-  transform: scale(0.05) translateY(600px);
-  opacity: 0;
-  pointer-events: none;
-}
-.win.maximized {
-  top: 34px !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: calc(100vh - 34px) !important;
-  border-radius: 0;
-}
-.win.maximized .win-tb { border-radius: 0; }
-
-/* tray for minimized windows, sits in its own pill beside the dock */
-#min-tray {
-  display: flex; gap: 8px;
-  background: rgba(255,255,255,0.06); backdrop-filter: blur(24px);
-  border: 0.5px solid rgba(255,255,255,0.14); border-radius: 18px;
-  padding: 10px 12px;
-  transition: opacity 0.2s, transform 0.2s;
-}
-#min-tray:empty { opacity: 0; transform: scale(0.9); pointer-events: none; padding: 0; border: none; }
-.min-tile {
-  width: 50px; height: 50px; border-radius: 12px;
-  background: rgba(255,255,255,0.07);
-  border: 0.5px solid rgba(255,255,255,0.16);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; cursor: pointer; position: relative;
-  animation: pop-in 0.3s cubic-bezier(.4,0,.2,1);
-  transition: transform 0.15s;
-}
-.min-tile:hover { transform: translateY(-6px) scale(1.1); }
-.min-tile::after {
-  content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%; background: #febc2e;
-}
-@keyframes pop-in { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.win { transition: box-shadow 0.2s; }
-.win.animating { transition: box-shadow 0.2s, top 0.25s, left 0.25s, width 0.25s, height 0.25s, transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s; }
-.win-tb { transition: border-radius 0.25s; }
-
+/* guide steps */
+.guide-step { display: flex; gap: 10px; border-left: 2px solid #39d35344; padding: 8px 12px; margin-bottom: 8px; }
+.guide-num { color: #39d353; font-weight: 700; flex-shrink: 0; font-family: monospace; }
+.guide-num::before { content: '['; } .guide-num::after { content: ']'; }
+.guide-step h4 { font-size: 12px; color: #39d353; font-weight: 700; margin-bottom: 2px; }
+.guide-step h4::before { content: '// '; color: #39d35366; }
+.guide-step p { font-size: 11px; color: #39d35388; line-height: 1.55; }
+.guide-step code { color: #39d353; background: #39d35311; padding: 1px 5px; font-family: monospace; border: 1px solid #39d35333; }
 
 /* sticky notes */
-#notes-board { display: flex; flex-wrap: wrap; gap: 12px; padding: 4px; }
-.sticky {
-  width: 130px; height: 130px; background: #f4d35e; border-radius: 4px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.35); padding: 10px; position: relative;
-  transform: rotate(-1deg);
-}
-.sticky:nth-child(2n) { background: #a78bfa; transform: rotate(1deg); }
-.sticky:nth-child(3n) { background: #6ee7b7; transform: rotate(-2deg); }
-.sticky textarea {
-  width: 100%; height: 92px; background: transparent; border: none; outline: none;
-  resize: none; font-family: -apple-system, sans-serif; font-size: 12px; color: #1a1a1a;
-  font-weight: 500; line-height: 1.4;
-}
-.sticky-del {
-  position: absolute; top: 4px; right: 6px; cursor: pointer; font-size: 13px;
-  color: rgba(0,0,0,0.4); border: none; background: none; padding: 0;
-}
-.sticky-del:hover { color: rgba(0,0,0,0.7); }
-#notes-add {
-  width: 130px; height: 130px; border: 1.5px dashed rgba(255,255,255,0.2); border-radius: 6px;
-  display: flex; align-items: center; justify-content: center; font-size: 28px;
-  color: rgba(255,255,255,0.25); cursor: pointer; transition: all 0.15s;
-}
-#notes-add:hover { border-color: #a78bfa; color: #a78bfa; }
+#notes-board { display: flex; flex-wrap: wrap; gap: 10px; padding: 4px; }
+.sticky { width: 130px; height: 130px; background: #0a0a0a; border: 1px solid #39d35344; padding: 10px; position: relative; }
+.sticky:nth-child(2n) { border-color: #f4d35e44; }
+.sticky:nth-child(3n) { border-color: #60a5fa44; }
+.sticky textarea { width: 100%; height: 92px; background: transparent; border: none; outline: none; resize: none; font-family: monospace; font-size: 11px; color: #39d353; line-height: 1.5; }
+.sticky-del { position: absolute; top: 4px; right: 6px; cursor: pointer; font-size: 11px; color: #39d35344; border: none; background: none; font-family: monospace; }
+.sticky-del:hover { color: #ff5f57; }
+#notes-add { width: 130px; height: 130px; border: 1px dashed #39d35333; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #39d35333; cursor: pointer; transition: all 0.15s; font-family: monospace; }
+#notes-add:hover { border-color: #39d353; color: #39d353; box-shadow: 0 0 8px #39d35322; }
 
-/* right click context menu */
+/* context menu */
 #ctx-menu {
   position: fixed; display: none; z-index: 5000;
-  background: rgba(18,15,32,0.95); backdrop-filter: blur(20px);
-  border: 0.5px solid rgba(255,255,255,0.14); border-radius: 10px;
-  padding: 6px; min-width: 180px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  background: #000; border: 1px solid #39d35366;
+  padding: 4px; min-width: 180px;
+  box-shadow: 0 0 20px #39d35322;
 }
-.ctx-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 10px; border-radius: 7px; cursor: pointer;
-  font-size: 13px; color: rgba(255,255,255,0.8);
-}
-.ctx-item:hover { background: rgba(167,139,250,0.15); color: #fff; }
-.ctx-item span.ic { font-size: 15px; width: 18px; text-align: center; }
-.ctx-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 5px 4px; }
+.ctx-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; cursor: pointer; font-size: 12px; color: #39d35388; font-family: monospace; }
+.ctx-item::before { content: '> '; color: #39d35344; }
+.ctx-item:hover { background: #39d35311; color: #39d353; }
+.ctx-sep { height: 1px; background: #39d35322; margin: 3px 4px; }
 
-/* guide hint bubble pointing at the dock icon */
+/* guide hint */
 #guide-hint {
-  position: fixed; bottom: 78px; left: 0;
+  position: fixed; bottom: 76px; left: 0;
   transform: translateX(-50%) translateY(8px);
-  background: rgba(167,139,250,0.95); color: #fff;
-  font-size: 12.5px; font-weight: 600; padding: 9px 14px;
-  border-radius: 10px; white-space: nowrap; z-index: 1001;
-  box-shadow: 0 10px 30px rgba(109,40,217,0.4);
+  background: #000; color: #39d353; border: 1px solid #39d353;
+  font-size: 12px; font-weight: 700; padding: 8px 14px;
+  white-space: nowrap; z-index: 1001;
+  box-shadow: 0 0 16px #39d35344;
   opacity: 0; pointer-events: none;
-  transition: opacity 0.4s, transform 0.4s, left 0.2s;
+  transition: opacity 0.4s, transform 0.4s;
+  font-family: monospace;
 }
+#guide-hint::before { content: '> '; color: #39d35388; }
 #guide-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-#guide-hint::after {
-  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-  border: 6px solid transparent; border-top-color: rgba(167,139,250,0.95);
-}
-#guide-hint .close-hint {
-  margin-left: 8px; cursor: pointer; opacity: 0.7; font-weight: 400;
-}
-#guide-hint .close-hint:hover { opacity: 1; }
+#guide-hint::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #39d353; }
+#guide-hint .close-hint { margin-left: 10px; cursor: pointer; color: #39d35366; }
+#guide-hint .close-hint:hover { color: #ff5f57; }
 
-@keyframes guide-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(167,139,250,0.5); }
-  50% { box-shadow: 0 0 0 10px rgba(167,139,250,0); }
-}
-.di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; }
+/* dock */
+#dock-row { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; gap: 10px; z-index: 1000; }
+#dock { background: #000; border: 1px solid #39d35344; padding: 8px 14px; display: flex; gap: 10px; border-radius: 3px; }
+.di { width: 46px; height: 46px; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; transition: transform 0.15s, box-shadow 0.15s; position: relative; border: 1px solid #39d35333; background: #0a0a0a; font-family: monospace; color: #39d353; font-weight: 700; flex-direction: column; gap: 2px; }
+.di:hover { transform: translateY(-8px) scale(1.1); box-shadow: 0 0 12px #39d35355; border-color: #39d353; }
+.di .tip { position: absolute; bottom: 58px; left: 50%; transform: translateX(-50%); background: #000; color: #39d353; font-size: 10px; padding: 3px 8px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s; font-family: monospace; border: 1px solid #39d35344; }
+.di:hover .tip { opacity: 1; }
+.di .dot { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: #39d353; display: none; }
+.di.open .dot { display: block; }
+.di .di-icon { font-size: 18px; }
+.di .di-label { font-size: 8px; color: #39d35366; letter-spacing: 0.5px; }
 
-#term-body { background: #000; font-family: monospace; font-size: 13px; color: #a78bfa; padding: 14px; overflow-y: auto; flex: 1; }
+/* min tray */
+#min-tray { display: flex; gap: 8px; border: 1px solid #39d35333; padding: 8px 10px; border-radius: 3px; transition: opacity 0.2s; }
+#min-tray:empty { opacity: 0; padding: 0; border: none; }
+.min-tile { width: 46px; height: 46px; border-radius: 4px; background: #0a0a0a; border: 1px solid #39d35333; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; position: relative; animation: pop-in 0.25s cubic-bezier(.4,0,.2,1); transition: transform 0.15s; }
+.min-tile:hover { transform: translateY(-6px); border-color: #39d353; box-shadow: 0 0 8px #39d35344; }
+.min-tile::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: #febc2e; }
+@keyframes pop-in { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* resize handle */
+.resize-handle { position: absolute; width: 14px; height: 14px; bottom: 0; right: 0; cursor: nwse-resize; z-index: 5; }
+.resize-handle::after { content: ''; position: absolute; right: 3px; bottom: 3px; width: 6px; height: 6px; border-right: 1px solid #39d35366; border-bottom: 1px solid #39d35366; }
+.win.maximized .resize-handle { display: none; }
+.win.animating { transition: top 0.25s, left 0.25s, width 0.25s, height 0.25s, transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s; }
+
+/* terminal */
+#term-body { background: #000; font-family: monospace; font-size: 12px; color: #39d353; padding: 12px; overflow-y: auto; flex: 1; }
 #term-body::-webkit-scrollbar { width: 4px; }
-#term-body::-webkit-scrollbar-thumb { background: rgba(167,139,250,0.2); }
-.tline { margin-bottom: 3px; line-height: 1.6; }
-.tprompt { color: #34d399; }
-.tout { color: rgba(255,255,255,0.6); }
-#term-input-row { display: flex; align-items: center; padding: 8px 14px; background: #000; border-top: 0.5px solid rgba(167,139,250,0.15); gap: 6px; flex-shrink: 0; }
-#term-input-row span { color: #34d399; font-family: monospace; font-size: 13px; }
-#term-input { background: transparent; border: none; outline: none; color: #a78bfa; font-family: monospace; font-size: 13px; flex: 1; caret-color: #a78bfa; }
+#term-body::-webkit-scrollbar-thumb { background: #39d35333; }
+.tline { margin-bottom: 2px; line-height: 1.6; }
+.tprompt { color: #39d353; }
+.tout { color: #39d35388; }
+#term-input-row { display: flex; align-items: center; padding: 8px 12px; background: #000; border-top: 1px solid #39d35322; gap: 6px; flex-shrink: 0; }
+#term-input-row span { color: #39d353; font-family: monospace; font-size: 12px; }
+#term-input { background: transparent; border: none; outline: none; color: #39d353; font-family: monospace; font-size: 12px; flex: 1; caret-color: #39d353; }
+
+/* neofetch */
+.neo-wrap { display: flex; gap: 20px; font-family: monospace; font-size: 11px; }
+.neo-art { color: #39d353; white-space: pre; line-height: 1.3; font-size: 10px; flex-shrink: 0; }
+.neo-info { color: #39d35388; line-height: 1.8; }
+.neo-info .key { color: #39d353; }
+
+@keyframes guide-pulse { 0%,100%{box-shadow:0 0 0 0 #39d35355} 50%{box-shadow:0 0 0 8px transparent} }
+.di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; border-color: #39d353; }
 </style>
 </head>
 <body>
@@ -324,391 +240,415 @@ html, body {
 <div id="boot">
   <div id="boot-logo">rinoOS</div>
   <div id="boot-tagline">live like rino</div>
-  <div id="boot-status"></div>
+  <div id="boot-lines"></div>
   <div id="boot-bar-wrap"><div id="boot-bar"></div></div>
 </div>
 
 <!-- SPLASH -->
-<div id="splash">
-  <div id="splash-text">live like <span>rino</span></div>
-</div>
+<div id="splash"><div id="splash-text">live like <span>rino</span></div></div>
 
 <!-- PICKER -->
 <div id="picker">
-  <h2>Choose your wallpaper</h2>
-  <p>set the vibe before you boot in</p>
+  <h2>select wallpaper</h2>
+  <p>// pick a pattern before you boot in</p>
   <div class="wp-grid" id="wp-grid"></div>
-  <button id="pick-btn" onclick="confirmWallpaper()">launch rinoOS →</button>
+  <button id="pick-btn" onclick="confirmWallpaper()">launch rinoOS</button>
 </div>
 
 <!-- DESKTOP -->
 <div id="desktop">
   <div id="desktop-bg"></div>
-  <div class="stars-layer" id="stars-layer"></div>
+  <canvas id="matrix-canvas"></canvas>
+  <div class="scanline-overlay"></div>
 
   <div id="topbar">
     <div class="tl">
       <span class="tlogo">rinoOS</span>
       <span class="thandle">@officiallyrino</span>
-      <span class="tagline-top">live like rino</span>
+      <span style="font-size:10px;color:#39d35344;letter-spacing:2px;">LIVE LIKE RINO</span>
     </div>
     <div class="tr">
-      <span class="tbtn" onclick="showPicker()">🖼 wallpaper</span>
+      <span class="tbtn" onclick="showPicker()">wallpaper</span>
       <span id="clock"></span>
     </div>
   </div>
 
   <!-- ABOUT -->
-  <div id="win-about" class="win" style="top:60px;left:28px;width:300px;height:340px;">
+  <div id="win-about" class="win" style="top:55px;left:24px;width:290px;height:330px;">
     <div class="win-tb" onmousedown="drag(event,'win-about')">
       <button class="wb wbc" onclick="closeWin('win-about')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-about')"></button><button class="wb wbx" onclick="toggleMaximize('win-about')"></button>
-      <span class="wt">about rino</span>
+      <button class="wb wbm" onclick="minimizeWin('win-about')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-about')"></button>
+      <span class="wt">about.txt</span>
     </div>
     <div class="win-body">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#6d28d9,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex-shrink:0;">R</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <div style="width:48px;height:48px;border:1px solid #39d353;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#39d353;flex-shrink:0;text-shadow:0 0 10px #39d353;font-family:monospace;">R</div>
         <div>
-          <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.5px;">Rivaan</div>
-          <div style="font-size:12px;color:#a78bfa;margin-top:1px;">@officiallyrino</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">India 🇮🇳</div>
+          <div style="font-size:15px;font-weight:700;color:#39d353;font-family:monospace;">Rivaan</div>
+          <div style="font-size:11px;color:#39d35388;margin-top:2px;">@officiallyrino</div>
+          <div style="font-size:10px;color:#39d35344;margin-top:1px;">India 🇮🇳</div>
         </div>
       </div>
-      <p style="font-size:12.5px;color:rgba(255,255,255,0.5);line-height:1.8;">Coder & GFX designer. Building things at 2am. F1 obsessed. Always shipping, always designing, always in the zone.</p>
-      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:4px;">
-        <span class="tag">coder</span>
-        <span class="tag">GFX designer</span>
-        <span class="tag">AI tools</span>
-        <span class="tag">game dev</span>
-        <span class="tag">F1 🏎️</span>
-        <span class="tag">python</span>
+      <div style="color:#39d35366;font-size:11px;margin-bottom:8px;"># bio</div>
+      <p style="font-size:11px;color:#39d35388;line-height:1.8;">Coder & GFX designer. Building things at 2am. F1 obsessed. Always in the terminal.</p>
+      <div style="margin-top:14px;color:#39d35366;font-size:11px;margin-bottom:6px;"># tags</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span class="tag">coder</span><span class="tag">GFX designer</span><span class="tag">AI tools</span><span class="tag">game dev</span><span class="tag">F1 🏎️</span><span class="tag">python</span>
       </div>
     </div>
   </div>
 
   <!-- PROJECTS -->
-  <div id="win-projects" class="win" style="top:60px;left:350px;width:305px;height:380px;display:none;">
+  <div id="win-projects" class="win" style="top:55px;left:340px;width:300px;height:370px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-projects')">
       <button class="wb wbc" onclick="closeWin('win-projects')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-projects')"></button><button class="wb wbx" onclick="toggleMaximize('win-projects')"></button>
-      <span class="wt">projects</span>
+      <button class="wb wbm" onclick="minimizeWin('win-projects')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-projects')"></button>
+      <span class="wt">projects/</span>
     </div>
     <div class="win-body">
-      <div class="pcard">
-        <h4>🤖 Jarvis AI</h4>
-        <p>Voice-activated personal assistant. Whisper STT, Ollama/qwen, WhatsApp automation, screen control & wake word.</p>
-      </div>
-      <div class="pcard">
-        <h4>🏎️ F1 Live Dashboard</h4>
-        <p>Real-time race leaderboard + telemetry via OpenF1 API and Streamlit.</p>
-      </div>
-      <div class="pcard">
-        <h4>⏳ Time Debt</h4>
-        <p>Roblox time-based collecting game. Race against the clock to collect as much as possible before time runs out.</p>
-      </div>
-      <div class="pcard">
-        <h4>🎮 Roblox CarGame</h4>
-        <p>Custom car controller welded over the default character rig with size-agnostic vertical alignment.</p>
-      </div>
+      <div style="color:#39d35366;font-size:11px;margin-bottom:8px;">$ ls -la ~/projects</div>
+      <div class="pcard"><h4>Jarvis AI</h4><p>Voice assistant — Whisper STT, Ollama/qwen, WhatsApp, screen control & wake word.</p></div>
+      <div class="pcard"><h4>F1 Live Dashboard</h4><p>Real-time race leaderboard + telemetry via OpenF1 API and Streamlit.</p></div>
+      <div class="pcard"><h4>Time Debt</h4><p>Roblox time-based collecting game. Race the clock to collect as much as possible.</p></div>
+      <div class="pcard"><h4>Roblox CarGame</h4><p>Custom car controller welded over default character rig with size-agnostic alignment.</p></div>
     </div>
   </div>
 
   <!-- SKILLS -->
-  <div id="win-skills" class="win" style="top:60px;left:350px;width:280px;height:320px;display:none;">
+  <div id="win-skills" class="win" style="top:55px;left:340px;width:275px;height:310px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-skills')">
       <button class="wb wbc" onclick="closeWin('win-skills')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-skills')"></button><button class="wb wbx" onclick="toggleMaximize('win-skills')"></button>
-      <span class="wt">skills</span>
+      <button class="wb wbm" onclick="minimizeWin('win-skills')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-skills')"></button>
+      <span class="wt">skills.sh</span>
     </div>
     <div class="win-body">
+      <div style="color:#39d35366;font-size:11px;margin-bottom:10px;">$ cat skills.log</div>
       <div class="sbar"><div class="sl"><span>GFX Design</span><span>88%</span></div><div class="st"><div class="sf" style="width:88%"></div></div></div>
       <div class="sbar"><div class="sl"><span>Python</span><span>85%</span></div><div class="st"><div class="sf" style="width:85%"></div></div></div>
       <div class="sbar"><div class="sl"><span>AI / LLMs</span><span>80%</span></div><div class="st"><div class="sf" style="width:80%"></div></div></div>
       <div class="sbar"><div class="sl"><span>Web Dev</span><span>75%</span></div><div class="st"><div class="sf" style="width:75%"></div></div></div>
       <div class="sbar"><div class="sl"><span>Roblox / Lua</span><span>70%</span></div><div class="st"><div class="sf" style="width:70%"></div></div></div>
-      <div style="margin-top:14px;font-size:11px;color:rgba(255,255,255,0.25);font-family:monospace;">macbook air m1 · macos · always in terminal</div>
+      <div style="margin-top:12px;font-size:10px;color:#39d35333;">// macbook air m1 · macos · always in terminal</div>
     </div>
   </div>
 
   <!-- F1 -->
-  <div id="win-f1" class="win" style="top:60px;left:350px;width:285px;height:360px;display:none;">
+  <div id="win-f1" class="win" style="top:55px;left:340px;width:275px;height:330px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-f1')">
       <button class="wb wbc" onclick="closeWin('win-f1')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-f1')"></button><button class="wb wbx" onclick="toggleMaximize('win-f1')"></button>
-      <span class="wt">F1 fan zone</span>
+      <button class="wb wbm" onclick="minimizeWin('win-f1')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-f1')"></button>
+      <span class="wt">f1.log</span>
     </div>
     <div class="win-body">
-      <div style="text-align:center;font-size:42px;margin-bottom:10px;">🏎️</div>
-      <div style="text-align:center;font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-0.3px;">Formula 1 Obsessed</div>
-      <div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:18px;">watches every race. built a live telemetry dashboard.</div>
+      <div style="text-align:center;font-size:32px;margin-bottom:8px;">🏎️</div>
+      <div style="text-align:center;font-size:13px;font-weight:700;color:#39d353;margin-bottom:3px;">Formula 1 Obsessed</div>
+      <div style="text-align:center;font-size:11px;color:#39d35366;margin-bottom:14px;">// watches every race. built a live dashboard.</div>
       <div class="pcard"><h4>F1 Live Dashboard</h4><p>Streamlit + OpenF1 API. Real-time telemetry, lap times & leaderboard.</p></div>
-      <div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.25);text-align:center;font-family:monospace;">lights out and away we go 🚦</div>
+      <div style="margin-top:10px;font-size:11px;color:#39d35344;text-align:center;">$ echo "lights out and away we go 🚦"</div>
     </div>
   </div>
 
   <!-- CONTACT -->
-  <div id="win-contact" class="win" style="top:60px;left:350px;width:265px;height:320px;display:none;">
+  <div id="win-contact" class="win" style="top:55px;left:340px;width:260px;height:280px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-contact')">
       <button class="wb wbc" onclick="closeWin('win-contact')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-contact')"></button><button class="wb wbx" onclick="toggleMaximize('win-contact')"></button>
-      <span class="wt">contact</span>
+      <button class="wb wbm" onclick="minimizeWin('win-contact')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-contact')"></button>
+      <span class="wt">contact.cfg</span>
     </div>
     <div class="win-body">
-      <div class="crow"><span class="crow-icon">🐙</span><span>@officiallyrino</span></div>
-      <div class="crow"><span class="crow-icon">💻</span><span>MacBook Air M1</span></div>
-      <div class="crow"><span class="crow-icon">🇮🇳</span><span>India</span></div>
-      <div class="crow"><span class="crow-icon">🎨</span><span>GFX Designer</span></div>
-      <div class="crow"><span class="crow-icon">⚡</span><span>Developer / coder</span></div>
-      <div style="margin-top:16px;padding:14px;background:rgba(167,139,250,0.07);border-radius:10px;border:0.5px solid rgba(167,139,250,0.2);font-size:12px;color:#c4b5fd;text-align:center;line-height:1.7;">
-        open to collabs, design work<br>& cool projects 🚀
+      <div class="crow"><span>github: @officiallyrino</span></div>
+      <div class="crow"><span>device: MacBook Air M1</span></div>
+      <div class="crow"><span>location: India 🇮🇳</span></div>
+      <div class="crow"><span>role: Coder / GFX Designer</span></div>
+      <div style="margin-top:14px;padding:10px;border:1px solid #39d35333;font-size:11px;color:#39d35366;text-align:center;line-height:1.8;">
+        open to collabs & cool projects<br><span style="color:#39d353;">// always building something</span>
       </div>
     </div>
   </div>
 
   <!-- TERMINAL -->
-  <div id="win-terminal" class="win" style="top:60px;left:350px;width:320px;height:300px;display:none;">
+  <div id="win-terminal" class="win" style="top:55px;left:340px;width:340px;height:310px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-terminal')">
       <button class="wb wbc" onclick="closeWin('win-terminal')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-terminal')"></button><button class="wb wbx" onclick="toggleMaximize('win-terminal')"></button>
-      <span class="wt">jarvis terminal</span>
+      <button class="wb wbm" onclick="minimizeWin('win-terminal')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-terminal')"></button>
+      <span class="wt">jarvis@rinoOS:~</span>
     </div>
     <div id="term-body"></div>
     <div id="term-input-row">
-      <span>rino@rinoOS ~ $</span>
-      <input id="term-input" placeholder="type a command..." autocomplete="off" onkeydown="termKey(event)">
+      <span>rino@rinoOS:~$</span>
+      <input id="term-input" placeholder="" autocomplete="off" onkeydown="termKey(event)">
     </div>
   </div>
 
-  <!-- STICKY NOTES -->
-  <div id="win-notes" class="win" style="top:60px;left:350px;width:330px;height:280px;display:none;">
+  <!-- NOTES -->
+  <div id="win-notes" class="win" style="top:55px;left:340px;width:330px;height:280px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-notes')">
       <button class="wb wbc" onclick="closeWin('win-notes')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-notes')"></button><button class="wb wbx" onclick="toggleMaximize('win-notes')"></button>
-      <span class="wt">sticky notes</span>
+      <button class="wb wbm" onclick="minimizeWin('win-notes')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-notes')"></button>
+      <span class="wt">notes.txt</span>
     </div>
     <div class="win-body">
-      <div id="notes-board">
-        <div id="notes-add" onclick="addNote()">+</div>
-      </div>
+      <div id="notes-board"><div id="notes-add" onclick="addNote()">+</div></div>
     </div>
   </div>
 
   <!-- GUIDE -->
-  <div id="win-guide" class="win" style="top:50px;left:340px;width:330px;height:420px;display:none;">
+  <div id="win-guide" class="win" style="top:55px;left:340px;width:330px;height:420px;display:none;">
     <div class="win-tb" onmousedown="drag(event,'win-guide')">
       <button class="wb wbc" onclick="closeWin('win-guide')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-guide')"></button><button class="wb wbx" onclick="toggleMaximize('win-guide')"></button>
-      <span class="wt">guide</span>
+      <button class="wb wbm" onclick="minimizeWin('win-guide')"></button>
+      <button class="wb wbx" onclick="toggleMaximize('win-guide')"></button>
+      <span class="wt">README.md</span>
     </div>
     <div class="win-body">
-      <div class="guide-step">
-        <div class="guide-num">1</div>
-        <div><h4>open apps</h4><p>click any icon in the dock at the bottom to open a window, About, Projects, Skills, F1, Notes, Terminal, Contact.</p></div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-num">2</div>
-        <div><h4>move windows</h4><p>drag a window by its top bar to move it anywhere on the desktop.</p></div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-num">3</div>
-        <div><h4>resize windows</h4><p>drag the small corner in the bottom right of any window to make it bigger or smaller.</p></div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-num">4</div>
-        <div><h4>window controls</h4><p>red closes, yellow minimizes to the tray next to the dock, green makes it fullscreen.</p></div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-num">5</div>
-        <div><h4>right click the desktop</h4><p>right click anywhere on the empty desktop for quick shortcuts to open Terminal, Notes, and change your wallpaper.</p></div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-num">6</div>
-        <div><h4>talk to jarvis</h4><p>open Terminal and try <code>hey jarvis, help</code> for a list of voice style commands.</p></div>
-      </div>
-      <div style="margin-top:6px;font-size:11.5px;color:rgba(255,255,255,0.3);text-align:center;">that's the whole OS. have fun exploring 🟣</div>
+      <div style="color:#39d35366;font-size:11px;margin-bottom:10px;">$ cat README.md</div>
+      <div class="guide-step"><div class="guide-num">1</div><div><h4>open apps</h4><p>click any icon in the dock at the bottom to open a window.</p></div></div>
+      <div class="guide-step"><div class="guide-num">2</div><div><h4>move windows</h4><p>drag a window by its top bar to move it anywhere.</p></div></div>
+      <div class="guide-step"><div class="guide-num">3</div><div><h4>resize windows</h4><p>drag the corner in the bottom right to resize.</p></div></div>
+      <div class="guide-step"><div class="guide-num">4</div><div><h4>window controls</h4><p>red closes, yellow minimizes to tray, green fullscreens.</p></div></div>
+      <div class="guide-step"><div class="guide-num">5</div><div><h4>right click desktop</h4><p>right click empty desktop for quick shortcuts.</p></div></div>
+      <div class="guide-step"><div class="guide-num">6</div><div><h4>talk to jarvis</h4><p>open Terminal and try <code>hey jarvis, help</code> or just <code>neofetch</code>.</p></div></div>
+      <div style="margin-top:6px;font-size:10px;color:#39d35333;text-align:center;">// that's it. have fun exploring.</div>
     </div>
   </div>
 
-  <!-- DOCK + minimized tray, sit side by side -->
+  <!-- DOCK -->
   <div id="dock-row">
     <div id="dock">
-      <div class="di" id="di-guide" style="background:linear-gradient(135deg,#0e7490,#22d3ee);" onclick="openWin('win-guide','di-guide')"><span>🧭</span><span class="tip">Guide</span><span class="dot"></span></div>
-      <div class="di" id="di-about" style="background:linear-gradient(135deg,#6d28d9,#a78bfa);" onclick="openWin('win-about','di-about')"><span>👤</span><span class="tip">About</span><span class="dot"></span></div>
-      <div class="di" id="di-projects" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);" onclick="openWin('win-projects','di-projects')"><span>🗂️</span><span class="tip">Projects</span><span class="dot"></span></div>
-      <div class="di" id="di-skills" style="background:linear-gradient(135deg,#065f46,#34d399);" onclick="openWin('win-skills','di-skills')"><span>⚡</span><span class="tip">Skills</span><span class="dot"></span></div>
-      <div class="di" id="di-f1" style="background:linear-gradient(135deg,#991b1b,#f87171);" onclick="openWin('win-f1','di-f1')"><span>🏎️</span><span class="tip">F1</span><span class="dot"></span></div>
-      <div class="di" id="di-notes" style="background:linear-gradient(135deg,#b45309,#f4d35e);" onclick="openWin('win-notes','di-notes')"><span>📝</span><span class="tip">Notes</span><span class="dot"></span></div>
-      <div class="di" id="di-terminal" style="background:linear-gradient(135deg,#111,#333);" onclick="openWin('win-terminal','di-terminal')"><span>⌨️</span><span class="tip">Terminal</span><span class="dot"></span></div>
-      <div class="di" id="di-contact" style="background:linear-gradient(135deg,#92400e,#fbbf24);" onclick="openWin('win-contact','di-contact')"><span>✉️</span><span class="tip">Contact</span><span class="dot"></span></div>
+      <div class="di" id="di-guide" onclick="openWin('win-guide','di-guide')"><span class="di-icon">🧭</span><span class="di-label">guide</span><span class="tip">README</span><span class="dot"></span></div>
+      <div class="di" id="di-about" onclick="openWin('win-about','di-about')"><span class="di-icon">👤</span><span class="di-label">about</span><span class="tip">about.txt</span><span class="dot"></span></div>
+      <div class="di" id="di-projects" onclick="openWin('win-projects','di-projects')"><span class="di-icon">🗂️</span><span class="di-label">projects</span><span class="tip">projects/</span><span class="dot"></span></div>
+      <div class="di" id="di-skills" onclick="openWin('win-skills','di-skills')"><span class="di-icon">⚡</span><span class="di-label">skills</span><span class="tip">skills.sh</span><span class="dot"></span></div>
+      <div class="di" id="di-f1" onclick="openWin('win-f1','di-f1')"><span class="di-icon">🏎️</span><span class="di-label">f1</span><span class="tip">f1.log</span><span class="dot"></span></div>
+      <div class="di" id="di-notes" onclick="openWin('win-notes','di-notes')"><span class="di-icon">📝</span><span class="di-label">notes</span><span class="tip">notes.txt</span><span class="dot"></span></div>
+      <div class="di" id="di-terminal" onclick="openWin('win-terminal','di-terminal')"><span class="di-icon">⌨️</span><span class="di-label">terminal</span><span class="tip">bash</span><span class="dot"></span></div>
+      <div class="di" id="di-contact" onclick="openWin('win-contact','di-contact')"><span class="di-icon">✉️</span><span class="di-label">contact</span><span class="tip">contact.cfg</span><span class="dot"></span></div>
     </div>
-
-    <!-- minimized windows land here as small tiles -->
     <div id="min-tray"></div>
   </div>
 
-  <!-- points up at the guide icon on first load, lives outside dock-row
-       so its position: fixed isn't broken by dock-row's transform -->
-  <div id="guide-hint">
-    👋 new here? click Guide to learn your way around <span class="close-hint" onclick="dismissGuideHint()">✕</span>
-  </div>
+  <!-- guide hint, outside dock-row so position:fixed isn't broken by transform -->
+  <div id="guide-hint">new here? open README <span class="close-hint" onclick="dismissGuideHint()">✕</span></div>
 
   <!-- right click context menu -->
   <div id="ctx-menu">
-    <div class="ctx-item" onclick="ctxAction('terminal')"><span class="ic">⌨️</span>open terminal</div>
-    <div class="ctx-item" onclick="ctxAction('notes')"><span class="ic">📝</span>new sticky note</div>
-    <div class="ctx-item" onclick="ctxAction('guide')"><span class="ic">🧭</span>open guide</div>
+    <div class="ctx-item" onclick="ctxAction('terminal')">open terminal</div>
+    <div class="ctx-item" onclick="ctxAction('notes')">new sticky note</div>
+    <div class="ctx-item" onclick="ctxAction('guide')">open guide</div>
     <div class="ctx-sep"></div>
-    <div class="ctx-item" onclick="ctxAction('wallpaper')"><span class="ic">🖼️</span>change wallpaper</div>
+    <div class="ctx-item" onclick="ctxAction('wallpaper')">change wallpaper</div>
   </div>
 </div>
 
-
 <script>
-// wallpapers
+// ── WALLPAPERS (terminal-themed patterns via canvas) ──
 const wallpapers = [
-  { name:"Deep Space",    bg:"radial-gradient(ellipse at 30% 40%, #0f0c29 0%, #302b63 50%, #24243e 100%)", stars:true  },
-  { name:"Aurora",        bg:"linear-gradient(160deg,#0a0a14 0%,#0d3b2e 40%,#1a0a3e 100%)",               stars:true  },
-  { name:"Race Night",    bg:"linear-gradient(160deg,#0a0005 0%,#1a0010 40%,#2a0020 70%,#0a0005 100%)",   stars:true  },
-  { name:"3am Build",     bg:"linear-gradient(135deg,#020818 0%,#071a3e 50%,#0c2461 100%)",               stars:true  },
-  { name:"Sunset",        bg:"linear-gradient(180deg,#1a0533 0%,#6b1a3a 40%,#c2502a 75%,#e87c3e 100%)",  stars:false },
-  { name:"Forest Night",  bg:"linear-gradient(160deg,#020c05 0%,#0a2010 50%,#112b16 100%)",               stars:true  },
-  { name:"Crimson Dark",  bg:"linear-gradient(135deg,#0d0000 0%,#2d0a0a 50%,#4a1010 100%)",               stars:false },
-  { name:"Violet Dream",  bg:"linear-gradient(135deg,#0d0020 0%,#2a0a5e 50%,#4a1a8a 100%)",               stars:true  },
-];
+  { name: 'pure black',   type: 'solid',    color: '#000000' },
+  { name: 'scanlines',    type: 'scanlines' },
+  { name: 'matrix rain',  type: 'matrix'    },
+  { name: 'grid',         type: 'grid'      },
+  { name: 'dot matrix',   type: 'dots'      },
+  { name: 'noise',        type: 'noise'     },
+  { name: 'amber',        type: 'amber'     },
+  { name: 'diagonal',     type: 'diagonal'  },
+]
 
-let selectedWp = 0;
-const grid = document.getElementById('wp-grid');
-wallpapers.forEach((wp, i) => {
-  const d = document.createElement('div');
-  d.className = 'wp-thumb' + (i===0?' selected':'');
-  d.style.background = wp.bg;
-  d.innerHTML = `<span>${wp.name}</span>`;
-  d.onclick = () => { document.querySelectorAll('.wp-thumb').forEach(t=>t.classList.remove('selected')); d.classList.add('selected'); selectedWp=i; };
-  grid.appendChild(d);
-});
+let matrixRAF = null
+
+function drawThumb(canvas, wp) {
+  const ctx = canvas.getContext('2d')
+  const w = canvas.width, h = canvas.height
+  ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h)
+
+  if (wp.type === 'solid') { ctx.fillStyle = wp.color; ctx.fillRect(0,0,w,h); }
+  else if (wp.type === 'scanlines') {
+    // alternating dark/bright bands so it's clearly visible
+    for (let y=0;y<h;y+=4) {
+      ctx.fillStyle = y%8===0 ? 'rgba(57,211,83,0.35)' : 'rgba(57,211,83,0.06)'
+      ctx.fillRect(0,y,w,2)
+    }
+  }
+  else if (wp.type === 'matrix') {
+    ctx.font='8px monospace'; ctx.fillStyle='#39d353';
+    const chars='01アイウエオカキクケコ';
+    for(let x=0;x<w;x+=8){for(let y=0;y<h;y+=10){if(Math.random()>0.7){ctx.globalAlpha=Math.random()*0.6+0.1;ctx.fillText(chars[Math.floor(Math.random()*chars.length)],x,y);}}} ctx.globalAlpha=1;
+  }
+  else if (wp.type === 'grid') {
+    ctx.strokeStyle='rgba(57,211,83,0.55)'; ctx.lineWidth=1;
+    for(let x=0;x<w;x+=14){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+    for(let y=0;y<h;y+=14){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+    // brighter major grid lines every 4
+    ctx.strokeStyle='rgba(57,211,83,0.9)'; ctx.lineWidth=1;
+    for(let x=0;x<w;x+=56){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+    for(let y=0;y<h;y+=56){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  }
+  else if (wp.type === 'dots') {
+    ctx.fillStyle='rgba(57,211,83,0.8)';
+    for(let x=8;x<w;x+=12){for(let y=8;y<h;y+=12){ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();}}
+  }
+  else if (wp.type === 'noise') {
+    const id=ctx.getImageData(0,0,w,h);
+    for(let i=0;i<id.data.length;i+=4){
+      const v = Math.random()>0.88 ? Math.floor(Math.random()*180+60) : Math.floor(Math.random()*15)
+      id.data[i]=0;id.data[i+1]=v;id.data[i+2]=0;id.data[i+3]=255;
+    }
+    ctx.putImageData(id,0,0);
+  }
+  else if (wp.type === 'amber') {
+    ctx.font='8px monospace'; ctx.fillStyle='#f4a300';
+    const chars='01><|_-=';
+    for(let x=0;x<w;x+=8){for(let y=0;y<h;y+=10){if(Math.random()>0.6){ctx.globalAlpha=Math.random()*0.7+0.2;ctx.fillText(chars[Math.floor(Math.random()*chars.length)],x,y);}}} ctx.globalAlpha=1;
+  }
+  else if (wp.type === 'diagonal') {
+    ctx.strokeStyle='rgba(57,211,83,0.55)'; ctx.lineWidth=1;
+    for(let i=-h;i<w+h;i+=14){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+h,h);ctx.stroke();}
+    // brighter major diagonal lines
+    ctx.strokeStyle='rgba(57,211,83,0.9)'; ctx.lineWidth=1;
+    for(let i=-h;i<w+h;i+=56){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+h,h);ctx.stroke();}
+  }
+}
 
 function applyWallpaper(idx) {
   const wp = wallpapers[idx]
-  document.getElementById('desktop-bg').style.background = wp.bg
+  const bg = document.getElementById('desktop-bg')
+  const mc = document.getElementById('matrix-canvas')
 
-  const sl = document.getElementById('stars-layer')
-  sl.innerHTML = ''
+  if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null; }
+  mc.style.opacity = '0'
+  bg.style.background = '#000'
 
-  if (!wp.stars) return
-
-  for (let i = 0; i < 90; i++) {
-    const s = document.createElement('div')
-    const sz = Math.random() * 2 + 0.5
-    const top = Math.random() * 100
-    const left = Math.random() * 100
-    const opacity = 0.1 + Math.random() * 0.9
-    const duration = 1.5 + Math.random() * 3
-    const delay = Math.random() * 4
-    s.style.cssText = `position:absolute;background:white;border-radius:50%;width:${sz}px;height:${sz}px;top:${top}%;left:${left}%;opacity:${opacity};animation:twinkle ${duration}s ${delay}s infinite alternate;`
-    sl.appendChild(s)
-  }
-}
-
-function showPicker() {
-  document.getElementById('desktop').style.display = 'none'
-  document.getElementById('picker').style.display = 'flex'
-}
-
-function confirmWallpaper() {
-  applyWallpaper(selectedWp)
-  document.getElementById('picker').style.display = 'none'
-  document.getElementById('desktop').style.display = 'block'
-
-  // wait a beat after the desktop is actually visible so the dock
-  // has real layout dimensions before we try to point at it
-  setTimeout(showGuideHint, 900)
-}
-
-// boot sequence
-const bootSteps = [
-  'loading jarvis...',
-  'syncing f1 telemetry...',
-  'compiling vibes...',
-  'brewing chai... ☕',
-  'rinoOS ready.',
-];
-let step = 0
-const bar = document.getElementById('boot-bar')
-const status = document.getElementById('boot-status')
-const tagline = document.getElementById('boot-tagline')
-
-// fade in the tagline after a beat
-setTimeout(() => tagline.style.opacity = '1', 400)
-
-// smooth boot bar, driven by actual elapsed time instead of random
-// jittery increments, so it always fills at a steady, consistent rate
-const bootDuration = 4200 // ms — slow enough that each message is actually readable
-const bootStart = performance.now()
-
-function tickBoot(now) {
-  const elapsed = now - bootStart
-  const prog = Math.min(100, (elapsed / bootDuration) * 100)
-
-  bar.style.width = prog + '%'
-
-  const si = Math.floor((prog / 100) * bootSteps.length)
-  if (si !== step && si < bootSteps.length) {
-    step = si
-    // quick crossfade instead of an abrupt text swap
-    status.style.opacity = '0'
-    setTimeout(() => {
-      status.textContent = bootSteps[step]
-      status.style.opacity = '1'
-    }, 150)
-  }
-
-  if (prog < 100) {
-    requestAnimationFrame(tickBoot)
+  if (wp.type === 'solid') {
+    bg.style.background = wp.color
     return
   }
 
-  status.textContent = 'rinoOS ready.'
+  if (wp.type === 'matrix') {
+    startMatrixRain(mc)
+    return
+  }
+
+  // static patterns — draw once to a bg canvas turned into a dataURL
+  const c = document.createElement('canvas')
+  c.width = window.innerWidth; c.height = window.innerHeight
+  drawThumb(c, wp)
+  bg.style.backgroundImage = `url(${c.toDataURL()})`
+  bg.style.backgroundSize = 'cover'
+}
+
+function startMatrixRain(canvas) {
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+  canvas.style.opacity = '1'
+  const ctx = canvas.getContext('2d')
+  const cols = Math.floor(canvas.width / 16)
+  const drops = Array(cols).fill(1)
+  const chars = '01アイウエオカキabcdefghijklmnopqrstuvwxyz><|_=-+*'
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'
+    ctx.fillRect(0,0,canvas.width,canvas.height)
+    ctx.font = '14px monospace'
+    drops.forEach((y, i) => {
+      const ch = chars[Math.floor(Math.random()*chars.length)]
+      const bright = Math.random() > 0.95
+      ctx.fillStyle = bright ? '#fff' : '#39d353'
+      ctx.globalAlpha = bright ? 1 : 0.7
+      ctx.fillText(ch, i*16, y*16)
+      ctx.globalAlpha = 1
+      if (y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0
+      drops[i]++
+    })
+    matrixRAF = requestAnimationFrame(draw)
+  }
+  draw()
+}
+
+let selectedWp = 0
+const grid = document.getElementById('wp-grid')
+wallpapers.forEach((wp, i) => {
+  const d = document.createElement('div')
+  d.className = 'wp-thumb' + (i===0?' selected':'')
+  const c = document.createElement('canvas')
+  c.width = 120; c.height = 76
+  drawThumb(c, wp)
+  d.appendChild(c)
+  const label = document.createElement('span')
+  label.textContent = wp.name
+  d.appendChild(label)
+  d.onclick = () => { document.querySelectorAll('.wp-thumb').forEach(t=>t.classList.remove('selected')); d.classList.add('selected'); selectedWp=i; }
+  grid.appendChild(d)
+})
+
+function showPicker() { document.getElementById('desktop').style.display='none'; document.getElementById('picker').style.display='flex'; }
+function confirmWallpaper() {
+  applyWallpaper(selectedWp)
+  document.getElementById('picker').style.display='none'
+  document.getElementById('desktop').style.display='block'
+  setTimeout(showGuideHint, 900)
+}
+
+// ── BOOT ──
+const bootLines = [
+  { text: '[  OK  ] loaded kernel modules', delay: 0 },
+  { text: '[  OK  ] started jarvis daemon', delay: 280 },
+  { text: '[ WARN ] f1 telemetry: race not live', delay: 520 },
+  { text: '[  OK  ] mounted /home/rino', delay: 750 },
+  { text: '[  OK  ] brewing chai...', delay: 960 },
+  { text: '[  OK  ] rinoOS ready.', delay: 1180 },
+]
+const bootLinesEl = document.getElementById('boot-lines')
+const bar = document.getElementById('boot-bar')
+const tagline = document.getElementById('boot-tagline')
+const bootDuration = 2200
+const bootStart = performance.now()
+
+setTimeout(() => tagline.style.opacity = '1', 300)
+
+bootLines.forEach((l, i) => {
+  setTimeout(() => {
+    const div = document.createElement('div')
+    div.className = 'boot-line'
+    const isWarn = l.text.includes('WARN')
+    div.innerHTML = l.text.replace('[  OK  ]', '<span class="ok">[  OK  ]</span>').replace('[ WARN ]', '<span class="warn">[ WARN ]</span>')
+    bootLinesEl.appendChild(div)
+  }, l.delay)
+})
+
+function tickBoot(now) {
+  const prog = Math.min(100, ((now - bootStart) / bootDuration) * 100)
+  bar.style.width = prog + '%'
+  if (prog < 100) { requestAnimationFrame(tickBoot); return; }
 
   setTimeout(() => {
-    const b = document.getElementById('boot')
-    b.style.opacity = '0'
-
+    const b = document.getElementById('boot'); b.style.opacity = '0'
     setTimeout(() => {
       b.style.display = 'none'
-      const sp = document.getElementById('splash')
-      sp.style.display = 'flex'
-
-      // show "live like rino" splash then go to picker
+      const sp = document.getElementById('splash'); sp.style.display = 'flex'
       setTimeout(() => {
         sp.style.opacity = '0'
-        setTimeout(() => {
-          sp.style.display = 'none'
-          document.getElementById('picker').style.display = 'flex'
-        }, 700)
-      }, 1600)
-    }, 800)
-  }, 500)
+        setTimeout(() => { sp.style.display = 'none'; document.getElementById('picker').style.display = 'flex' }, 600)
+      }, 1400)
+    }, 700)
+  }, 400)
 }
-
 requestAnimationFrame(tickBoot)
 
-// clock
+// ── CLOCK ──
 function tick() {
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  })
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})
 }
-tick()
-setInterval(tick, 1000)
+tick(); setInterval(tick, 1000)
 
-// window dragging + resizing share one mousemove/mouseup pair
-// so they can never both be active at once and fight over the cursor
-let dragging = null
-let resizing = null
-let ox = 0, oy = 0
-let startW = 0, startH = 0, startX = 0, startY = 0
+// ── DRAG + RESIZE ──
+let dragging = null, resizing = null
+let ox = 0, oy = 0, startW = 0, startH = 0, startX = 0, startY = 0
 let zt = 200
 
 function drag(e, id) {
@@ -717,31 +657,25 @@ function drag(e, id) {
   document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'))
   dragging.classList.add('focused')
   const r = dragging.getBoundingClientRect()
-  ox = e.clientX - r.left
-  oy = e.clientY - r.top
+  ox = e.clientX - r.left; oy = e.clientY - r.top
   dragging.style.zIndex = ++zt
   e.preventDefault()
 }
 
-// give every window a resize handle in its bottom-right corner
 document.querySelectorAll('.win').forEach(w => {
-  const handle = document.createElement('div')
-  handle.className = 'resize-handle'
-  handle.addEventListener('mousedown', e => {
+  const h = document.createElement('div')
+  h.className = 'resize-handle'
+  h.addEventListener('mousedown', e => {
     if (dragging) return
     resizing = w
     const r = w.getBoundingClientRect()
-    startW = r.width
-    startH = r.height
-    startX = e.clientX
-    startY = e.clientY
-    w.classList.add('resizing', 'focused')
-    document.querySelectorAll('.win').forEach(x => { if (x !== w) x.classList.remove('focused') })
+    startW = r.width; startH = r.height; startX = e.clientX; startY = e.clientY
+    w.classList.add('resizing','focused')
+    document.querySelectorAll('.win').forEach(x => { if(x!==w) x.classList.remove('focused') })
     w.style.zIndex = ++zt
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault(); e.stopPropagation()
   })
-  w.appendChild(handle)
+  w.appendChild(h)
 })
 
 document.addEventListener('mousemove', e => {
@@ -749,114 +683,18 @@ document.addEventListener('mousemove', e => {
     dragging.style.left = Math.max(0, e.clientX - ox) + 'px'
     dragging.style.top = Math.max(34, e.clientY - oy) + 'px'
   } else if (resizing) {
-    const newW = Math.max(260, startW + (e.clientX - startX))
-    const newH = Math.max(160, startH + (e.clientY - startY))
-    resizing.style.width = newW + 'px'
-    resizing.style.height = newH + 'px'
+    resizing.style.width = Math.max(260, startW + (e.clientX - startX)) + 'px'
+    resizing.style.height = Math.max(160, startH + (e.clientY - startY)) + 'px'
   }
 })
-
 document.addEventListener('mouseup', () => {
   dragging = null
   if (resizing) resizing.classList.remove('resizing')
   resizing = null
 })
 
-// minimize / maximize
-const winIcons = {
-  'win-about':    '👤',
-  'win-projects': '🗂️',
-  'win-skills':   '⚡',
-  'win-f1':       '🏎️',
-  'win-notes':    '📝',
-  'win-terminal': '⌨️',
-  'win-contact':  '✉️',
-}
-
-function minimizeWin(id) {
-  const w = document.getElementById(id)
-  w.classList.add('minimized')
-
-  // actually hide it once the shrink animation finishes, so it
-  // doesn't sit there invisible but still blocking clicks
-  setTimeout(() => {
-    w.style.display = 'none'
-    w.classList.remove('minimized')
-    addTrayTile(id)
-  }, 350)
-}
-
-function addTrayTile(id) {
-  // don't double up if it's already minimized somehow
-  if (document.getElementById('tray-' + id)) return
-
-  const tray = document.getElementById('min-tray')
-  const tile = document.createElement('div')
-  tile.className = 'min-tile'
-  tile.id = 'tray-' + id
-  tile.textContent = winIcons[id] || '🪟'
-  tile.onclick = () => restoreFromTray(id)
-  tray.appendChild(tile)
-}
-
-function restoreFromTray(id) {
-  const tile = document.getElementById('tray-' + id)
-  if (tile) tile.remove()
-
-  const w = document.getElementById(id)
-  w.style.display = 'flex'
-  w.style.zIndex = ++zt
-
-  document.querySelectorAll('.win').forEach(x => x.classList.remove('focused'))
-  w.classList.add('focused')
-}
-
-function toggleMaximize(id) {
-  const w = document.getElementById(id)
-
-  // briefly enable the smooth transition just for this snap, then
-  // turn it back off so dragging/resizing stays instant and 1:1
-  w.classList.add('animating')
-  setTimeout(() => w.classList.remove('animating'), 260)
-
-  if (w.classList.contains('maximized')) {
-    // restore back to whatever it was before
-    w.classList.remove('maximized')
-    w.style.top = w.dataset.prevTop || '70px'
-    w.style.left = w.dataset.prevLeft || '100px'
-    w.style.width = w.dataset.prevWidth || ''
-    w.style.height = w.dataset.prevHeight || ''
-  } else {
-    // remember where it was so we can put it back later
-    w.dataset.prevTop = w.style.top
-    w.dataset.prevLeft = w.style.left
-    w.dataset.prevWidth = w.style.width
-    w.dataset.prevHeight = w.style.height
-    w.classList.add('maximized')
-  }
-}
-
-// sticky notes — kept in memory only, resets on reload
-let noteCount = 0
-
-function addNote() {
-  noteCount++
-  const board = document.getElementById('notes-board')
-  const addBtn = document.getElementById('notes-add')
-
-  const note = document.createElement('div')
-  note.className = 'sticky'
-  note.innerHTML = `
-    <button class="sticky-del" onclick="this.parentElement.remove()">✕</button>
-    <textarea placeholder="write something...">${''}</textarea>
-  `
-  // insert before the + button so it always stays last
-  board.insertBefore(note, addBtn)
-}
-
-// open / close windows
+// ── WINDOWS ──
 const winToDock = {}
-
 function closeWin(id) {
   document.getElementById(id).style.display = 'none'
   if (winToDock[id]) document.getElementById(winToDock[id])?.classList.remove('open')
@@ -864,167 +702,210 @@ function closeWin(id) {
 
 function openWin(id, di) {
   if (di) winToDock[id] = di
-
-  // if it's sitting minimized in the tray, just restore it instead
   const trayTile = document.getElementById('tray-' + id)
   if (trayTile) trayTile.remove()
-
   const w = document.getElementById(id)
-  w.style.display = 'flex'
-  w.style.zIndex = ++zt
-
+  w.style.display = 'flex'; w.style.zIndex = ++zt
   document.querySelectorAll('.win').forEach(x => x.classList.remove('focused'))
   w.classList.add('focused')
-
-  // scatter windows a bit so they don't all stack perfectly,
-  // except the guide which keeps its nice centered starting spot
   if (id !== 'win-guide') {
-    w.style.top = (70 + Math.random() * 60) + 'px'
-    w.style.left = (60 + Math.random() * 250) + 'px'
+    w.style.top = (60 + Math.random()*60) + 'px'
+    w.style.left = (60 + Math.random()*250) + 'px'
   }
-
   if (di) document.getElementById(di)?.classList.add('open')
-
   if (id === 'win-terminal') {
     setTimeout(() => {
-      termPrint('output', 'welcome to rinoOS — live like rino 🟣')
-      termPrint('output', 'type: help  or  hey jarvis, help')
-    }, 200)
+      termPrint('output', 'rinoOS v1.0 — live like rino')
+      termPrint('output', 'type `help` or `hey jarvis, help`')
+      termPrint('output', '')
+    }, 150)
   }
-
-  // someone found the guide on their own, no need to keep pointing at it
   if (id === 'win-guide') dismissGuideHint()
 }
 
+// ── MINIMIZE / MAXIMIZE ──
+const winIcons = { 'win-about':'👤','win-projects':'🗂️','win-skills':'⚡','win-f1':'🏎️','win-notes':'📝','win-terminal':'⌨️','win-contact':'✉️','win-guide':'🧭' }
+
+function minimizeWin(id) {
+  const w = document.getElementById(id)
+  w.classList.add('animating')
+  w.style.transform = 'scale(0.05) translateY(400px)'
+  w.style.opacity = '0'
+  setTimeout(() => {
+    w.style.display = 'none'; w.style.transform = ''; w.style.opacity = ''
+    w.classList.remove('animating')
+    const tray = document.getElementById('min-tray')
+    if (document.getElementById('tray-'+id)) return
+    const tile = document.createElement('div')
+    tile.className = 'min-tile'; tile.id = 'tray-'+id
+    tile.textContent = winIcons[id] || '🪟'
+    tile.onclick = () => { tile.remove(); const ww=document.getElementById(id); ww.style.display='flex'; ww.style.zIndex=++zt; document.querySelectorAll('.win').forEach(x=>x.classList.remove('focused')); ww.classList.add('focused'); }
+    tray.appendChild(tile)
+  }, 320)
+}
+
+function toggleMaximize(id) {
+  const w = document.getElementById(id)
+  w.classList.add('animating')
+  setTimeout(() => w.classList.remove('animating'), 260)
+  if (w.classList.contains('maximized')) {
+    w.classList.remove('maximized')
+    w.style.top = w.dataset.pt || '70px'; w.style.left = w.dataset.pl || '100px'
+    w.style.width = w.dataset.pw || ''; w.style.height = w.dataset.ph || ''
+  } else {
+    w.dataset.pt = w.style.top; w.dataset.pl = w.style.left
+    w.dataset.pw = w.style.width; w.dataset.ph = w.style.height
+    w.classList.add('maximized')
+    w.style.top = '34px'; w.style.left = '0'
+    w.style.width = '100vw'; w.style.height = 'calc(100vh - 34px)'
+    w.style.borderRadius = '0'
+  }
+}
+
+// ── STICKY NOTES ──
+function addNote() {
+  const board = document.getElementById('notes-board')
+  const btn = document.getElementById('notes-add')
+  const note = document.createElement('div')
+  note.className = 'sticky'
+  note.innerHTML = `<button class="sticky-del" onclick="this.parentElement.remove()">✕</button><textarea placeholder="// write here..."></textarea>`
+  board.insertBefore(note, btn)
+}
+
+// ── CONTEXT MENU ──
+const ctxMenu = document.getElementById('ctx-menu')
+document.getElementById('desktop').addEventListener('contextmenu', e => {
+  if (e.target.closest('.win') || e.target.closest('#dock-row')) return
+  e.preventDefault()
+  ctxMenu.style.display = 'block'
+  ctxMenu.style.left = Math.min(e.clientX, window.innerWidth-200) + 'px'
+  ctxMenu.style.top = Math.min(e.clientY, window.innerHeight-160) + 'px'
+})
+document.addEventListener('click', () => ctxMenu.style.display = 'none')
+function ctxAction(type) {
+  ctxMenu.style.display = 'none'
+  if (type === 'terminal') openWin('win-terminal','di-terminal')
+  if (type === 'guide') openWin('win-guide','di-guide')
+  if (type === 'wallpaper') showPicker()
+  if (type === 'notes') { openWin('win-notes','di-notes'); setTimeout(addNote, 150) }
+}
+
+// ── GUIDE HINT ──
+function positionGuideHint() {
+  const r = document.getElementById('di-guide').getBoundingClientRect()
+  document.getElementById('guide-hint').style.left = (r.left + r.width/2) + 'px'
+}
+function showGuideHint() { positionGuideHint(); document.getElementById('guide-hint').classList.add('show'); document.getElementById('di-guide').classList.add('guide-pulsing'); }
+function dismissGuideHint() { document.getElementById('guide-hint').classList.remove('show'); document.getElementById('di-guide').classList.remove('guide-pulsing'); }
+window.addEventListener('resize', () => { if (document.getElementById('guide-hint').classList.contains('show')) positionGuideHint() })
+
+
 // ── TERMINAL ──
-let termReady=false;
 function termPrint(type, text) {
   const tb = document.getElementById('term-body')
   const d = document.createElement('div')
   d.className = 'tline'
-
   if (type === 'cmd') {
-    d.innerHTML = `<span class="tprompt">rino@rinoOS ~ $ </span><span style="color:#fff">${text}</span>`
+    d.innerHTML = `<span class="tprompt">rino@rinoOS:~$ </span><span style="color:#39d353">${text}</span>`
   } else {
     d.innerHTML = `<span class="tout">${text}</span>`
   }
-
   tb.appendChild(d)
   tb.scrollTop = tb.scrollHeight
 }
-const termCmds={
-  help:()=>['available commands:','  about       — who is rino','  projects    — what rino builds','  skills      — what rino knows','  f1          — race mode','  jarvis      — wake jarvis','  clear       — clear terminal','  vibe        — activate vibe mode'],
-  about:()=>['Rivaan / @officiallyrino','developer. GFX designer. F1 head.','building stuff at 2am since forever.'],
-  projects:()=>['> Jarvis AI — voice assistant (ollama + whisper)','> F1 Dashboard — live telemetry via openf1','> Time Debt — roblox time-based collecting game','> Roblox CarGame — custom car controller'],
-  skills:()=>['GFX design   ███████████  88%','python       ██████████   85%','AI/LLMs      █████████    80%','web dev      ████████     75%','lua/roblox   ███████      70%'],
-  f1:()=>['🚦 loading race data...','P1 VER +0.000','P2 NOR +0.412','P3 LEC +0.651','P4 HAM +1.203','lights out and away we go 🏎️'],
-  jarvis:()=>['🤖 Jarvis online.','listening for commands...','say: hey jarvis, open projects'],
-  vibe:()=>['🎵 vibe mode activated','now playing: phonk.exe','aesthetic: 2am terminal glow ✓','productivity: 📈'],
-  clear:()=>null,
-};
-const jarvisCmds={
-  'open projects':  ()=>{ openWin('win-projects','di-projects'); return['📂 opening projects...']; },
-  'open about':     ()=>{ openWin('win-about','di-about');       return['👤 opening about...']; },
-  'open skills':    ()=>{ openWin('win-skills','di-skills');     return['⚡ opening skills...']; },
-  'open f1':        ()=>{ openWin('win-f1','di-f1');             return['🏎️ opening f1 fan zone...']; },
-  'open contact':   ()=>{ openWin('win-contact','di-contact');   return['✉️ opening contact...']; },
-  'open terminal':  ()=>{ openWin('win-terminal','di-terminal'); return['⌨️ opening terminal...']; },
-  'open notes':     ()=>{ openWin('win-notes','di-notes');       return['📝 opening sticky notes...']; },
-  'open guide':     ()=>{ openWin('win-guide','di-guide');       return['🧭 opening the guide...']; },
-  'play music':     ()=>['🎵 now playing: phonk.exe — vibe mode on'],
-  'what time is it':()=>[`🕐 it's ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`],
-  'next f1 race':   ()=>['🏎️ next race: checking calendar...','Canadian GP — Montreal'],
-  'close all':      ()=>{ ['win-about','win-projects','win-skills','win-f1','win-contact','win-notes','win-guide'].forEach(closeWin); return['✓ closed all windows']; },
-  'status':         ()=>['🟢 all systems nominal','jarvis: online','vibes: immaculate','chai: brewing'],
-  'time debt':      ()=>['⏳ Time Debt — roblox game by rino','collect as much as possible before time runs out','available on roblox 🎮'],
-  'hello':          ()=>['hey rino 👋 what do you need?'],
-  'help':           ()=>['jarvis commands:','  hey jarvis, open projects','  hey jarvis, open about','  hey jarvis, open skills','  hey jarvis, open f1','  hey jarvis, open contact','  hey jarvis, open notes','  hey jarvis, open guide','  hey jarvis, play music','  hey jarvis, what time is it','  hey jarvis, status','  hey jarvis, close all'],
-};
 
-function termKey(e){
-  if(e.key!=='Enter') return;
-  const inp=document.getElementById('term-input');
-  const raw=inp.value.trim(); inp.value='';
-  if(!raw) return;
-  termPrint('cmd',raw);
-  const cmd=raw.toLowerCase();
+const neoArt = `
+ ██████╗ ██╗███╗   ██╗ ██████╗
+ ██╔══██╗██║████╗  ██║██╔═══██╗
+ ██████╔╝██║██╔██╗ ██║██║   ██║
+ ██╔══██╗██║██║╚██╗██║██║   ██║
+ ██║  ██║██║██║ ╚████║╚██████╔╝
+ ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ `
 
-  // hey jarvis, <command>
-  if(cmd.startsWith('hey jarvis')){
-    const sub=cmd.replace(/^hey jarvis[,\s]*/,'').trim();
-    const fn=jarvisCmds[sub];
-    if(fn){ fn().forEach(l=>termPrint('output',l)); }
-    else { termPrint('output','🤖 sorry rino, i don\'t know how to: '+sub); termPrint('output','try: hey jarvis, help'); }
-    return;
+const termCmds = {
+  help: () => [
+    '── rinoOS terminal ──────────────────',
+    '  neofetch       system info',
+    '  whoami         who is rino',
+    '  ls             list projects',
+    '  cat about.txt  read my bio',
+    '  sudo make me a sandwich',
+    '  matrix         toggle matrix rain',
+    '  clear          clear terminal',
+    '─────────────────────────────────────',
+    '  hey jarvis, open [app]',
+    '  hey jarvis, help',
+  ],
+  neofetch: () => [
+    '         .\'.',
+    "      .\'   \'.",
+    '    .\'  rino  \'.',
+    "   /  @official \\",
+    '   \\     rino   /',
+    "    \'.  OS  .\'",
+    '      \'._.\'',
+    '',
+    '  <span style="color:#39d353">OS</span>          rinoOS v1.0',
+    '  <span style="color:#39d353">Host</span>        MacBook Air M1',
+    '  <span style="color:#39d353">Shell</span>       jarvis + bash',
+    '  <span style="color:#39d353">Theme</span>       terminal green',
+    '  <span style="color:#39d353">Role</span>        Coder / GFX Designer',
+    '  <span style="color:#39d353">Location</span>    India 🇮🇳',
+    '  <span style="color:#39d353">Status</span>      always building',
+    '',
+    '  <span style="background:#39d353;color:#000;padding:0 6px">  </span><span style="background:#f4d35e;color:#000;padding:0 6px">  </span><span style="background:#60a5fa;color:#000;padding:0 6px">  </span><span style="background:#f87171;color:#000;padding:0 6px">  </span>',
+  ],
+  whoami: () => ['rino', '// coder. gfx designer. terminal geek. f1 head.','// always in the terminal, always shipping something.'],
+  ls: () => ['total 4', 'drwxr-xr-x  jarvis-ai/', 'drwxr-xr-x  f1-dashboard/', 'drwxr-xr-x  time-debt-roblox/', 'drwxr-xr-x  roblox-cargame/', '-rw-r--r--  about.txt', '-rw-r--r--  skills.log'],
+  'cat about.txt': () => ['# rivaan / @officiallyrino', '# coder, gfx designer, terminal geek', '# building jarvis, f1 dashboards, roblox games', '# always 2am, always in the terminal', '# india 🇮🇳 · macbook air m1'],
+  'sudo make me a sandwich': () => ['[sudo] password for rino: ','...','ok fine. 🥪'],
+  matrix: () => {
+    const mc = document.getElementById('matrix-canvas')
+    if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null; mc.style.opacity='0'; return ['matrix rain off'] }
+    startMatrixRain(mc); return ['matrix rain on']
+  },
+}
+
+const jarvisCmds = {
+  'open projects':  () => { openWin('win-projects','di-projects'); return ['📂 opening projects/'] },
+  'open about':     () => { openWin('win-about','di-about');       return ['👤 opening about.txt'] },
+  'open skills':    () => { openWin('win-skills','di-skills');     return ['⚡ opening skills.sh'] },
+  'open f1':        () => { openWin('win-f1','di-f1');             return ['🏎️ opening f1.log'] },
+  'open contact':   () => { openWin('win-contact','di-contact');   return ['✉️ opening contact.cfg'] },
+  'open terminal':  () => { openWin('win-terminal','di-terminal'); return ['⌨️ opening terminal'] },
+  'open notes':     () => { openWin('win-notes','di-notes');       return ['📝 opening notes.txt'] },
+  'open guide':     () => { openWin('win-guide','di-guide');       return ['🧭 opening README.md'] },
+  'what time is it':() => [`🕐 ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`],
+  'status':         () => ['🟢 all systems nominal','jarvis: online','chai: brewing ☕','always building'],
+  'time debt':      () => ['⏳ Time Debt — roblox game by rino','race the clock, collect as much as possible'],
+  'hello':          () => ['hey rino 👋'],
+  'close all':      () => { ['win-about','win-projects','win-skills','win-f1','win-contact','win-notes','win-guide'].forEach(closeWin); return ['✓ closed all windows'] },
+  'help':           () => ['hey jarvis commands:', '  hey jarvis, open [about|projects|skills|f1|contact|notes|terminal|guide]', '  hey jarvis, play music', '  hey jarvis, what time is it', '  hey jarvis, status', '  hey jarvis, close all'],
+}
+
+function termKey(e) {
+  if (e.key !== 'Enter') return
+  const inp = document.getElementById('term-input')
+  const raw = inp.value.trim(); inp.value = ''
+  if (!raw) return
+  termPrint('cmd', raw)
+  const cmd = raw.toLowerCase()
+
+  if (cmd.startsWith('hey jarvis')) {
+    const sub = cmd.replace(/^hey jarvis[,\s]*/, '').trim()
+    const fn = jarvisCmds[sub]
+    if (fn) fn().forEach(l => termPrint('output', l))
+    else { termPrint('output', `jarvis: unknown command "${sub}"`); termPrint('output', 'try: hey jarvis, help') }
+    return
   }
 
-  // regular shell commands
-  if(cmd==='clear'){ document.getElementById('term-body').innerHTML=''; return; }
-  const fn=termCmds[cmd];
-  if(fn){ const res=fn(); if(res) res.forEach(l=>termPrint('output',l)); }
-  else { termPrint('output',`command not found: ${cmd}`); termPrint('output','type \'help\' or \'hey jarvis, help\''); }
+  if (cmd === 'clear') { document.getElementById('term-body').innerHTML = ''; return }
+
+  // handle multi-word commands like "cat about.txt"
+  const fn = termCmds[cmd]
+  if (fn) { const res = fn(); if (res) res.forEach(l => termPrint('output', l)) }
+  else { termPrint('output', `command not found: ${cmd}`); termPrint('output', "type 'help' to see available commands") }
 }
-
-// right click context menu
-const ctxMenu = document.getElementById('ctx-menu')
-
-document.getElementById('desktop').addEventListener('contextmenu', e => {
-  // only show our custom menu on empty desktop space, not on top of a window
-  if (e.target.closest('.win') || e.target.closest('#dock-row')) return
-  e.preventDefault()
-
-  ctxMenu.style.display = 'block'
-  // keep the menu on screen even if you right click near an edge
-  const menuW = 200, menuH = 160
-  const x = Math.min(e.clientX, window.innerWidth - menuW)
-  const y = Math.min(e.clientY, window.innerHeight - menuH)
-  ctxMenu.style.left = x + 'px'
-  ctxMenu.style.top = y + 'px'
-})
-
-document.addEventListener('click', () => { ctxMenu.style.display = 'none' })
-
-function ctxAction(type) {
-  ctxMenu.style.display = 'none'
-
-  if (type === 'terminal') openWin('win-terminal', 'di-terminal')
-  if (type === 'guide') openWin('win-guide', 'di-guide')
-  if (type === 'wallpaper') showPicker()
-
-  if (type === 'notes') {
-    openWin('win-notes', 'di-notes')
-    // give the window a moment to actually be visible before adding a note into it
-    setTimeout(addNote, 150)
-  }
-}
-
-// guide hint — points at the guide icon so first time visitors know
-// where to start, shows once per session then gets out of the way
-function positionGuideHint() {
-  const icon = document.getElementById('di-guide')
-  const hint = document.getElementById('guide-hint')
-  const r = icon.getBoundingClientRect()
-  // center the bubble horizontally over the actual icon, not the dock
-  hint.style.left = (r.left + r.width / 2) + 'px'
-}
-
-function showGuideHint() {
-  positionGuideHint()
-  document.getElementById('guide-hint').classList.add('show')
-  document.getElementById('di-guide').classList.add('guide-pulsing')
-}
-
-function dismissGuideHint() {
-  document.getElementById('guide-hint').classList.remove('show')
-  document.getElementById('di-guide').classList.remove('guide-pulsing')
-}
-
-// keep the hint lined up with the icon if the window resizes
-window.addEventListener('resize', () => {
-  if (document.getElementById('guide-hint').classList.contains('show')) {
-    positionGuideHint()
-  }
-})
 </script>
 </body>
 </html>
