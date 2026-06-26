@@ -137,7 +137,6 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 .crow { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid #39d35322; font-size: 12px; color: #39d35388; }
 .crow::before { content: '$'; color: #39d35366; font-family: monospace; }
 
-/* guide steps */
 .guide-step { display: flex; gap: 10px; border-left: 2px solid #39d35344; padding: 8px 12px; margin-bottom: 8px; }
 .guide-num { color: #39d353; font-weight: 700; flex-shrink: 0; font-family: monospace; }
 .guide-num::before { content: '['; } .guide-num::after { content: ']'; }
@@ -169,7 +168,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 .ctx-item:hover { background: #39d35311; color: #39d353; }
 .ctx-sep { height: 1px; background: #39d35322; margin: 3px 4px; }
 
-/* guide hint */
+/* guide hint — sits outside dock-row so position:fixed isn't broken by the dock's transform */
 #guide-hint {
   position: fixed; bottom: 76px; left: 0;
   transform: translateX(-50%) translateY(8px);
@@ -187,7 +186,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 #guide-hint .close-hint { margin-left: 10px; cursor: pointer; color: #39d35366; }
 #guide-hint .close-hint:hover { color: #ff5f57; }
 
-/* dock */
+/* dock — don't let it escape the screen 😭 */
 #dock-row { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; gap: 10px; z-index: 1000; }
 #dock { background: #000; border: 1px solid #39d35344; padding: 8px 14px; display: flex; gap: 10px; border-radius: 3px; }
 .di { width: 46px; height: 46px; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; transition: transform 0.15s, box-shadow 0.15s; position: relative; border: 1px solid #39d35333; background: #0a0a0a; font-family: monospace; color: #39d353; font-weight: 700; flex-direction: column; gap: 2px; }
@@ -199,7 +198,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 .di .di-icon { font-size: 18px; }
 .di .di-label { font-size: 8px; color: #39d35366; letter-spacing: 0.5px; }
 
-/* min tray */
+/* minimise tray */
 #min-tray { display: flex; gap: 8px; border: 1px solid #39d35333; padding: 8px 10px; border-radius: 3px; transition: opacity 0.2s; }
 #min-tray:empty { opacity: 0; padding: 0; border: none; }
 .min-tile { width: 46px; height: 46px; border-radius: 4px; background: #0a0a0a; border: 1px solid #39d35333; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; position: relative; animation: pop-in 0.25s cubic-bezier(.4,0,.2,1); transition: transform 0.15s; }
@@ -224,12 +223,6 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 #term-input-row span { color: #39d353; font-family: monospace; font-size: 12px; }
 #term-input { background: transparent; border: none; outline: none; color: #39d353; font-family: monospace; font-size: 12px; flex: 1; caret-color: #39d353; }
 
-/* neofetch */
-.neo-wrap { display: flex; gap: 20px; font-family: monospace; font-size: 11px; }
-.neo-art { color: #39d353; white-space: pre; line-height: 1.3; font-size: 10px; flex-shrink: 0; }
-.neo-info { color: #39d35388; line-height: 1.8; }
-.neo-info .key { color: #39d353; }
-
 @keyframes guide-pulse { 0%,100%{box-shadow:0 0 0 0 #39d35355} 50%{box-shadow:0 0 0 8px transparent} }
 .di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; border-color: #39d353; }
 </style>
@@ -247,7 +240,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 <!-- SPLASH -->
 <div id="splash"><div id="splash-text">live like <span>rino</span></div></div>
 
-<!-- PICKER -->
+<!-- WALLPAPER PICKER -->
 <div id="picker">
   <h2>select wallpaper</h2>
   <p>// pick a pattern before you boot in</p>
@@ -275,7 +268,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 
   <!-- ABOUT -->
   <div id="win-about" class="win" style="top:55px;left:24px;width:290px;height:330px;">
-    <div class="win-tb" onmousedown="drag(event,'win-about')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-about')">
       <button class="wb wbc" onclick="closeWin('win-about')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-about')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-about')"></button>
@@ -301,7 +294,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 
   <!-- PROJECTS -->
   <div id="win-projects" class="win" style="top:55px;left:340px;width:300px;height:370px;display:none;">
-    <div class="win-tb" onmousedown="drag(event,'win-projects')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-projects')">
       <button class="wb wbc" onclick="closeWin('win-projects')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-projects')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-projects')"></button>
@@ -318,7 +311,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 
   <!-- SKILLS -->
   <div id="win-skills" class="win" style="top:55px;left:340px;width:275px;height:310px;display:none;">
-    <div class="win-tb" onmousedown="drag(event,'win-skills')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-skills')">
       <button class="wb wbc" onclick="closeWin('win-skills')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-skills')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-skills')"></button>
@@ -337,7 +330,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 
   <!-- F1 -->
   <div id="win-f1" class="win" style="top:55px;left:340px;width:275px;height:330px;display:none;">
-    <div class="win-tb" onmousedown="drag(event,'win-f1')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-f1')">
       <button class="wb wbc" onclick="closeWin('win-f1')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-f1')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-f1')"></button>
@@ -354,7 +347,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 
   <!-- CONTACT -->
   <div id="win-contact" class="win" style="top:55px;left:340px;width:260px;height:280px;display:none;">
-    <div class="win-tb" onmousedown="drag(event,'win-contact')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-contact')">
       <button class="wb wbc" onclick="closeWin('win-contact')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-contact')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-contact')"></button>
@@ -373,7 +366,7 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 
   <!-- TERMINAL -->
   <div id="win-terminal" class="win" style="top:55px;left:340px;width:340px;height:310px;display:none;">
-    <div class="win-tb" onmousedown="drag(event,'win-terminal')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-terminal')">
       <button class="wb wbc" onclick="closeWin('win-terminal')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-terminal')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-terminal')"></button>
@@ -382,26 +375,26 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
     <div id="term-body"></div>
     <div id="term-input-row">
       <span>rino@rinoOS:~$</span>
-      <input id="term-input" placeholder="" autocomplete="off" onkeydown="termKey(event)">
+      <input id="term-input" placeholder="" autocomplete="off" onkeydown="handleTerminalKey(event)">
     </div>
   </div>
 
   <!-- NOTES -->
   <div id="win-notes" class="win" style="top:55px;left:340px;width:330px;height:280px;display:none;">
-    <div class="win-tb" onmousedown="drag(event,'win-notes')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-notes')">
       <button class="wb wbc" onclick="closeWin('win-notes')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-notes')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-notes')"></button>
       <span class="wt">notes.txt</span>
     </div>
     <div class="win-body">
-      <div id="notes-board"><div id="notes-add" onclick="addNote()">+</div></div>
+      <div id="notes-board"><div id="notes-add" onclick="addStickyNote()">+</div></div>
     </div>
   </div>
 
-  <!-- GUIDE -->
+  <!-- GUIDE / README -->
   <div id="win-guide" class="win" style="top:55px;left:340px;width:330px;height:420px;display:none;">
-    <div class="win-tb" onmousedown="drag(event,'win-guide')">
+    <div class="win-tb" onmousedown="startDrag(event,'win-guide')">
       <button class="wb wbc" onclick="closeWin('win-guide')"></button>
       <button class="wb wbm" onclick="minimizeWin('win-guide')"></button>
       <button class="wb wbx" onclick="toggleMaximize('win-guide')"></button>
@@ -422,22 +415,22 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
   <!-- DOCK -->
   <div id="dock-row">
     <div id="dock">
-      <div class="di" id="di-guide" onclick="openWin('win-guide','di-guide')"><span class="di-icon">🧭</span><span class="di-label">guide</span><span class="tip">README</span><span class="dot"></span></div>
-      <div class="di" id="di-about" onclick="openWin('win-about','di-about')"><span class="di-icon">👤</span><span class="di-label">about</span><span class="tip">about.txt</span><span class="dot"></span></div>
+      <div class="di" id="di-guide"    onclick="openWin('win-guide','di-guide')"><span class="di-icon">🧭</span><span class="di-label">guide</span><span class="tip">README</span><span class="dot"></span></div>
+      <div class="di" id="di-about"    onclick="openWin('win-about','di-about')"><span class="di-icon">👤</span><span class="di-label">about</span><span class="tip">about.txt</span><span class="dot"></span></div>
       <div class="di" id="di-projects" onclick="openWin('win-projects','di-projects')"><span class="di-icon">🗂️</span><span class="di-label">projects</span><span class="tip">projects/</span><span class="dot"></span></div>
-      <div class="di" id="di-skills" onclick="openWin('win-skills','di-skills')"><span class="di-icon">⚡</span><span class="di-label">skills</span><span class="tip">skills.sh</span><span class="dot"></span></div>
-      <div class="di" id="di-f1" onclick="openWin('win-f1','di-f1')"><span class="di-icon">🏎️</span><span class="di-label">f1</span><span class="tip">f1.log</span><span class="dot"></span></div>
-      <div class="di" id="di-notes" onclick="openWin('win-notes','di-notes')"><span class="di-icon">📝</span><span class="di-label">notes</span><span class="tip">notes.txt</span><span class="dot"></span></div>
+      <div class="di" id="di-skills"   onclick="openWin('win-skills','di-skills')"><span class="di-icon">⚡</span><span class="di-label">skills</span><span class="tip">skills.sh</span><span class="dot"></span></div>
+      <div class="di" id="di-f1"       onclick="openWin('win-f1','di-f1')"><span class="di-icon">🏎️</span><span class="di-label">f1</span><span class="tip">f1.log</span><span class="dot"></span></div>
+      <div class="di" id="di-notes"    onclick="openWin('win-notes','di-notes')"><span class="di-icon">📝</span><span class="di-label">notes</span><span class="tip">notes.txt</span><span class="dot"></span></div>
       <div class="di" id="di-terminal" onclick="openWin('win-terminal','di-terminal')"><span class="di-icon">⌨️</span><span class="di-label">terminal</span><span class="tip">bash</span><span class="dot"></span></div>
-      <div class="di" id="di-contact" onclick="openWin('win-contact','di-contact')"><span class="di-icon">✉️</span><span class="di-label">contact</span><span class="tip">contact.cfg</span><span class="dot"></span></div>
+      <div class="di" id="di-contact"  onclick="openWin('win-contact','di-contact')"><span class="di-icon">✉️</span><span class="di-label">contact</span><span class="tip">contact.cfg</span><span class="dot"></span></div>
     </div>
     <div id="min-tray"></div>
   </div>
 
-  <!-- guide hint, outside dock-row so position:fixed isn't broken by transform -->
+  <!-- guide hint lives outside #dock-row so position:fixed isn't killed by the dock's transform -->
   <div id="guide-hint">new here? open README <span class="close-hint" onclick="dismissGuideHint()">✕</span></div>
 
-  <!-- right click context menu -->
+  <!-- right-click context menu -->
   <div id="ctx-menu">
     <div class="ctx-item" onclick="ctxAction('terminal')">open terminal</div>
     <div class="ctx-item" onclick="ctxAction('notes')">new sticky note</div>
@@ -448,70 +441,94 @@ html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courie
 </div>
 
 <script>
-// ── WALLPAPERS (terminal-themed patterns via canvas) ──
+// ════════════════════════════════════════════
+//  WALLPAPERS
+// ════════════════════════════════════════════
+
 const wallpapers = [
-  { name: 'pure black',   type: 'solid',    color: '#000000' },
-  { name: 'scanlines',    type: 'scanlines' },
-  { name: 'matrix rain',  type: 'matrix'    },
-  { name: 'grid',         type: 'grid'      },
-  { name: 'dot matrix',   type: 'dots'      },
-  { name: 'noise',        type: 'noise'     },
-  { name: 'amber',        type: 'amber'     },
-  { name: 'diagonal',     type: 'diagonal'  },
+  { name: 'pure black',  type: 'solid',    color: '#000000' },
+  { name: 'scanlines',   type: 'scanlines' },
+  { name: 'matrix rain', type: 'matrix'    },
+  { name: 'grid',        type: 'grid'      },
+  { name: 'dot matrix',  type: 'dots'      },
+  { name: 'noise',       type: 'noise'     },
+  { name: 'amber',       type: 'amber'     },
+  { name: 'diagonal',    type: 'diagonal'  },
 ]
 
 let matrixRAF = null
+let selectedWallpaper = 0
 
-function drawThumb(canvas, wp) {
+function drawWallpaperThumb(canvas, wp) {
   const ctx = canvas.getContext('2d')
   const w = canvas.width, h = canvas.height
-  ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h)
+  ctx.fillStyle = '#000'
+  ctx.fillRect(0, 0, w, h)
 
-  if (wp.type === 'solid') { ctx.fillStyle = wp.color; ctx.fillRect(0,0,w,h); }
-  else if (wp.type === 'scanlines') {
-    // alternating dark/bright bands so it's clearly visible
-    for (let y=0;y<h;y+=4) {
-      ctx.fillStyle = y%8===0 ? 'rgba(57,211,83,0.35)' : 'rgba(57,211,83,0.06)'
-      ctx.fillRect(0,y,w,2)
+  if (wp.type === 'solid') {
+    ctx.fillStyle = wp.color
+    ctx.fillRect(0, 0, w, h)
+  } else if (wp.type === 'scanlines') {
+    for (let y = 0; y < h; y += 4) {
+      ctx.fillStyle = y % 8 === 0 ? 'rgba(57,211,83,0.35)' : 'rgba(57,211,83,0.06)'
+      ctx.fillRect(0, y, w, 2)
     }
-  }
-  else if (wp.type === 'matrix') {
-    ctx.font='8px monospace'; ctx.fillStyle='#39d353';
-    const chars='01アイウエオカキクケコ';
-    for(let x=0;x<w;x+=8){for(let y=0;y<h;y+=10){if(Math.random()>0.7){ctx.globalAlpha=Math.random()*0.6+0.1;ctx.fillText(chars[Math.floor(Math.random()*chars.length)],x,y);}}} ctx.globalAlpha=1;
-  }
-  else if (wp.type === 'grid') {
-    ctx.strokeStyle='rgba(57,211,83,0.55)'; ctx.lineWidth=1;
-    for(let x=0;x<w;x+=14){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
-    for(let y=0;y<h;y+=14){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
-    // brighter major grid lines every 4
-    ctx.strokeStyle='rgba(57,211,83,0.9)'; ctx.lineWidth=1;
-    for(let x=0;x<w;x+=56){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
-    for(let y=0;y<h;y+=56){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
-  }
-  else if (wp.type === 'dots') {
-    ctx.fillStyle='rgba(57,211,83,0.8)';
-    for(let x=8;x<w;x+=12){for(let y=8;y<h;y+=12){ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();}}
-  }
-  else if (wp.type === 'noise') {
-    const id=ctx.getImageData(0,0,w,h);
-    for(let i=0;i<id.data.length;i+=4){
-      const v = Math.random()>0.88 ? Math.floor(Math.random()*180+60) : Math.floor(Math.random()*15)
-      id.data[i]=0;id.data[i+1]=v;id.data[i+2]=0;id.data[i+3]=255;
+  } else if (wp.type === 'matrix') {
+    ctx.font = '8px monospace'
+    ctx.fillStyle = '#39d353'
+    const chars = '01アイウエオカキクケコ'
+    for (let x = 0; x < w; x += 8) {
+      for (let y = 0; y < h; y += 10) {
+        if (Math.random() > 0.7) {
+          ctx.globalAlpha = Math.random() * 0.6 + 0.1
+          ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y)
+        }
+      }
     }
-    ctx.putImageData(id,0,0);
-  }
-  else if (wp.type === 'amber') {
-    ctx.font='8px monospace'; ctx.fillStyle='#f4a300';
-    const chars='01><|_-=';
-    for(let x=0;x<w;x+=8){for(let y=0;y<h;y+=10){if(Math.random()>0.6){ctx.globalAlpha=Math.random()*0.7+0.2;ctx.fillText(chars[Math.floor(Math.random()*chars.length)],x,y);}}} ctx.globalAlpha=1;
-  }
-  else if (wp.type === 'diagonal') {
-    ctx.strokeStyle='rgba(57,211,83,0.55)'; ctx.lineWidth=1;
-    for(let i=-h;i<w+h;i+=14){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+h,h);ctx.stroke();}
-    // brighter major diagonal lines
-    ctx.strokeStyle='rgba(57,211,83,0.9)'; ctx.lineWidth=1;
-    for(let i=-h;i<w+h;i+=56){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+h,h);ctx.stroke();}
+    ctx.globalAlpha = 1
+  } else if (wp.type === 'grid') {
+    ctx.strokeStyle = 'rgba(57,211,83,0.55)'
+    ctx.lineWidth = 1
+    for (let x = 0; x < w; x += 14) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
+    for (let y = 0; y < h; y += 14) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
+    // brighter major lines every 4 cells
+    ctx.strokeStyle = 'rgba(57,211,83,0.9)'
+    for (let x = 0; x < w; x += 56) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
+    for (let y = 0; y < h; y += 56) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
+  } else if (wp.type === 'dots') {
+    ctx.fillStyle = 'rgba(57,211,83,0.8)'
+    for (let x = 8; x < w; x += 12) {
+      for (let y = 8; y < h; y += 12) {
+        ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI * 2); ctx.fill()
+      }
+    }
+  } else if (wp.type === 'noise') {
+    const imgData = ctx.getImageData(0, 0, w, h)
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      const v = Math.random() > 0.88 ? Math.floor(Math.random() * 180 + 60) : Math.floor(Math.random() * 15)
+      imgData.data[i] = 0; imgData.data[i+1] = v; imgData.data[i+2] = 0; imgData.data[i+3] = 255
+    }
+    ctx.putImageData(imgData, 0, 0)
+  } else if (wp.type === 'amber') {
+    ctx.font = '8px monospace'
+    ctx.fillStyle = '#f4a300'
+    const chars = '01><|_-='
+    for (let x = 0; x < w; x += 8) {
+      for (let y = 0; y < h; y += 10) {
+        if (Math.random() > 0.6) {
+          ctx.globalAlpha = Math.random() * 0.7 + 0.2
+          ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y)
+        }
+      }
+    }
+    ctx.globalAlpha = 1
+  } else if (wp.type === 'diagonal') {
+    ctx.strokeStyle = 'rgba(57,211,83,0.55)'
+    ctx.lineWidth = 1
+    for (let i = -h; i < w + h; i += 14) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
+    // brighter major diagonals
+    ctx.strokeStyle = 'rgba(57,211,83,0.9)'
+    for (let i = -h; i < w + h; i += 56) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
   }
 }
 
@@ -520,25 +537,20 @@ function applyWallpaper(idx) {
   const bg = document.getElementById('desktop-bg')
   const mc = document.getElementById('matrix-canvas')
 
-  if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null; }
+  if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null }
   mc.style.opacity = '0'
   bg.style.background = '#000'
+  bg.style.backgroundImage = ''
 
-  if (wp.type === 'solid') {
-    bg.style.background = wp.color
-    return
-  }
+  if (wp.type === 'solid') { bg.style.background = wp.color; return }
+  if (wp.type === 'matrix') { startMatrixRain(mc); return }
 
-  if (wp.type === 'matrix') {
-    startMatrixRain(mc)
-    return
-  }
-
-  // static patterns — draw once to a bg canvas turned into a dataURL
-  const c = document.createElement('canvas')
-  c.width = window.innerWidth; c.height = window.innerHeight
-  drawThumb(c, wp)
-  bg.style.backgroundImage = `url(${c.toDataURL()})`
+  // static patterns — render once and bake into a data URL
+  const offscreen = document.createElement('canvas')
+  offscreen.width = window.innerWidth
+  offscreen.height = window.innerHeight
+  drawWallpaperThumb(offscreen, wp)
+  bg.style.backgroundImage = `url(${offscreen.toDataURL()})`
   bg.style.backgroundSize = 'cover'
 }
 
@@ -546,283 +558,397 @@ function startMatrixRain(canvas) {
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
   canvas.style.opacity = '1'
+
   const ctx = canvas.getContext('2d')
   const cols = Math.floor(canvas.width / 16)
   const drops = Array(cols).fill(1)
   const chars = '01アイウエオカキabcdefghijklmnopqrstuvwxyz><|_=-+*'
 
-  function draw() {
+  function drawFrame() {
     ctx.fillStyle = 'rgba(0,0,0,0.05)'
-    ctx.fillRect(0,0,canvas.width,canvas.height)
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.font = '14px monospace'
     drops.forEach((y, i) => {
-      const ch = chars[Math.floor(Math.random()*chars.length)]
+      const ch = chars[Math.floor(Math.random() * chars.length)]
       const bright = Math.random() > 0.95
       ctx.fillStyle = bright ? '#fff' : '#39d353'
       ctx.globalAlpha = bright ? 1 : 0.7
-      ctx.fillText(ch, i*16, y*16)
+      ctx.fillText(ch, i * 16, y * 16)
       ctx.globalAlpha = 1
-      if (y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0
+      if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0
       drops[i]++
     })
-    matrixRAF = requestAnimationFrame(draw)
+    matrixRAF = requestAnimationFrame(drawFrame)
   }
-  draw()
+  drawFrame()
 }
 
-let selectedWp = 0
+// build the wallpaper picker grid
 const grid = document.getElementById('wp-grid')
 wallpapers.forEach((wp, i) => {
-  const d = document.createElement('div')
-  d.className = 'wp-thumb' + (i===0?' selected':'')
-  const c = document.createElement('canvas')
-  c.width = 120; c.height = 76
-  drawThumb(c, wp)
-  d.appendChild(c)
+  const thumb = document.createElement('div')
+  thumb.className = 'wp-thumb' + (i === 0 ? ' selected' : '')
+
+  const preview = document.createElement('canvas')
+  preview.width = 120; preview.height = 76
+  drawWallpaperThumb(preview, wp)
+  thumb.appendChild(preview)
+
   const label = document.createElement('span')
   label.textContent = wp.name
-  d.appendChild(label)
-  d.onclick = () => { document.querySelectorAll('.wp-thumb').forEach(t=>t.classList.remove('selected')); d.classList.add('selected'); selectedWp=i; }
-  grid.appendChild(d)
+  thumb.appendChild(label)
+
+  thumb.onclick = () => {
+    document.querySelectorAll('.wp-thumb').forEach(t => t.classList.remove('selected'))
+    thumb.classList.add('selected')
+    selectedWallpaper = i
+  }
+  grid.appendChild(thumb)
 })
 
-function showPicker() { document.getElementById('desktop').style.display='none'; document.getElementById('picker').style.display='flex'; }
+function showPicker() {
+  document.getElementById('desktop').style.display = 'none'
+  document.getElementById('picker').style.display = 'flex'
+}
+
 function confirmWallpaper() {
-  applyWallpaper(selectedWp)
-  document.getElementById('picker').style.display='none'
-  document.getElementById('desktop').style.display='block'
+  applyWallpaper(selectedWallpaper)
+  document.getElementById('picker').style.display = 'none'
+  document.getElementById('desktop').style.display = 'block'
   setTimeout(showGuideHint, 900)
 }
 
-// ── BOOT ──
-const bootLines = [
-  { text: '[  OK  ] loaded kernel modules', delay: 0 },
-  { text: '[  OK  ] started jarvis daemon', delay: 280 },
+
+// ════════════════════════════════════════════
+//  BOOT SEQUENCE
+// ════════════════════════════════════════════
+
+const bootMessages = [
+  { text: '[  OK  ] loaded kernel modules',     delay: 0    },
+  { text: '[  OK  ] started jarvis daemon',     delay: 280  },
   { text: '[ WARN ] f1 telemetry: race not live', delay: 520 },
-  { text: '[  OK  ] mounted /home/rino', delay: 750 },
-  { text: '[  OK  ] brewing chai...', delay: 960 },
-  { text: '[  OK  ] rinoOS ready.', delay: 1180 },
+  { text: '[  OK  ] mounted /home/rino',        delay: 750  },
+  { text: '[  OK  ] brewing chai...',           delay: 960  },
+  { text: '[  OK  ] rinoOS ready.',             delay: 1180 },
 ]
-const bootLinesEl = document.getElementById('boot-lines')
-const bar = document.getElementById('boot-bar')
-const tagline = document.getElementById('boot-tagline')
-const bootDuration = 2200
-const bootStart = performance.now()
 
-setTimeout(() => tagline.style.opacity = '1', 300)
+const bootLogEl  = document.getElementById('boot-lines')
+const bootBarEl  = document.getElementById('boot-bar')
+const bootTagEl  = document.getElementById('boot-tagline')
+const BOOT_DURATION_MS = 2200
+const bootStart  = performance.now()
 
-bootLines.forEach((l, i) => {
+setTimeout(() => bootTagEl.style.opacity = '1', 300)
+
+bootMessages.forEach(msg => {
   setTimeout(() => {
-    const div = document.createElement('div')
-    div.className = 'boot-line'
-    const isWarn = l.text.includes('WARN')
-    div.innerHTML = l.text.replace('[  OK  ]', '<span class="ok">[  OK  ]</span>').replace('[ WARN ]', '<span class="warn">[ WARN ]</span>')
-    bootLinesEl.appendChild(div)
-  }, l.delay)
+    const line = document.createElement('div')
+    line.className = 'boot-line'
+    line.innerHTML = msg.text
+      .replace('[  OK  ]', '<span class="ok">[  OK  ]</span>')
+      .replace('[ WARN ]', '<span class="warn">[ WARN ]</span>')
+    bootLogEl.appendChild(line)
+  }, msg.delay)
 })
 
-function tickBoot(now) {
-  const prog = Math.min(100, ((now - bootStart) / bootDuration) * 100)
-  bar.style.width = prog + '%'
-  if (prog < 100) { requestAnimationFrame(tickBoot); return; }
+// rewritten from setInterval to rAF so the progress bar stays smooth
+function tickBootProgress(now) {
+  const progress = Math.min(100, ((now - bootStart) / BOOT_DURATION_MS) * 100)
+  bootBarEl.style.width = progress + '%'
+  if (progress < 100) { requestAnimationFrame(tickBootProgress); return }
 
   setTimeout(() => {
-    const b = document.getElementById('boot'); b.style.opacity = '0'
+    const bootEl = document.getElementById('boot')
+    bootEl.style.opacity = '0'
     setTimeout(() => {
-      b.style.display = 'none'
-      const sp = document.getElementById('splash'); sp.style.display = 'flex'
+      bootEl.style.display = 'none'
+      const splashEl = document.getElementById('splash')
+      splashEl.style.display = 'flex'
       setTimeout(() => {
-        sp.style.opacity = '0'
-        setTimeout(() => { sp.style.display = 'none'; document.getElementById('picker').style.display = 'flex' }, 600)
+        splashEl.style.opacity = '0'
+        setTimeout(() => {
+          splashEl.style.display = 'none'
+          document.getElementById('picker').style.display = 'flex'
+        }, 600)
       }, 1400)
     }, 700)
   }, 400)
 }
-requestAnimationFrame(tickBoot)
+requestAnimationFrame(tickBootProgress)
 
-// ── CLOCK ──
-function tick() {
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})
+
+// ════════════════════════════════════════════
+//  CLOCK
+// ════════════════════════════════════════════
+
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 }
-tick(); setInterval(tick, 1000)
+updateClock()
+setInterval(updateClock, 1000)
 
-// ── DRAG + RESIZE ──
-let dragging = null, resizing = null
-let ox = 0, oy = 0, startW = 0, startH = 0, startX = 0, startY = 0
-let zt = 200
 
-function drag(e, id) {
-  if (resizing) return
-  dragging = document.getElementById(id)
+// ════════════════════════════════════════════
+//  DRAG & RESIZE
+// ════════════════════════════════════════════
+
+let dragState   = null  // { win, offsetX, offsetY }
+let resizeState = null  // { win, startW, startH, startMouseX, startMouseY }
+let zTop = 200          // magic number? yep. just needs to start above everything else.
+
+function focusWindow(win) {
   document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'))
-  dragging.classList.add('focused')
-  const r = dragging.getBoundingClientRect()
-  ox = e.clientX - r.left; oy = e.clientY - r.top
-  dragging.style.zIndex = ++zt
+  win.classList.add('focused')
+  win.style.zIndex = ++zTop
+}
+
+function startDrag(e, winId) {
+  if (resizeState) return
+  const win = document.getElementById(winId)
+  focusWindow(win)
+  const rect = win.getBoundingClientRect()
+  dragState = { win, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top }
   e.preventDefault()
 }
 
-document.querySelectorAll('.win').forEach(w => {
-  const h = document.createElement('div')
-  h.className = 'resize-handle'
-  h.addEventListener('mousedown', e => {
-    if (dragging) return
-    resizing = w
-    const r = w.getBoundingClientRect()
-    startW = r.width; startH = r.height; startX = e.clientX; startY = e.clientY
-    w.classList.add('resizing','focused')
-    document.querySelectorAll('.win').forEach(x => { if(x!==w) x.classList.remove('focused') })
-    w.style.zIndex = ++zt
-    e.preventDefault(); e.stopPropagation()
+// attach resize handles to every window on load
+document.querySelectorAll('.win').forEach(win => {
+  const handle = document.createElement('div')
+  handle.className = 'resize-handle'
+  handle.addEventListener('mousedown', e => {
+    if (dragState) return
+    const rect = win.getBoundingClientRect()
+    resizeState = {
+      win,
+      startW: rect.width, startH: rect.height,
+      startMouseX: e.clientX, startMouseY: e.clientY
+    }
+    win.classList.add('resizing')
+    focusWindow(win)
+    e.preventDefault()
+    e.stopPropagation()
   })
-  w.appendChild(h)
+  win.appendChild(handle)
 })
 
 document.addEventListener('mousemove', e => {
-  if (dragging) {
-    dragging.style.left = Math.max(0, e.clientX - ox) + 'px'
-    dragging.style.top = Math.max(34, e.clientY - oy) + 'px'
-  } else if (resizing) {
-    resizing.style.width = Math.max(260, startW + (e.clientX - startX)) + 'px'
-    resizing.style.height = Math.max(160, startH + (e.clientY - startY)) + 'px'
+  if (dragState) {
+    const { win, offsetX, offsetY } = dragState
+    win.style.left = Math.max(0, e.clientX - offsetX) + 'px'
+    // 34px = topbar height — don't let windows hide under it
+    win.style.top  = Math.max(34, e.clientY - offsetY) + 'px'
+  } else if (resizeState) {
+    const { win, startW, startH, startMouseX, startMouseY } = resizeState
+    win.style.width  = Math.max(260, startW + (e.clientX - startMouseX)) + 'px'
+    win.style.height = Math.max(160, startH + (e.clientY - startMouseY)) + 'px'
   }
 })
+
 document.addEventListener('mouseup', () => {
-  dragging = null
-  if (resizing) resizing.classList.remove('resizing')
-  resizing = null
+  dragState = null
+  if (resizeState) resizeState.win.classList.remove('resizing')
+  resizeState = null
 })
 
-// ── WINDOWS ──
-const winToDock = {}
-function closeWin(id) {
-  document.getElementById(id).style.display = 'none'
-  if (winToDock[id]) document.getElementById(winToDock[id])?.classList.remove('open')
+
+// ════════════════════════════════════════════
+//  WINDOW MANAGEMENT
+// ════════════════════════════════════════════
+
+// maps win id → dock icon id so we can toggle the "open" dot
+const winDockMap = {}
+
+const winIcons = {
+  'win-about':    '👤',
+  'win-projects': '🗂️',
+  'win-skills':   '⚡',
+  'win-f1':       '🏎️',
+  'win-notes':    '📝',
+  'win-terminal': '⌨️',
+  'win-contact':  '✉️',
+  'win-guide':    '🧭',
 }
 
-function openWin(id, di) {
-  if (di) winToDock[id] = di
-  const trayTile = document.getElementById('tray-' + id)
-  if (trayTile) trayTile.remove()
-  const w = document.getElementById(id)
-  w.style.display = 'flex'; w.style.zIndex = ++zt
-  document.querySelectorAll('.win').forEach(x => x.classList.remove('focused'))
-  w.classList.add('focused')
-  if (id !== 'win-guide') {
-    w.style.top = (60 + Math.random()*60) + 'px'
-    w.style.left = (60 + Math.random()*250) + 'px'
+function openWin(winId, dockId) {
+  if (dockId) winDockMap[winId] = dockId
+
+  // if it's sitting in the tray, pull it out first
+  document.getElementById('tray-' + winId)?.remove()
+
+  const win = document.getElementById(winId)
+  win.style.display = 'flex'
+  focusWindow(win)
+
+  // random spawn offset so stacked windows don't perfectly overlap
+  if (winId !== 'win-guide') {
+    win.style.top  = (60 + Math.random() * 60)  + 'px'
+    win.style.left = (60 + Math.random() * 250) + 'px'
   }
-  if (di) document.getElementById(di)?.classList.add('open')
-  if (id === 'win-terminal') {
+
+  document.getElementById(dockId)?.classList.add('open')
+
+  if (winId === 'win-terminal') {
+    // slight delay so the window paint settles before we print
     setTimeout(() => {
-      termPrint('output', 'rinoOS v1.0 — live like rino')
-      termPrint('output', 'type `help` or `hey jarvis, help`')
-      termPrint('output', '')
+      printToTerminal('output', 'rinoOS v1.0 — live like rino')
+      printToTerminal('output', 'type `help` or `hey jarvis, help`')
+      printToTerminal('output', '')
     }, 150)
   }
-  if (id === 'win-guide') dismissGuideHint()
+
+  if (winId === 'win-guide') dismissGuideHint()
 }
 
-// ── MINIMIZE / MAXIMIZE ──
-const winIcons = { 'win-about':'👤','win-projects':'🗂️','win-skills':'⚡','win-f1':'🏎️','win-notes':'📝','win-terminal':'⌨️','win-contact':'✉️','win-guide':'🧭' }
+function closeWin(winId) {
+  document.getElementById(winId).style.display = 'none'
+  document.getElementById(winDockMap[winId])?.classList.remove('open')
+}
 
-function minimizeWin(id) {
-  const w = document.getElementById(id)
-  w.classList.add('animating')
-  w.style.transform = 'scale(0.05) translateY(400px)'
-  w.style.opacity = '0'
+function minimizeWin(winId) {
+  const win = document.getElementById(winId)
+  win.classList.add('animating')
+  win.style.transform = 'scale(0.05) translateY(400px)'
+  win.style.opacity = '0'
+
   setTimeout(() => {
-    w.style.display = 'none'; w.style.transform = ''; w.style.opacity = ''
-    w.classList.remove('animating')
-    const tray = document.getElementById('min-tray')
-    if (document.getElementById('tray-'+id)) return
+    win.style.display = 'none'
+    win.style.transform = ''
+    win.style.opacity = ''
+    win.classList.remove('animating')
+
+    // don't add a duplicate tray tile if it's already there
+    if (document.getElementById('tray-' + winId)) return
+
     const tile = document.createElement('div')
-    tile.className = 'min-tile'; tile.id = 'tray-'+id
-    tile.textContent = winIcons[id] || '🪟'
-    tile.onclick = () => { tile.remove(); const ww=document.getElementById(id); ww.style.display='flex'; ww.style.zIndex=++zt; document.querySelectorAll('.win').forEach(x=>x.classList.remove('focused')); ww.classList.add('focused'); }
-    tray.appendChild(tile)
+    tile.className = 'min-tile'
+    tile.id = 'tray-' + winId
+    tile.textContent = winIcons[winId] || '🪟'
+    tile.onclick = () => {
+      tile.remove()
+      win.style.display = 'flex'
+      focusWindow(win)
+    }
+    document.getElementById('min-tray').appendChild(tile)
   }, 320)
 }
 
-function toggleMaximize(id) {
-  const w = document.getElementById(id)
-  w.classList.add('animating')
-  setTimeout(() => w.classList.remove('animating'), 260)
-  if (w.classList.contains('maximized')) {
-    w.classList.remove('maximized')
-    w.style.top = w.dataset.pt || '70px'; w.style.left = w.dataset.pl || '100px'
-    w.style.width = w.dataset.pw || ''; w.style.height = w.dataset.ph || ''
+function toggleMaximize(winId) {
+  const win = document.getElementById(winId)
+  win.classList.add('animating')
+  setTimeout(() => win.classList.remove('animating'), 260)
+
+  if (win.classList.contains('maximized')) {
+    win.classList.remove('maximized')
+    win.style.top    = win.dataset.savedTop    || '70px'
+    win.style.left   = win.dataset.savedLeft   || '100px'
+    win.style.width  = win.dataset.savedWidth  || ''
+    win.style.height = win.dataset.savedHeight || ''
   } else {
-    w.dataset.pt = w.style.top; w.dataset.pl = w.style.left
-    w.dataset.pw = w.style.width; w.dataset.ph = w.style.height
-    w.classList.add('maximized')
-    w.style.top = '34px'; w.style.left = '0'
-    w.style.width = '100vw'; w.style.height = 'calc(100vh - 34px)'
-    w.style.borderRadius = '0'
+    // save current position before blowing it up
+    win.dataset.savedTop    = win.style.top
+    win.dataset.savedLeft   = win.style.left
+    win.dataset.savedWidth  = win.style.width
+    win.dataset.savedHeight = win.style.height
+
+    win.classList.add('maximized')
+    win.style.top    = '34px'
+    win.style.left   = '0'
+    win.style.width  = '100vw'
+    win.style.height = 'calc(100vh - 34px)'
+    win.style.borderRadius = '0'
   }
 }
 
-// ── STICKY NOTES ──
-function addNote() {
+
+// ════════════════════════════════════════════
+//  STICKY NOTES
+// ════════════════════════════════════════════
+
+function addStickyNote() {
   const board = document.getElementById('notes-board')
-  const btn = document.getElementById('notes-add')
+  const addBtn = document.getElementById('notes-add')
   const note = document.createElement('div')
   note.className = 'sticky'
   note.innerHTML = `<button class="sticky-del" onclick="this.parentElement.remove()">✕</button><textarea placeholder="// write here..."></textarea>`
-  board.insertBefore(note, btn)
+  board.insertBefore(note, addBtn)
 }
 
-// ── CONTEXT MENU ──
+
+// ════════════════════════════════════════════
+//  CONTEXT MENU
+// ════════════════════════════════════════════
+
 const ctxMenu = document.getElementById('ctx-menu')
+
+const ctxActions = {
+  terminal:  () => openWin('win-terminal', 'di-terminal'),
+  guide:     () => openWin('win-guide', 'di-guide'),
+  wallpaper: () => showPicker(),
+  notes:     () => { openWin('win-notes', 'di-notes'); setTimeout(addStickyNote, 150) },
+}
+
 document.getElementById('desktop').addEventListener('contextmenu', e => {
   if (e.target.closest('.win') || e.target.closest('#dock-row')) return
   e.preventDefault()
   ctxMenu.style.display = 'block'
-  ctxMenu.style.left = Math.min(e.clientX, window.innerWidth-200) + 'px'
-  ctxMenu.style.top = Math.min(e.clientY, window.innerHeight-160) + 'px'
+  // keep the menu on screen — magic numbers because the menu is 180×160ish
+  ctxMenu.style.left = Math.min(e.clientX, window.innerWidth  - 200) + 'px'
+  ctxMenu.style.top  = Math.min(e.clientY, window.innerHeight - 160) + 'px'
 })
+
 document.addEventListener('click', () => ctxMenu.style.display = 'none')
+
 function ctxAction(type) {
   ctxMenu.style.display = 'none'
-  if (type === 'terminal') openWin('win-terminal','di-terminal')
-  if (type === 'guide') openWin('win-guide','di-guide')
-  if (type === 'wallpaper') showPicker()
-  if (type === 'notes') { openWin('win-notes','di-notes'); setTimeout(addNote, 150) }
+  ctxActions[type]?.()
 }
 
-// ── GUIDE HINT ──
+
+// ════════════════════════════════════════════
+//  GUIDE HINT
+// ════════════════════════════════════════════
+
 function positionGuideHint() {
-  const r = document.getElementById('di-guide').getBoundingClientRect()
-  document.getElementById('guide-hint').style.left = (r.left + r.width/2) + 'px'
+  const dockIcon = document.getElementById('di-guide')
+  const rect = dockIcon.getBoundingClientRect()
+  document.getElementById('guide-hint').style.left = (rect.left + rect.width / 2) + 'px'
 }
-function showGuideHint() { positionGuideHint(); document.getElementById('guide-hint').classList.add('show'); document.getElementById('di-guide').classList.add('guide-pulsing'); }
-function dismissGuideHint() { document.getElementById('guide-hint').classList.remove('show'); document.getElementById('di-guide').classList.remove('guide-pulsing'); }
-window.addEventListener('resize', () => { if (document.getElementById('guide-hint').classList.contains('show')) positionGuideHint() })
+
+function showGuideHint() {
+  positionGuideHint()
+  document.getElementById('guide-hint').classList.add('show')
+  document.getElementById('di-guide').classList.add('guide-pulsing')
+}
+
+function dismissGuideHint() {
+  document.getElementById('guide-hint').classList.remove('show')
+  document.getElementById('di-guide').classList.remove('guide-pulsing')
+}
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('guide-hint').classList.contains('show')) positionGuideHint()
+})
 
 
-// ── TERMINAL ──
-function termPrint(type, text) {
-  const tb = document.getElementById('term-body')
-  const d = document.createElement('div')
-  d.className = 'tline'
+// ════════════════════════════════════════════
+//  TERMINAL
+// ════════════════════════════════════════════
+
+function printToTerminal(type, text) {
+  const body = document.getElementById('term-body')
+  const line = document.createElement('div')
+  line.className = 'tline'
   if (type === 'cmd') {
-    d.innerHTML = `<span class="tprompt">rino@rinoOS:~$ </span><span style="color:#39d353">${text}</span>`
+    line.innerHTML = `<span class="tprompt">rino@rinoOS:~$ </span><span style="color:#39d353">${text}</span>`
   } else {
-    d.innerHTML = `<span class="tout">${text}</span>`
+    line.innerHTML = `<span class="tout">${text}</span>`
   }
-  tb.appendChild(d)
-  tb.scrollTop = tb.scrollHeight
+  body.appendChild(line)
+  body.scrollTop = body.scrollHeight
 }
 
-const neoArt = `
- ██████╗ ██╗███╗   ██╗ ██████╗
- ██╔══██╗██║████╗  ██║██╔═══██╗
- ██████╔╝██║██╔██╗ ██║██║   ██║
- ██╔══██╗██║██║╚██╗██║██║   ██║
- ██║  ██║██║██║ ╚████║╚██████╔╝
- ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ `
-
-const termCmds = {
+const termCommands = {
   help: () => [
     '── rinoOS terminal ──────────────────',
     '  neofetch       system info',
@@ -837,13 +963,13 @@ const termCmds = {
     '  hey jarvis, help',
   ],
   neofetch: () => [
-    '         .\'.',
-    "      .\'   \'.",
-    '    .\'  rino  \'.',
+    "         .'.",
+    "      .'   '.",
+    "    .'  rino  '.",
     "   /  @official \\",
-    '   \\     rino   /',
-    "    \'.  OS  .\'",
-    '      \'._.\'',
+    "   \\     rino   /",
+    "    '.  OS  .'",
+    "      '._.'",
     '',
     '  <span style="color:#39d353">OS</span>          rinoOS v1.0',
     '  <span style="color:#39d353">Host</span>        MacBook Air M1',
@@ -855,56 +981,107 @@ const termCmds = {
     '',
     '  <span style="background:#39d353;color:#000;padding:0 6px">  </span><span style="background:#f4d35e;color:#000;padding:0 6px">  </span><span style="background:#60a5fa;color:#000;padding:0 6px">  </span><span style="background:#f87171;color:#000;padding:0 6px">  </span>',
   ],
-  whoami: () => ['rino', '// coder. gfx designer. terminal geek. f1 head.','// always in the terminal, always shipping something.'],
-  ls: () => ['total 4', 'drwxr-xr-x  jarvis-ai/', 'drwxr-xr-x  f1-dashboard/', 'drwxr-xr-x  time-debt-roblox/', 'drwxr-xr-x  roblox-cargame/', '-rw-r--r--  about.txt', '-rw-r--r--  skills.log'],
-  'cat about.txt': () => ['# rivaan / @officiallyrino', '# coder, gfx designer, terminal geek', '# building jarvis, f1 dashboards, roblox games', '# always 2am, always in the terminal', '# india 🇮🇳 · macbook air m1'],
-  'sudo make me a sandwich': () => ['[sudo] password for rino: ','...','ok fine. 🥪'],
+  whoami: () => [
+    'rino',
+    '// coder. gfx designer. terminal geek. f1 head.',
+    '// always in the terminal, always shipping something.',
+  ],
+  ls: () => [
+    'total 4',
+    'drwxr-xr-x  jarvis-ai/',
+    'drwxr-xr-x  f1-dashboard/',
+    'drwxr-xr-x  time-debt-roblox/',
+    'drwxr-xr-x  roblox-cargame/',
+    '-rw-r--r--  about.txt',
+    '-rw-r--r--  skills.log',
+  ],
+  'cat about.txt': () => [
+    '# rivaan / @officiallyrino',
+    '# coder, gfx designer, terminal geek',
+    '# building jarvis, f1 dashboards, roblox games',
+    '# always 2am, always in the terminal',
+    '# india 🇮🇳 · macbook air m1',
+  ],
+  'sudo make me a sandwich': () => [
+    '[sudo] password for rino: ',
+    '...',
+    'ok fine. 🥪',
+  ],
   matrix: () => {
     const mc = document.getElementById('matrix-canvas')
-    if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null; mc.style.opacity='0'; return ['matrix rain off'] }
-    startMatrixRain(mc); return ['matrix rain on']
+    if (matrixRAF) {
+      cancelAnimationFrame(matrixRAF)
+      matrixRAF = null
+      mc.style.opacity = '0'
+      return ['matrix rain off']
+    }
+    startMatrixRain(mc)
+    return ['matrix rain on']
   },
 }
 
-const jarvisCmds = {
-  'open projects':  () => { openWin('win-projects','di-projects'); return ['📂 opening projects/'] },
-  'open about':     () => { openWin('win-about','di-about');       return ['👤 opening about.txt'] },
-  'open skills':    () => { openWin('win-skills','di-skills');     return ['⚡ opening skills.sh'] },
-  'open f1':        () => { openWin('win-f1','di-f1');             return ['🏎️ opening f1.log'] },
-  'open contact':   () => { openWin('win-contact','di-contact');   return ['✉️ opening contact.cfg'] },
-  'open terminal':  () => { openWin('win-terminal','di-terminal'); return ['⌨️ opening terminal'] },
-  'open notes':     () => { openWin('win-notes','di-notes');       return ['📝 opening notes.txt'] },
-  'open guide':     () => { openWin('win-guide','di-guide');       return ['🧭 opening README.md'] },
-  'what time is it':() => [`🕐 ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`],
-  'status':         () => ['🟢 all systems nominal','jarvis: online','chai: brewing ☕','always building'],
-  'time debt':      () => ['⏳ Time Debt — roblox game by rino','race the clock, collect as much as possible'],
+const jarvisCommands = {
+  'open projects':  () => { openWin('win-projects',  'di-projects');  return ['📂 opening projects/'] },
+  'open about':     () => { openWin('win-about',     'di-about');     return ['👤 opening about.txt'] },
+  'open skills':    () => { openWin('win-skills',    'di-skills');    return ['⚡ opening skills.sh'] },
+  'open f1':        () => { openWin('win-f1',        'di-f1');        return ['🏎️ opening f1.log'] },
+  'open contact':   () => { openWin('win-contact',   'di-contact');   return ['✉️ opening contact.cfg'] },
+  'open terminal':  () => { openWin('win-terminal',  'di-terminal');  return ['⌨️ opening terminal'] },
+  'open notes':     () => { openWin('win-notes',     'di-notes');     return ['📝 opening notes.txt'] },
+  'open guide':     () => { openWin('win-guide',     'di-guide');     return ['🧭 opening README.md'] },
+  'what time is it':() => [`🕐 ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`],
+  'status':         () => ['🟢 all systems nominal', 'jarvis: online', 'chai: brewing ☕', 'always building'],
+  'time debt':      () => ['⏳ Time Debt — roblox game by rino', 'race the clock, collect as much as possible'],
   'hello':          () => ['hey rino 👋'],
-  'close all':      () => { ['win-about','win-projects','win-skills','win-f1','win-contact','win-notes','win-guide'].forEach(closeWin); return ['✓ closed all windows'] },
-  'help':           () => ['hey jarvis commands:', '  hey jarvis, open [about|projects|skills|f1|contact|notes|terminal|guide]', '  hey jarvis, play music', '  hey jarvis, what time is it', '  hey jarvis, status', '  hey jarvis, close all'],
+  'close all': () => {
+    ['win-about','win-projects','win-skills','win-f1','win-contact','win-notes','win-guide'].forEach(closeWin)
+    return ['✓ closed all windows']
+  },
+  'help': () => [
+    'hey jarvis commands:',
+    '  hey jarvis, open [about|projects|skills|f1|contact|notes|terminal|guide]',
+    '  hey jarvis, what time is it',
+    '  hey jarvis, status',
+    '  hey jarvis, close all',
+  ],
 }
 
-function termKey(e) {
+function handleTerminalKey(e) {
   if (e.key !== 'Enter') return
-  const inp = document.getElementById('term-input')
-  const raw = inp.value.trim(); inp.value = ''
+
+  const input = document.getElementById('term-input')
+  const raw = input.value.trim()
+  input.value = ''
   if (!raw) return
-  termPrint('cmd', raw)
+
+  printToTerminal('cmd', raw)
   const cmd = raw.toLowerCase()
 
-  if (cmd.startsWith('hey jarvis')) {
-    const sub = cmd.replace(/^hey jarvis[,\s]*/, '').trim()
-    const fn = jarvisCmds[sub]
-    if (fn) fn().forEach(l => termPrint('output', l))
-    else { termPrint('output', `jarvis: unknown command "${sub}"`); termPrint('output', 'try: hey jarvis, help') }
+  if (cmd === 'clear') {
+    document.getElementById('term-body').innerHTML = ''
     return
   }
 
-  if (cmd === 'clear') { document.getElementById('term-body').innerHTML = ''; return }
+  if (cmd.startsWith('hey jarvis')) {
+    const sub = cmd.replace(/^hey jarvis[,\s]*/, '').trim()
+    const handler = jarvisCommands[sub]
+    if (handler) {
+      handler().forEach(l => printToTerminal('output', l))
+    } else {
+      printToTerminal('output', `jarvis: unknown command "${sub}"`)
+      printToTerminal('output', 'try: hey jarvis, help')
+    }
+    return
+  }
 
-  // handle multi-word commands like "cat about.txt"
-  const fn = termCmds[cmd]
-  if (fn) { const res = fn(); if (res) res.forEach(l => termPrint('output', l)) }
-  else { termPrint('output', `command not found: ${cmd}`); termPrint('output', "type 'help' to see available commands") }
+  const handler = termCommands[cmd]
+  if (handler) {
+    const result = handler()
+    if (result) result.forEach(l => printToTerminal('output', l))
+  } else {
+    printToTerminal('output', `command not found: ${cmd}`)
+    printToTerminal('output', "type 'help' to see available commands")
+  }
 }
 </script>
 </body>
