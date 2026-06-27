@@ -4,7 +4,7 @@ reasons why:
 
 I didn't want to create another usual website. A logo, a list of my projects, a couple of links, goodnight. No one actually reads that crap.
 
-I wanted something that should be explored. That's why I created my OS instead of a boring page about myself.
+I wanted something that should be explored. That's why I created my OS where you live like me, instead of a boring page about myself.
 
 about this project:
 
