@@ -99,13 +99,3 @@ it actually feels like an OS and not a webpage.
 the boot sequence, wallpaper picker, minimized window tray, guide app, resize handles, right-click menu, jarvis terminal — none of that was in a brief. i just kept adding things until it felt done.
 
 ---
-
-## run it
-
-open `rinoOS.html` in a browser. that's it.
-
-```
-let it boot.
-pick a wallpaper.
-type neofetch in the terminal.
-```
