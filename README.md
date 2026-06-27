@@ -1,83 +1,53 @@
-rinoOS — live like rino
+rinoOS — Live like rino
 
-why:
+reasons why:
 
-i didn't want to make the usual thing. name at the top, list of projects, some links, call it a day. nobody actually reads those.
+I didn't want to create another usual website. A logo, a list of my projects, a couple of links, goodnight. No one actually reads that crap.
 
-i wanted something you had to explore. so instead of a page about me, i made an OS that feels like mine.
+I wanted something that should be explored. That's why I created my OS instead of a boring page about myself.
 
-what it is:
+about this project:
 
 vanilla JS. no frameworks. no libraries. no backend. one file.
 
-you boot in, pick a wallpaper, land on a desktop, and click around. every window, every command, every little detail is intentional.
+you boot up the OS, choose your wallpaper, get to a desktop and browse around. Everything, every single element was thought through.
 
-what you can do:
+what you can do with it:
 
-boot
-watch the OS start with real [ OK ] style messages and a progress bar
+watch the OS booting up with actual [ OK ] style messages and progress bar
 
-wallpaper picker
-8 terminal-themed patterns — scanlines, matrix rain, grid, dot matrix, noise, indigo fog, diagonal, pure black
+wallpaper picker 8 wallpaper designs inspired by terminals: scanlines, matrix rain, grid, dot matrix, noise, indigo fog, diagonals, pure black
 
-desktop apps
-open from the dock: about, projects, skills, f1, notes, terminal, contact
+apps on a desktop all the apps appear when you launch the OS and can be opened from the dock: about, projects, skills, f1, notes, terminal, contact
 
-window management
-drag, resize, minimize, maximize. minimized windows go into a tray next to the dock. click a tile to restore.
+windows manager drag, resize, minimize and maximize windows. minimized windows are stored in a tray near the dock, just click the tile to return to your app.
 
-right-click menu
-right click the empty desktop for shortcuts
+right-click menu right click the empty desktop for shortcuts
 
-jarvis terminal
-built-in terminal. real commands:
+jarvis terminal terminal that comes pre-installed in jarvis. real commands:
 
-neofetch
-whoami
-ls
-cat about.txt
-sudo make me a sandwich
-matrix
-hey jarvis, open projects
-hey jarvis, help
-hey jarvis, close all
-hey jarvis, what time is it
+neofetch whoami ls cat about.txt sudo make me a sandwich matrix hey jarvis, open projects hey jarvis, help hey jarvis, close all hey jarvis, what time is it
 
-sticky notes
-write whatever in the notes app
+sticky notes write whatever you like in the sticky notes application
 
-README app
-there's a guide icon in the dock if you get lost
+README app you can find an icon that represents a guide in the dock
 
 design:
 
 palette
 
-
-#0D0F1A — deep navy base
-#6C63FF — flat indigo accent
-#F0EBE1 — warm cream text
-#8B8FA8 — slate for secondary text
-#E8957A — rose for warnings
-
+#0D0F1A — deep navy base color #6C63FF — flat indigo accent #F0EBE1 — cream text #8B8FA8 — slate color for secondary text #E8957A — rose for warnings
 
 typography
 
+Cabinet Grotesk — display, headings, body DM Mono — terminal output, file paths, code labels only
 
-Cabinet Grotesk — display, headings, body
-DM Mono — terminal output, file paths, code labels only
-
-
-icons
-flat purple SVG strokes. no emojis, no gradients.
+icons flat purple SVG strokes. no emojis, no gradients.
 
 difficulties:
 
-drag vs resize
-both need mousemove on the document. they kept fighting each other. fixed it by putting everything into one shared handler with two separate state objects — dragState and resizeState. one wins, one idles.
+drag & resize both events use mousemove event listener on the whole document. they were conflicting with each other. solved by creating one handler with two state objects inside — dragState & resizeState. one takes place and another waits.
 
-the guide hint bubble
-was pointing to completely the wrong spot. a CSS transform on the dock silently breaks position: fixed for anything inside it. had to pull the element out of the dock entirely and calculate position from the icon's real bounding box.
+The hint bubble on the guide was pointing to an area that was totally off. A CSS transform on the dock quietly made the position:fixed property break for any child elements. It turned out I had to remove the element from the dock itself and use its actual bounding box to compute the position.
 
-the boot progress bar
-looked choppy even when the math was right. setInterval with random increments was the problem — rewrote it with requestAnimationFrame and actual elapsed time against a fixed duration. smooth now.
+The boot progress bar seemed to be jerky despite correct math calculations. The culprit turned out to be setInterval with randomized incrementations. Rewrote it using requestAnimationFrame and actual elapsed time relative to a fixed duration.
