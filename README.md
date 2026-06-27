@@ -71,7 +71,7 @@ DM Mono — terminal output, file paths, code labels only
 icons
 flat purple SVG strokes. no emojis, no gradients.
 
-what was actually hard:
+difficulties:
 
 drag vs resize
 both need mousemove on the document. they kept fighting each other. fixed it by putting everything into one shared handler with two separate state objects — dragState and resizeState. one wins, one idles.
@@ -81,9 +81,3 @@ was pointing to completely the wrong spot. a CSS transform on the dock silently 
 
 the boot progress bar
 looked choppy even when the math was right. setInterval with random increments was the problem — rewrote it with requestAnimationFrame and actual elapsed time against a fixed duration. smooth now.
-
-what i'm proud of:
-
-it actually feels like an OS and not a webpage.
-
-the boot sequence, wallpaper picker, minimized tray, guide app, resize handles, right-click menu, jarvis terminal — none of that was in a brief. i just kept adding things until it felt done.
