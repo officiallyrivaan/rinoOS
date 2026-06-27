@@ -9,493 +9,667 @@
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
-/* ── TOKENS ──────────────────────────────── */
-:root {
-  --navy:    #0D0F1A;
-  --cream:   #F0EBE1;
-  --indigo:  #6C63FF;
-  --rose:    #E8957A;
-  --slate:   #8B8FA8;
-  --surface: #13162A;
-  --border:  rgba(255,255,255,0.08);
-  --glass:   rgba(255,255,255,0.04);
-
-  --font-display: 'Cabinet Grotesk', sans-serif;
-  --font-mono:    'DM Mono', monospace;
-}
-
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
 html, body {
-  width: 100vw; height: 100vh; overflow: hidden;
-  font-family: var(--font-display);
-  background: var(--navy);
-  color: var(--cream);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  background: #12110F;
+  color: #E8E4DC;
 }
 
-/* ── BOOT ──────────────────────────────── */
+/* boot screen */
 #boot {
-  position: fixed; inset: 0; z-index: 9999;
-  background: var(--navy);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  transition: opacity 0.7s ease;
-  /* subtle grain texture */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #12110F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s;
 }
 
 #boot-eyebrow {
-  font-family: var(--font-mono);
+  font-family: 'DM Mono', monospace;
   font-size: 11px;
-  color: var(--slate);
+  color: #5a5750;
   text-transform: uppercase;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   opacity: 0;
-  transition: opacity 0.8s ease;
+  transition: opacity 0.8s;
 }
 
 #boot-logo {
-  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: var(--cream);
-  margin-bottom: 6px;
-  position: relative;
+  color: #E8E4DC;
+  margin-bottom: 8px;
 }
 
-#boot-logo .logo-accent { color: var(--indigo); }
+#boot-logo .acc { color: #E07A3A; }
 
 #boot-tagline {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--slate);
-  margin-bottom: 52px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #5a5750;
+  margin-bottom: 48px;
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 1s;
 }
 
 #boot-lines {
-  font-family: var(--font-mono);
+  font-family: 'DM Mono', monospace;
   font-size: 11px;
-  color: var(--slate);
-  margin-bottom: 24px;
-  min-height: 96px;
-  text-align: left;
-  width: 360px;
+  color: #5a5750;
+  margin-bottom: 20px;
+  min-height: 90px;
+  width: 340px;
 }
 
-.boot-line { margin-bottom: 5px; opacity: 0; animation: fadein 0.3s forwards; }
-.boot-line .ok   { color: var(--indigo); }
-.boot-line .warn { color: var(--rose); }
+.boot-line { margin-bottom: 4px; opacity: 0; animation: fadein 0.3s forwards; }
+.boot-line .ok { color: #E07A3A; }
+.boot-line .warn { color: #c9a84c; }
 @keyframes fadein { to { opacity: 1; } }
 
 #boot-bar-wrap {
-  width: 360px; height: 1px;
-  background: var(--border);
+  width: 340px;
+  height: 1px;
+  background: #2a2820;
   overflow: hidden;
 }
 #boot-bar {
-  height: 100%; width: 0%;
-  background: var(--indigo);
-  transition: none;
+  height: 100%;
+  width: 0%;
+  background: #E07A3A;
 }
 
-/* ── SPLASH ──────────────────────────────── */
+/* splash */
 #splash {
-  position: fixed; inset: 0; z-index: 9998; display: none;
-  align-items: center; justify-content: center;
-  background: var(--navy);
-  transition: opacity 0.6s ease;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #12110F;
+  transition: opacity 0.6s;
 }
 
 #splash-text {
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2rem, 6vw, 4.5rem);
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: var(--cream);
+  color: #E8E4DC;
 }
-#splash-text em { font-style: normal; color: var(--indigo); }
+#splash-text em { font-style: normal; color: #E07A3A; }
 
-/* ── WALLPAPER PICKER ──────────────────────────────── */
+/* wallpaper picker */
 #picker {
-  position: fixed; inset: 0; z-index: 9997; display: none;
-  flex-direction: column; align-items: center; justify-content: center;
-  background: var(--navy);
-  background-image: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(108,99,255,0.12) 0%, transparent 70%);
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #12110F;
 }
 
 #picker-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--slate);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #5a5750;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 #picker h2 {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--cream);
-  margin-bottom: 32px;
+  letter-spacing: -0.02em;
+  color: #E8E4DC;
+  margin-bottom: 28px;
 }
 
 .wp-grid {
   display: grid;
   grid-template-columns: repeat(4, 140px);
   gap: 8px;
-  margin-bottom: 32px;
-  /* gapless bento: 4x2 = 8 cells, exactly 8 wallpapers */
-  grid-auto-flow: dense;
+  margin-bottom: 28px;
 }
 
 .wp-thumb {
-  width: 140px; height: 88px;
-  border-radius: 6px; cursor: pointer;
-  border: 1px solid var(--border);
-  transition: border-color 0.2s, transform 0.2s;
-  position: relative; overflow: hidden;
+  width: 140px;
+  height: 88px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #2a2820;
+  transition: border-color 0.15s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
 }
-.wp-thumb:hover { border-color: var(--indigo); transform: scale(1.03); }
+.wp-thumb:hover { border-color: #E07A3A; transform: scale(1.03); }
 .wp-thumb.selected {
-  border-color: var(--indigo);
-  box-shadow: 0 0 0 3px rgba(108,99,255,0.3);
+  border-color: #E07A3A;
+  box-shadow: 0 0 0 2px rgba(224,122,58,0.25);
 }
 .wp-thumb span {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  text-align: center; font-family: var(--font-mono); font-size: 9px;
-  color: var(--cream); background: rgba(13,15,26,0.8); padding: 4px 0;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: #E8E4DC;
+  background: rgba(18,17,15,0.85);
+  padding: 3px 0;
 }
 
 #pick-btn {
-  background: var(--indigo);
-  color: #fff;
-  border: none; border-radius: 6px;
-  padding: 12px 40px;
-  font-family: var(--font-display);
-  font-size: 14px; font-weight: 700;
+  background: #E07A3A;
+  color: #12110F;
+  border: none;
+  border-radius: 5px;
+  padding: 11px 36px;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  letter-spacing: -0.01em;
-  transition: opacity 0.15s, transform 0.15s;
+  transition: opacity 0.15s;
 }
-#pick-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+#pick-btn:hover { opacity: 0.85; }
 
-/* ── DESKTOP ──────────────────────────────── */
+/* desktop */
 #desktop { position: fixed; inset: 0; display: none; overflow: hidden; }
-#desktop-bg { position: absolute; inset: 0; background: var(--navy); }
+#desktop-bg { position: absolute; inset: 0; background: #12110F; }
 #matrix-canvas { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+
 .scanline-overlay {
-  position: absolute; inset: 0; pointer-events: none; z-index: 1;
-  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px);
 }
 
-/* ── TOPBAR ──────────────────────────────── */
+/* topbar */
 #topbar {
-  position: absolute; top: 0; left: 0; right: 0; height: 36px;
-  background: rgba(13,15,26,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 18px; z-index: 1000;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 34px;
+  background: rgba(18,17,15,0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid #2a2820;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 1000;
 }
-.tl { display: flex; align-items: center; gap: 14px; }
+
+.tl { display: flex; align-items: center; gap: 12px; }
+
 .tlogo {
-  font-weight: 900; font-size: 14px;
-  color: var(--cream);
+  font-weight: 900;
+  font-size: 13px;
+  color: #E8E4DC;
   letter-spacing: -0.03em;
 }
-.tlogo .logo-dot { color: var(--indigo); }
-.thandle { font-family: var(--font-display); font-size: 11px; color: var(--slate); }
-.tr { display: flex; align-items: center; gap: 12px; }
-#clock { font-family: var(--font-mono); font-size: 11px; color: var(--slate); }
-.tbtn {
-  font-family: var(--font-mono); font-size: 10px;
-  color: var(--slate); border: 1px solid var(--border);
-  background: var(--glass); padding: 3px 10px;
-  border-radius: 4px; cursor: pointer;
-  transition: all 0.15s;
-}
-.tbtn:hover { color: var(--cream); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
+.tlogo .acc { color: #E07A3A; }
 
-/* ── WINDOWS ──────────────────────────────── */
+.thandle { font-size: 11px; color: #5a5750; }
+
+.tr { display: flex; align-items: center; gap: 10px; }
+
+#clock {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #5a5750;
+}
+
+.tbtn {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #5a5750;
+  border: 1px solid #2a2820;
+  background: transparent;
+  padding: 3px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tbtn:hover { color: #E8E4DC; border-color: #444038; }
+
+/* windows */
 .win {
   position: absolute;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05) inset;
-  min-width: 260px; min-height: 160px;
-  display: flex; flex-direction: column;
+  background: #1C1B18;
+  border: 1px solid #2e2c28;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  min-width: 260px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
 }
+
 .win.focused {
-  border-color: rgba(108,99,255,0.35);
-  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,99,255,0.2), 0 1px 0 rgba(255,255,255,0.07) inset;
+  border-color: #3d3b36;
+  box-shadow: 0 24px 72px rgba(0,0,0,0.7);
 }
+
 .win.resizing { transition: none !important; }
 
 .win-tb {
-  height: 36px;
-  background: rgba(255,255,255,0.03);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; padding: 0 12px; gap: 8px;
-  cursor: move; flex-shrink: 0;
-  border-radius: 10px 10px 0 0;
+  height: 34px;
+  background: #191815;
+  border-bottom: 1px solid #2a2820;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 8px;
+  cursor: move;
+  flex-shrink: 0;
+  border-radius: 8px 8px 0 0;
 }
-.wb { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; border: none; flex-shrink: 0; transition: filter 0.15s; }
+
+.wb {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+  transition: filter 0.15s;
+}
 .wb:hover { filter: brightness(1.2); }
 .wbc { background: #ff5f57; }
 .wbm { background: #febc2e; }
 .wbx { background: #28c840; }
+
 .wt {
-  font-family: var(--font-mono);
-  font-size: 10px; color: var(--slate);
-  flex: 1; text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #5a5750;
+  flex: 1;
+  text-align: center;
 }
 
 .win-body {
-  flex: 1; overflow-y: auto; padding: 18px;
-  color: var(--cream); font-size: 12px; line-height: 1.7;
-  font-family: var(--font-display);
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  color: #E8E4DC;
+  font-size: 12px;
+  line-height: 1.7;
 }
 .win-body::-webkit-scrollbar { width: 3px; }
-.win-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.win-body::-webkit-scrollbar-thumb { background: #2a2820; }
 
-/* ── COMPONENTS ──────────────────────────────── */
+/* tags */
 .tag {
-  display: inline-block; font-family: var(--font-mono);
-  font-size: 10px; padding: 3px 8px; margin: 2px;
-  border: 1px solid var(--border);
-  border-radius: 4px; color: var(--slate);
-  transition: all 0.15s;
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 7px;
+  margin: 2px;
+  border: 1px solid #2e2c28;
+  border-radius: 3px;
+  color: #7a7570;
+  transition: border-color 0.15s, color 0.15s;
 }
-.tag:hover { border-color: var(--indigo); color: var(--indigo); }
+.tag:hover { border-color: #E07A3A; color: #E07A3A; }
 
+/* project cards */
 .pcard {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 14px; margin-bottom: 8px;
-  transition: background 0.15s, border-color 0.15s;
+  border: 1px solid #2e2c28;
+  border-left: 2px solid #E07A3A;
+  border-radius: 0 5px 5px 0;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  transition: background 0.15s;
 }
-.pcard:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
-.pcard h4 { color: var(--cream); font-size: 12px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; }
-.pcard p { color: var(--slate); font-size: 11px; line-height: 1.6; }
+.pcard:hover { background: rgba(255,255,255,0.02); }
+.pcard h4 { color: #E8E4DC; font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.pcard p { color: #7a7570; font-size: 11px; line-height: 1.6; }
 
-.sbar { margin-bottom: 12px; }
-.sl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; color: var(--slate); font-family: var(--font-mono); }
-.st { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.sf { height: 3px; background: var(--indigo); border-radius: 2px; }
+/* skills */
+.sbar { margin-bottom: 10px; }
+.sl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; color: #7a7570; font-family: 'DM Mono', monospace; }
+.st { height: 2px; background: #2a2820; }
+.sf { height: 2px; background: #E07A3A; }
 
+/* contact rows */
 .crow {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 0; border-bottom: 1px solid var(--border);
-  font-size: 12px; color: var(--slate); font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid #2a2820;
+  font-size: 11px;
+  color: #7a7570;
+  font-family: 'DM Mono', monospace;
 }
 .crow:last-child { border-bottom: none; }
-.crow::before { content: '$'; color: rgba(108,99,255,0.6); }
+.crow::before { content: '$'; color: #E07A3A; }
 
+/* guide steps */
 .guide-step {
-  display: flex; gap: 12px;
-  border-left: 2px solid rgba(108,99,255,0.3);
-  padding: 8px 14px; margin-bottom: 8px;
+  display: flex;
+  gap: 10px;
+  border-left: 2px solid #2e2c28;
+  padding: 7px 12px;
+  margin-bottom: 8px;
 }
 .guide-num {
-  color: var(--indigo); font-weight: 700; flex-shrink: 0;
-  font-family: var(--font-mono); font-size: 11px;
+  color: #E07A3A;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
 }
-.guide-step h4 { font-size: 12px; color: var(--cream); font-weight: 700; margin-bottom: 3px; }
-.guide-step p { font-size: 11px; color: var(--slate); line-height: 1.6; }
+.guide-step h4 { font-size: 12px; color: #E8E4DC; font-weight: 700; margin-bottom: 2px; }
+.guide-step p { font-size: 11px; color: #7a7570; line-height: 1.55; }
 .guide-step code {
-  color: var(--rose); background: rgba(232,149,122,0.1);
-  padding: 1px 5px; font-family: var(--font-mono);
-  border: 1px solid rgba(232,149,122,0.2); border-radius: 3px;
+  color: #E07A3A;
+  background: rgba(224,122,58,0.08);
+  padding: 1px 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
 }
 
-/* sticky notes */
-#notes-board { display: flex; flex-wrap: wrap; gap: 10px; padding: 4px; }
+/* notes */
+#notes-board { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px; }
 .sticky {
-  width: 130px; height: 130px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 6px; padding: 10px; position: relative;
-  transition: border-color 0.15s;
+  width: 128px;
+  height: 128px;
+  background: #191815;
+  border: 1px solid #2e2c28;
+  border-radius: 4px;
+  padding: 9px;
+  position: relative;
 }
-.sticky:nth-child(2n) { border-color: rgba(108,99,255,0.25); }
-.sticky:nth-child(3n) { border-color: rgba(232,149,122,0.25); }
-.sticky:hover { border-color: rgba(255,255,255,0.2); }
+/* alternating accent borders so they feel hand-placed */
+.sticky:nth-child(2n) { border-color: rgba(224,122,58,0.3); }
+.sticky:nth-child(3n) { border-color: rgba(201,168,76,0.25); }
 .sticky textarea {
-  width: 100%; height: 92px; background: transparent; border: none;
-  outline: none; resize: none; font-family: var(--font-mono);
-  font-size: 11px; color: var(--cream); line-height: 1.5;
+  width: 100%;
+  height: 90px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #E8E4DC;
+  line-height: 1.5;
 }
 .sticky-del {
-  position: absolute; top: 5px; right: 8px; cursor: pointer;
-  font-size: 10px; color: var(--border); border: none; background: none;
-  font-family: var(--font-mono); transition: color 0.15s;
+  position: absolute;
+  top: 4px; right: 6px;
+  cursor: pointer;
+  font-size: 10px;
+  color: #3a3830;
+  border: none;
+  background: none;
+  transition: color 0.15s;
 }
 .sticky-del:hover { color: #ff5f57; }
-#notes-add {
-  width: 130px; height: 130px;
-  border: 1px dashed var(--border);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: var(--slate); cursor: pointer;
-  transition: all 0.15s;
-}
-#notes-add:hover { border-color: var(--indigo); color: var(--indigo); }
 
-/* context menu */
+#notes-add {
+  width: 128px;
+  height: 128px;
+  border: 1px dashed #2a2820;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #3a3830;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+#notes-add:hover { border-color: #E07A3A; color: #E07A3A; }
+
+/* right-click menu */
 #ctx-menu {
-  position: fixed; display: none; z-index: 5000;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px; padding: 4px; min-width: 190px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-  backdrop-filter: blur(12px);
+  position: fixed;
+  display: none;
+  z-index: 5000;
+  background: #1C1B18;
+  border: 1px solid #2e2c28;
+  border-radius: 6px;
+  padding: 3px;
+  min-width: 180px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
 }
 .ctx-item {
-  padding: 8px 12px; cursor: pointer; font-size: 12px;
-  color: var(--slate); border-radius: 5px;
+  padding: 7px 11px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #7a7570;
+  border-radius: 4px;
   transition: background 0.1s, color 0.1s;
-  font-family: var(--font-display);
 }
-.ctx-item:hover { background: rgba(108,99,255,0.15); color: var(--cream); }
-.ctx-sep { height: 1px; background: var(--border); margin: 3px 0; }
+.ctx-item:hover { background: rgba(224,122,58,0.12); color: #E8E4DC; }
+.ctx-sep { height: 1px; background: #2a2820; margin: 3px 0; }
 
-/* guide hint */
+/* the guide hint tooltip — has to be outside dock-row or the transform breaks position:fixed */
 #guide-hint {
-  position: fixed; bottom: 80px; left: 0;
-  transform: translateX(-50%) translateY(8px);
-  background: var(--indigo); color: #fff;
-  font-size: 12px; font-weight: 600; padding: 8px 16px;
-  border-radius: 6px; white-space: nowrap; z-index: 1001;
-  box-shadow: 0 8px 24px rgba(108,99,255,0.4);
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.4s, transform 0.4s;
+  position: fixed;
+  bottom: 78px;
+  left: 0;
+  transform: translateX(-50%) translateY(6px);
+  background: #E07A3A;
+  color: #12110F;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 1001;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s, transform 0.35s;
 }
 #guide-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
 #guide-hint::after {
-  content: ''; position: absolute; top: 100%; left: 50%;
-  transform: translateX(-50%); border: 6px solid transparent;
-  border-top-color: var(--indigo);
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #E07A3A;
 }
-#guide-hint .close-hint { margin-left: 10px; cursor: pointer; opacity: 0.6; }
+#guide-hint .close-hint { margin-left: 8px; cursor: pointer; opacity: 0.6; }
 #guide-hint .close-hint:hover { opacity: 1; }
 
 /* dock */
 #dock-row {
-  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-  display: flex; align-items: flex-end; gap: 8px; z-index: 1000;
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 1000;
 }
+
 #dock {
-  background: rgba(13,15,26,0.8);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  padding: 8px 12px; display: flex; gap: 8px; border-radius: 14px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.06) inset;
+  background: rgba(18,17,15,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #2a2820;
+  padding: 7px 10px;
+  display: flex;
+  gap: 6px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
 }
+
 .di {
-  width: 46px; height: 46px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 11px;
-  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
+  width: 44px;
+  height: 44px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
   position: relative;
-  border: 1px solid var(--border);
-  background: var(--glass);
-  color: var(--cream); font-weight: 700;
-  flex-direction: column; gap: 2px;
+  border: 1px solid #2a2820;
+  background: #1C1B18;
+  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
 }
 .di:hover {
-  transform: translateY(-9px) scale(1.08);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.35);
-  border-color: rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.06);
+  transform: translateY(-8px) scale(1.07);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+  border-color: #3d3b36;
 }
+
 .di .tip {
-  position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
-  background: var(--surface); color: var(--cream);
-  font-family: var(--font-mono); font-size: 9px; padding: 4px 8px;
-  white-space: nowrap; opacity: 0; pointer-events: none;
-  transition: opacity 0.15s; border-radius: 4px;
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  position: absolute;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1C1B18;
+  color: #E8E4DC;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 3px 7px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  border-radius: 3px;
+  border: 1px solid #2e2c28;
 }
 .di:hover .tip { opacity: 1; }
+
 .di .dot {
-  position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
-  width: 3px; height: 3px; border-radius: 50%;
-  background: var(--indigo); display: none;
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: #E07A3A;
+  display: none;
 }
 .di.open .dot { display: block; }
-.di .di-icon { width: 20px; height: 20px; }
-.di .di-label { font-size: 7px; color: var(--slate); font-family: var(--font-mono); }
 
-/* minimise tray */
+.di .di-icon { width: 19px; height: 19px; }
+.di .di-label { font-size: 7px; color: #5a5750; font-family: 'DM Mono', monospace; }
+
+/* minimized tray */
 #min-tray {
-  display: flex; gap: 6px;
-  border: 1px solid var(--border);
-  padding: 8px 10px; border-radius: 12px;
-  background: rgba(13,15,26,0.7);
-  backdrop-filter: blur(20px);
+  display: flex;
+  gap: 6px;
+  border: 1px solid #2a2820;
+  padding: 7px 8px;
+  border-radius: 10px;
+  background: rgba(18,17,15,0.85);
+  backdrop-filter: blur(16px);
   transition: opacity 0.2s;
 }
 #min-tray:empty { opacity: 0; padding: 0; border: none; background: none; }
+
 .min-tile {
-  width: 46px; height: 46px; border-radius: 10px;
-  background: var(--glass); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; cursor: pointer; position: relative;
-  animation: pop-in 0.25s cubic-bezier(.34,1.56,.64,1);
-  transition: transform 0.18s;
+  width: 44px; height: 44px;
+  border-radius: 9px;
+  background: #1C1B18;
+  border: 1px solid #2a2820;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  animation: pop-in 0.22s cubic-bezier(.34,1.56,.64,1);
+  transition: transform 0.15s;
 }
-.min-tile:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.15); }
+.min-tile:hover { transform: translateY(-5px); border-color: #3d3b36; }
+/* orange dot on minimized tiles so you know they're waiting */
 .min-tile::after {
-  content: ''; position: absolute; bottom: 3px; left: 50%;
-  transform: translateX(-50%); width: 3px; height: 3px;
-  border-radius: 50%; background: var(--rose);
+  content: '';
+  position: absolute;
+  bottom: 3px; left: 50%;
+  transform: translateX(-50%);
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: #E07A3A;
 }
 @keyframes pop-in { from { transform: scale(0.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-/* resize handle */
-.resize-handle { position: absolute; width: 14px; height: 14px; bottom: 0; right: 0; cursor: nwse-resize; z-index: 5; }
+/* resize corner */
+.resize-handle {
+  position: absolute;
+  width: 14px; height: 14px;
+  bottom: 0; right: 0;
+  cursor: nwse-resize;
+  z-index: 5;
+}
 .resize-handle::after {
-  content: ''; position: absolute; right: 4px; bottom: 4px;
+  content: '';
+  position: absolute;
+  right: 4px; bottom: 4px;
   width: 5px; height: 5px;
-  border-right: 1px solid var(--slate); border-bottom: 1px solid var(--slate);
-  border-radius: 0 0 2px 0;
+  border-right: 1px solid #3d3b36;
+  border-bottom: 1px solid #3d3b36;
 }
 .win.maximized .resize-handle { display: none; }
-.win.animating { transition: top 0.25s, left 0.25s, width 0.25s, height 0.25s, transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s; }
+.win.animating { transition: top 0.25s, left 0.25s, width 0.25s, height 0.25s, transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.25s; }
 
 /* terminal */
 #term-body {
-  background: rgba(0,0,0,0.3); font-family: var(--font-mono);
-  font-size: 11px; color: var(--slate);
-  padding: 14px; overflow-y: auto; flex: 1;
+  background: #111009;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #7a7570;
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
 }
 #term-body::-webkit-scrollbar { width: 3px; }
-#term-body::-webkit-scrollbar-thumb { background: var(--border); }
-.tline { margin-bottom: 3px; line-height: 1.7; }
-.tprompt { color: var(--indigo); }
-.tout { color: var(--slate); }
+#term-body::-webkit-scrollbar-thumb { background: #2a2820; }
+.tline { margin-bottom: 3px; line-height: 1.6; }
+.tprompt { color: #E07A3A; }
+.tout { color: #7a7570; }
+
 #term-input-row {
-  display: flex; align-items: center; padding: 10px 14px;
-  background: rgba(0,0,0,0.2); border-top: 1px solid var(--border);
-  gap: 8px; flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #111009;
+  border-top: 1px solid #2a2820;
+  gap: 6px;
+  flex-shrink: 0;
 }
-#term-input-row span { color: var(--indigo); font-family: var(--font-mono); font-size: 11px; }
+#term-input-row span { color: #E07A3A; font-family: 'DM Mono', monospace; font-size: 11px; }
 #term-input {
-  background: transparent; border: none; outline: none;
-  color: var(--cream); font-family: var(--font-mono); font-size: 11px;
-  flex: 1; caret-color: var(--indigo);
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #E8E4DC;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  flex: 1;
+  caret-color: #E07A3A;
 }
 
 @keyframes guide-pulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(108,99,255,0.4) }
-  50%      { box-shadow: 0 0 0 8px transparent }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(224,122,58,0.4); }
+  50% { box-shadow: 0 0 0 7px transparent; }
 }
-.di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; border-color: var(--indigo); }
+.di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; border-color: #E07A3A; }
+
 </style>
 </head>
 <body>
@@ -503,7 +677,7 @@ html, body {
 <!-- BOOT -->
 <div id="boot">
   <div id="boot-eyebrow">initializing</div>
-  <div id="boot-logo">rino<span class="logo-accent">OS</span></div>
+  <div id="boot-logo">rino<span class="acc">OS</span></div>
   <div id="boot-tagline">live like rino</div>
   <div id="boot-lines"></div>
   <div id="boot-bar-wrap"><div id="boot-bar"></div></div>
@@ -530,7 +704,7 @@ html, body {
 
   <div id="topbar">
     <div class="tl">
-      <span class="tlogo">rino<span class="logo-dot">OS</span></span>
+      <span class="tlogo">rino<span class="acc">OS</span></span>
       <span class="thandle">@officiallyrino</span>
     </div>
     <div class="tr">
@@ -548,15 +722,15 @@ html, body {
       <span class="wt">about.txt</span>
     </div>
     <div class="win-body">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
-        <div style="width:50px;height:50px;border-radius:10px;background:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;flex-shrink:0;font-family:var(--font-display);">R</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:48px;height:48px;border-radius:8px;background:#E07A3A;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#12110F;flex-shrink:0;">R</div>
         <div>
-          <div style="font-size:15px;font-weight:700;color:var(--cream);letter-spacing:-0.02em;">Rivaan</div>
-          <div style="font-family:var(--font-display);font-size:10px;color:var(--slate);margin-top:2px;">@officiallyrino</div>
-          <div style="font-family:var(--font-display);font-size:9px;color:rgba(139,143,168,0.5);margin-top:1px;">India</div>
+          <div style="font-size:14px;font-weight:700;color:#E8E4DC;letter-spacing:-0.02em;">Rivaan</div>
+          <div style="font-size:11px;color:#5a5750;margin-top:2px;">@officiallyrino</div>
+          <div style="font-size:10px;color:#3a3830;margin-top:1px;">India</div>
         </div>
       </div>
-      <p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:16px;">Coder & GFX designer. Building things at 2am. F1 obsessed. Always in the terminal.</p>
+      <p style="font-size:11px;color:#7a7570;line-height:1.8;margin-bottom:14px;">Coder & GFX designer. Building things at 2am. F1 obsessed. Always in the terminal.</p>
       <div style="display:flex;flex-wrap:wrap;gap:4px;">
         <span class="tag">coder</span><span class="tag">GFX designer</span><span class="tag">AI tools</span><span class="tag">game dev</span><span class="tag">F1</span><span class="tag">python</span>
       </div>
@@ -572,7 +746,7 @@ html, body {
       <span class="wt">projects/</span>
     </div>
     <div class="win-body">
-      <div style="font-family:var(--font-mono);font-size:10px;color:var(--slate);margin-bottom:12px;">$ ls -la ~/projects</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:12px;">$ ls -la ~/projects</div>
       <div class="pcard"><h4>Jarvis AI</h4><p>Voice assistant — Whisper STT, Ollama/qwen, WhatsApp, screen control & wake word.</p></div>
       <div class="pcard"><h4>F1 Live Dashboard</h4><p>Real-time race leaderboard + telemetry via OpenF1 API and Streamlit.</p></div>
       <div class="pcard"><h4>Time Debt</h4><p>Roblox time-based collecting game. Race the clock to collect as much as possible.</p></div>
@@ -589,13 +763,13 @@ html, body {
       <span class="wt">skills.sh</span>
     </div>
     <div class="win-body">
-      <div style="font-family:var(--font-mono);font-size:10px;color:var(--slate);margin-bottom:14px;">$ cat skills.log</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:14px;">$ cat skills.log</div>
       <div class="sbar"><div class="sl"><span>GFX Design</span><span>88%</span></div><div class="st"><div class="sf" style="width:88%"></div></div></div>
       <div class="sbar"><div class="sl"><span>Python</span><span>85%</span></div><div class="st"><div class="sf" style="width:85%"></div></div></div>
       <div class="sbar"><div class="sl"><span>AI / LLMs</span><span>80%</span></div><div class="st"><div class="sf" style="width:80%"></div></div></div>
       <div class="sbar"><div class="sl"><span>Web Dev</span><span>75%</span></div><div class="st"><div class="sf" style="width:75%"></div></div></div>
       <div class="sbar"><div class="sl"><span>Roblox / Lua</span><span>70%</span></div><div class="st"><div class="sf" style="width:70%"></div></div></div>
-      <div style="margin-top:14px;font-family:var(--font-mono);font-size:9px;color:rgba(139,143,168,0.4);">macbook air m1 · macos · always in terminal</div>
+      <div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:9px;color:#3a3830;">macbook air m1 · macos · always in terminal</div>
     </div>
   </div>
 
@@ -608,11 +782,11 @@ html, body {
       <span class="wt">f1.log</span>
     </div>
     <div class="win-body">
-      <div style="text-align:center;margin-bottom:10px;"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#6C63FF"/><circle cx="19" cy="19" r="1" fill="#6C63FF"/></svg></div>
-      <div style="text-align:center;font-size:14px;font-weight:700;color:var(--cream);margin-bottom:4px;letter-spacing:-0.02em;">Formula 1 Obsessed</div>
-      <div style="text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--slate);margin-bottom:16px;">watches every race. built a live dashboard.</div>
+      <div style="text-align:center;margin-bottom:10px;"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#E07A3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#E07A3A"/><circle cx="19" cy="19" r="1" fill="#E07A3A"/></svg></div>
+      <div style="text-align:center;font-size:14px;font-weight:700;color:#E8E4DC;margin-bottom:4px;letter-spacing:-0.02em;">Formula 1 Obsessed</div>
+      <div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:16px;">watches every race. built a live dashboard.</div>
       <div class="pcard"><h4>F1 Live Dashboard</h4><p>Streamlit + OpenF1 API. Real-time telemetry, lap times & leaderboard.</p></div>
-      <div style="margin-top:12px;font-family:var(--font-mono);font-size:10px;color:rgba(139,143,168,0.4);text-align:center;">lights out and away we go</div>
+      <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:10px;color:#3a3830;text-align:center;">lights out and away we go</div>
     </div>
   </div>
 
@@ -629,8 +803,8 @@ html, body {
       <div class="crow"><span>device: MacBook Air M1</span></div>
       <div class="crow"><span>location: India</span></div>
       <div class="crow"><span>role: Coder / GFX Designer</span></div>
-      <div style="margin-top:16px;padding:12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-mono);font-size:10px;color:var(--slate);text-align:center;line-height:1.9;">
-        open to collabs & cool projects<br><span style="color:var(--indigo);">always building something</span>
+      <div style="margin-top:14px;padding:10px;border:1px solid #2e2c28;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;text-align:center;line-height:1.9;">
+        open to collabs & cool projects<br><span style="color:#E07A3A;">always building something</span>
       </div>
     </div>
   </div>
@@ -663,7 +837,7 @@ html, body {
     </div>
   </div>
 
-  <!-- GUIDE / README -->
+  <!-- GUIDE -->
   <div id="win-guide" class="win" style="top:55px;left:340px;width:330px;height:420px;display:none;">
     <div class="win-tb" onmousedown="startDrag(event,'win-guide')">
       <button class="wb wbc" onclick="closeWin('win-guide')"></button>
@@ -672,14 +846,14 @@ html, body {
       <span class="wt">README.md</span>
     </div>
     <div class="win-body">
-      <div style="font-family:var(--font-mono);font-size:10px;color:var(--slate);margin-bottom:14px;">$ cat README.md</div>
-      <div class="guide-step"><div class="guide-num">01</div><div><h4>open apps</h4><p>click any icon in the dock at the bottom to open a window.</p></div></div>
-      <div class="guide-step"><div class="guide-num">02</div><div><h4>move windows</h4><p>drag a window by its top bar to move it anywhere.</p></div></div>
-      <div class="guide-step"><div class="guide-num">03</div><div><h4>resize windows</h4><p>drag the corner in the bottom right to resize.</p></div></div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:14px;">$ cat README.md</div>
+      <div class="guide-step"><div class="guide-num">01</div><div><h4>open apps</h4><p>click any icon in the dock at the bottom.</p></div></div>
+      <div class="guide-step"><div class="guide-num">02</div><div><h4>move windows</h4><p>drag by the top bar.</p></div></div>
+      <div class="guide-step"><div class="guide-num">03</div><div><h4>resize</h4><p>drag the bottom-right corner.</p></div></div>
       <div class="guide-step"><div class="guide-num">04</div><div><h4>window controls</h4><p>red closes, yellow minimizes to tray, green fullscreens.</p></div></div>
-      <div class="guide-step"><div class="guide-num">05</div><div><h4>right click desktop</h4><p>right click empty desktop for quick shortcuts.</p></div></div>
-      <div class="guide-step"><div class="guide-num">06</div><div><h4>talk to jarvis</h4><p>open Terminal and try <code>hey jarvis, help</code> or just <code>neofetch</code>.</p></div></div>
-      <div style="margin-top:8px;font-family:var(--font-mono);font-size:9px;color:rgba(139,143,168,0.4);text-align:center;">that's it. have fun exploring.</div>
+      <div class="guide-step"><div class="guide-num">05</div><div><h4>right click</h4><p>right click empty desktop for shortcuts.</p></div></div>
+      <div class="guide-step"><div class="guide-num">06</div><div><h4>terminal</h4><p>try <code>hey jarvis, help</code> or <code>neofetch</code>.</p></div></div>
+      <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:#3a3830;text-align:center;">that's it. have fun.</div>
     </div>
   </div>
 
@@ -687,45 +861,43 @@ html, body {
   <div id="dock-row">
     <div id="dock">
       <div class="di" id="di-guide"    onclick="openWin('win-guide','di-guide')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#6C63FF" stroke="none"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#E07A3A" stroke="none"/></svg>
         <span class="di-label">guide</span><span class="tip">README</span><span class="dot"></span>
       </div>
       <div class="di" id="di-about"    onclick="openWin('win-about','di-about')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         <span class="di-label">about</span><span class="tip">about.txt</span><span class="dot"></span>
       </div>
       <div class="di" id="di-projects" onclick="openWin('win-projects','di-projects')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         <span class="di-label">projects</span><span class="tip">projects/</span><span class="dot"></span>
       </div>
       <div class="di" id="di-skills"   onclick="openWin('win-skills','di-skills')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke="#6C63FF"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         <span class="di-label">skills</span><span class="tip">skills.sh</span><span class="dot"></span>
       </div>
       <div class="di" id="di-f1"       onclick="openWin('win-f1','di-f1')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#6C63FF"/><circle cx="19" cy="19" r="1" fill="#6C63FF"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#E07A3A"/><circle cx="19" cy="19" r="1" fill="#E07A3A"/></svg>
         <span class="di-label">f1</span><span class="tip">f1.log</span><span class="dot"></span>
       </div>
       <div class="di" id="di-notes"    onclick="openWin('win-notes','di-notes')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         <span class="di-label">notes</span><span class="tip">notes.txt</span><span class="dot"></span>
       </div>
       <div class="di" id="di-terminal" onclick="openWin('win-terminal','di-terminal')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
         <span class="di-label">terminal</span><span class="tip">bash</span><span class="dot"></span>
       </div>
       <div class="di" id="di-contact"  onclick="openWin('win-contact','di-contact')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         <span class="di-label">contact</span><span class="tip">contact.cfg</span><span class="dot"></span>
       </div>
     </div>
     <div id="min-tray"></div>
   </div>
 
-  <!-- guide hint lives outside #dock-row so position:fixed isn't killed by the dock's transform -->
   <div id="guide-hint">new here? open README <span class="close-hint" onclick="dismissGuideHint()">✕</span></div>
 
-  <!-- right-click context menu -->
   <div id="ctx-menu">
     <div class="ctx-item" onclick="ctxAction('terminal')">open terminal</div>
     <div class="ctx-item" onclick="ctxAction('notes')">new sticky note</div>
@@ -741,24 +913,23 @@ html, body {
 // ════════════════════════════════════════════
 
 const wallpapers = [
-  { name: 'void',       type: 'solid',    color: '#0D0F1A' },
+  { name: 'void',       type: 'solid',    color: '#12110F' },
   { name: 'scanlines',  type: 'scanlines' },
   { name: 'matrix',     type: 'matrix'    },
   { name: 'grid',       type: 'grid'      },
   { name: 'dots',       type: 'dots'      },
   { name: 'noise',      type: 'noise'     },
-  { name: 'indigo fog', type: 'fog'       },
+  { name: 'warm fog',   type: 'fog'       },
   { name: 'diagonal',   type: 'diagonal'  },
 ]
 
 let matrixRAF = null
 let selectedWallpaper = 0
 
-// draws a preview thumbnail — same logic used for the full-screen bake
 function drawWallpaperThumb(canvas, wp) {
   const ctx = canvas.getContext('2d')
   const w = canvas.width, h = canvas.height
-  ctx.fillStyle = '#0D0F1A'
+  ctx.fillStyle = '#12110F'
   ctx.fillRect(0, 0, w, h)
 
   if (wp.type === 'solid') {
@@ -766,7 +937,7 @@ function drawWallpaperThumb(canvas, wp) {
     ctx.fillRect(0, 0, w, h)
   } else if (wp.type === 'scanlines') {
     for (let y = 0; y < h; y += 4) {
-      ctx.fillStyle = y % 8 === 0 ? 'rgba(108,99,255,0.2)' : 'rgba(108,99,255,0.04)'
+      ctx.fillStyle = y % 8 === 0 ? 'rgba(224,122,58,0.18)' : 'rgba(224,122,58,0.04)'
       ctx.fillRect(0, y, w, 2)
     }
   } else if (wp.type === 'matrix') {
@@ -776,21 +947,21 @@ function drawWallpaperThumb(canvas, wp) {
       for (let y = 0; y < h; y += 10) {
         if (Math.random() > 0.7) {
           ctx.globalAlpha = Math.random() * 0.5 + 0.1
-          ctx.fillStyle = Math.random() > 0.85 ? '#E8957A' : '#6C63FF'
+          ctx.fillStyle = Math.random() > 0.85 ? '#c9a84c' : '#E07A3A'
           ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y)
         }
       }
     }
     ctx.globalAlpha = 1
   } else if (wp.type === 'grid') {
-    ctx.strokeStyle = 'rgba(108,99,255,0.4)'; ctx.lineWidth = 1
+    ctx.strokeStyle = 'rgba(224,122,58,0.3)'; ctx.lineWidth = 1
     for (let x = 0; x < w; x += 14) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
     for (let y = 0; y < h; y += 14) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
-    ctx.strokeStyle = 'rgba(108,99,255,0.8)'
+    ctx.strokeStyle = 'rgba(224,122,58,0.7)'
     for (let x = 0; x < w; x += 56) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
     for (let y = 0; y < h; y += 56) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
   } else if (wp.type === 'dots') {
-    ctx.fillStyle = 'rgba(108,99,255,0.7)'
+    ctx.fillStyle = 'rgba(224,122,58,0.6)'
     for (let x = 8; x < w; x += 12) {
       for (let y = 8; y < h; y += 12) {
         ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill()
@@ -799,23 +970,22 @@ function drawWallpaperThumb(canvas, wp) {
   } else if (wp.type === 'noise') {
     const imgData = ctx.getImageData(0, 0, w, h)
     for (let i = 0; i < imgData.data.length; i += 4) {
-      const v = Math.random() > 0.9 ? Math.floor(Math.random() * 150 + 60) : Math.floor(Math.random() * 20)
-      imgData.data[i] = Math.floor(v * 0.4); imgData.data[i+1] = Math.floor(v * 0.38)
-      imgData.data[i+2] = v; imgData.data[i+3] = 255
+      const v = Math.random() > 0.9 ? Math.floor(Math.random() * 140 + 60) : Math.floor(Math.random() * 20)
+      imgData.data[i] = v; imgData.data[i+1] = Math.floor(v * 0.55)
+      imgData.data[i+2] = Math.floor(v * 0.22); imgData.data[i+3] = 255
     }
     ctx.putImageData(imgData, 0, 0)
   } else if (wp.type === 'fog') {
-    // radial indigo gradient — like staring into deep space
     const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w,h)*0.6)
-    grad.addColorStop(0, 'rgba(108,99,255,0.25)')
-    grad.addColorStop(0.5, 'rgba(108,99,255,0.08)')
-    grad.addColorStop(1, 'rgba(13,15,26,0)')
+    grad.addColorStop(0, 'rgba(224,122,58,0.15)')
+    grad.addColorStop(0.5, 'rgba(224,122,58,0.05)')
+    grad.addColorStop(1, 'rgba(18,17,15,0)')
     ctx.fillStyle = grad
     ctx.fillRect(0, 0, w, h)
   } else if (wp.type === 'diagonal') {
-    ctx.strokeStyle = 'rgba(108,99,255,0.3)'; ctx.lineWidth = 1
+    ctx.strokeStyle = 'rgba(224,122,58,0.25)'; ctx.lineWidth = 1
     for (let i = -h; i < w + h; i += 14) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
-    ctx.strokeStyle = 'rgba(232,149,122,0.5)'
+    ctx.strokeStyle = 'rgba(201,168,76,0.45)'
     for (let i = -h; i < w + h; i += 56) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
   }
 }
@@ -827,17 +997,16 @@ function applyWallpaper(idx) {
 
   if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null }
   mc.style.opacity = '0'
-  bg.style.background = '#0D0F1A'
+  bg.style.background = '#12110F'
   bg.style.backgroundImage = ''
 
   if (wp.type === 'solid') { bg.style.background = wp.color; return }
   if (wp.type === 'matrix') { startMatrixRain(mc); return }
   if (wp.type === 'fog') {
-    bg.style.background = 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(108,99,255,0.18) 0%, #0D0F1A 70%)'
+    bg.style.background = 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(224,122,58,0.12) 0%, #12110F 70%)'
     return
   }
 
-  // bake static patterns into a dataURL so rAF stays free
   const offscreen = document.createElement('canvas')
   offscreen.width = window.innerWidth; offscreen.height = window.innerHeight
   drawWallpaperThumb(offscreen, wp)
@@ -854,14 +1023,14 @@ function startMatrixRain(canvas) {
   const chars = '01アイウエオカキabcdefghijklmnopqrstuvwxyz><|_=-+*'
 
   function drawFrame() {
-    ctx.fillStyle = 'rgba(13,15,26,0.06)'
+    ctx.fillStyle = 'rgba(18,17,15,0.06)'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.font = '14px monospace'
     drops.forEach((y, i) => {
       const ch = chars[Math.floor(Math.random() * chars.length)]
       const accent = Math.random() > 0.92
-      ctx.fillStyle = accent ? '#E8957A' : '#6C63FF'
-      ctx.globalAlpha = accent ? 0.9 : 0.55
+      ctx.fillStyle = accent ? '#c9a84c' : '#E07A3A'
+      ctx.globalAlpha = accent ? 0.9 : 0.5
       ctx.fillText(ch, i * 16, y * 16)
       ctx.globalAlpha = 1
       if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0
@@ -872,7 +1041,6 @@ function startMatrixRain(canvas) {
   drawFrame()
 }
 
-// build the wallpaper picker grid
 const grid = document.getElementById('wp-grid')
 wallpapers.forEach((wp, i) => {
   const thumb = document.createElement('div')
@@ -979,9 +1147,9 @@ setInterval(updateClock, 1000)
 //  DRAG & RESIZE
 // ════════════════════════════════════════════
 
-let dragState   = null  // { win, offsetX, offsetY }
-let resizeState = null  // { win, startW, startH, startMouseX, startMouseY }
-let zTop = 200          // just needs to start above the dock (z:1000) — wait no, windows are below. still fine.
+let dragState   = null
+let resizeState = null
+let zTop = 200
 
 function focusWindow(win) {
   document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'))
@@ -1016,7 +1184,7 @@ document.addEventListener('mousemove', e => {
   if (dragState) {
     const { win, offsetX, offsetY } = dragState
     win.style.left = Math.max(0, e.clientX - offsetX) + 'px'
-    win.style.top  = Math.max(36, e.clientY - offsetY) + 'px'  // 36px = topbar height
+    win.style.top  = Math.max(34, e.clientY - offsetY) + 'px'
   } else if (resizeState) {
     const { win, startW, startH, startMouseX, startMouseY } = resizeState
     win.style.width  = Math.max(260, startW + (e.clientX - startMouseX)) + 'px'
@@ -1038,14 +1206,14 @@ document.addEventListener('mouseup', () => {
 const winDockMap = {}
 
 const winIcons = {
-  'win-about':    `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
-  'win-projects': `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
-  'win-skills':   `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-  'win-f1':       `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/></svg>`,
-  'win-notes':    `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
-  'win-terminal': `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`,
-  'win-contact':  `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
-  'win-guide':    `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#6C63FF" stroke="none"/></svg>`,
+  'win-about':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
+  'win-projects': `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
+  'win-skills':   `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+  'win-f1':       `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/></svg>`,
+  'win-notes':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+  'win-terminal': `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`,
+  'win-contact':  `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  'win-guide':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#E07A3A" stroke="none"/></svg>`,
 }
 
 function openWin(winId, dockId) {
@@ -1116,8 +1284,8 @@ function toggleMaximize(winId) {
     win.dataset.savedWidth  = win.style.width
     win.dataset.savedHeight = win.style.height
     win.classList.add('maximized')
-    win.style.top = '36px'; win.style.left = '0'
-    win.style.width = '100vw'; win.style.height = 'calc(100vh - 36px)'
+    win.style.top = '34px'; win.style.left = '0'
+    win.style.width = '100vw'; win.style.height = 'calc(100vh - 34px)'
     win.style.borderRadius = '0'
   }
 }
@@ -1197,7 +1365,7 @@ function printToTerminal(type, text) {
   const line = document.createElement('div')
   line.className = 'tline'
   if (type === 'cmd') {
-    line.innerHTML = `<span class="tprompt">rino@rinoOS:~$ </span><span style="color:var(--cream)">${text}</span>`
+    line.innerHTML = `<span class="tprompt">rino@rinoOS:~$ </span><span style="color:#E8E4DC">${text}</span>`
   } else {
     line.innerHTML = `<span class="tout">${text}</span>`
   }
@@ -1228,15 +1396,15 @@ const termCommands = {
     "    '.  OS  .'",
     "      '._.'",
     '',
-    '  <span style="color:var(--indigo)">OS</span>          rinoOS v1.0',
-    '  <span style="color:var(--indigo)">Host</span>        MacBook Air M1',
-    '  <span style="color:var(--indigo)">Shell</span>       jarvis + bash',
-    '  <span style="color:var(--indigo)">Theme</span>       indigo / navy',
-    '  <span style="color:var(--indigo)">Role</span>        Coder / GFX Designer',
-    '  <span style="color:var(--indigo)">Location</span>    India',
-    '  <span style="color:var(--indigo)">Status</span>      always building',
+    '  <span style="color:#E07A3A">OS</span>          rinoOS v1.0',
+    '  <span style="color:#E07A3A">Host</span>        MacBook Air M1',
+    '  <span style="color:#E07A3A">Shell</span>       jarvis + bash',
+    '  <span style="color:#E07A3A">Theme</span>       warm dark / orange',
+    '  <span style="color:#E07A3A">Role</span>        Coder / GFX Designer',
+    '  <span style="color:#E07A3A">Location</span>    India',
+    '  <span style="color:#E07A3A">Status</span>      always building',
     '',
-    '  <span style="background:#6C63FF;color:#fff;padding:0 6px">  </span><span style="background:#E8957A;color:#fff;padding:0 6px">  </span><span style="background:#F0EBE1;color:#0D0F1A;padding:0 6px">  </span><span style="background:#8B8FA8;color:#fff;padding:0 6px">  </span>',
+    '  <span style="background:#E07A3A;color:#12110F;padding:0 6px">  </span><span style="background:#c9a84c;color:#12110F;padding:0 6px">  </span><span style="background:#E8E4DC;color:#12110F;padding:0 6px">  </span><span style="background:#5a5750;color:#E8E4DC;padding:0 6px">  </span>',
   ],
   whoami: () => [
     'rino',
@@ -1259,11 +1427,7 @@ const termCommands = {
     '# always 2am, always in the terminal',
     '# india · macbook air m1',
   ],
-  'sudo make me a sandwich': () => [
-    '[sudo] password for rino: ',
-    '...',
-    'ok fine. here you go.',
-  ],
+  'sudo make me a sandwich': () => ['[sudo] password for rino: ', '...', 'ok fine. here you go.'],
   matrix: () => {
     const mc = document.getElementById('matrix-canvas')
     if (matrixRAF) {
