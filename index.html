@@ -8,910 +8,837 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-
 html, body {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  font-family: 'Cabinet Grotesk', sans-serif;
-  background: #12110F;
-  color: #E8E4DC;
+width: 100vw;
+height: 100vh;
+overflow: hidden;
+font-family: 'Cabinet Grotesk', sans-serif;
+background: #12110F;
+color: #E8E4DC;
 }
-
 /* boot screen */
 #boot {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: #12110F;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.7s;
+position: fixed;
+inset: 0;
+z-index: 9999;
+background: #12110F;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+transition: opacity 0.7s;
 }
-
 #boot-eyebrow {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: #5a5750;
-  text-transform: uppercase;
-  margin-bottom: 18px;
-  opacity: 0;
-  transition: opacity 0.8s;
+font-family: 'DM Mono', monospace;
+font-size: 9px;
+color: #5a5750;
+text-transform: uppercase;
+letter-spacing: 0.12em;
+margin-bottom: 18px;
+opacity: 0;
+transition: opacity 0.8s;
 }
-
 #boot-logo {
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: #E8E4DC;
-  margin-bottom: 8px;
+font-size: clamp(3rem, 8vw, 6rem);
+font-weight: 900;
+letter-spacing: -0.04em;
+line-height: 1;
+color: #E8E4DC;
+margin-bottom: 8px;
 }
-
-#boot-logo .acc { color: #E07A3A; }
-
+#boot-logo .acc { color: #6C63FF; }
 #boot-tagline {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: #5a5750;
-  margin-bottom: 48px;
-  opacity: 0;
-  transition: opacity 1s;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+color: #5a5750;
+margin-bottom: 48px;
+opacity: 0;
+transition: opacity 1s;
 }
-
 #boot-lines {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: #5a5750;
-  margin-bottom: 20px;
-  min-height: 90px;
-  width: 340px;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+color: #5a5750;
+margin-bottom: 20px;
+min-height: 90px;
+width: 340px;
 }
-
 .boot-line { margin-bottom: 4px; opacity: 0; animation: fadein 0.3s forwards; }
-.boot-line .ok { color: #E07A3A; }
-.boot-line .warn { color: #c9a84c; }
+.boot-line .ok { color: #6C63FF; }
+.boot-line .warn { color: #8B8FA8; }
 @keyframes fadein { to { opacity: 1; } }
-
 #boot-bar-wrap {
-  width: 340px;
-  height: 1px;
-  background: #2a2820;
-  overflow: hidden;
+width: 340px;
+height: 1px;
+background: #2a2820;
+overflow: hidden;
 }
 #boot-bar {
-  height: 100%;
-  width: 0%;
-  background: #E07A3A;
+height: 100%;
+width: 0%;
+background: #6C63FF;
 }
-
 /* splash */
 #splash {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: #12110F;
-  transition: opacity 0.6s;
+position: fixed;
+inset: 0;
+z-index: 9998;
+display: none;
+align-items: center;
+justify-content: center;
+background: #12110F;
+transition: opacity 0.6s;
 }
-
 #splash-text {
-  font-size: clamp(2rem, 6vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  color: #E8E4DC;
+font-size: clamp(2rem, 6vw, 4.5rem);
+font-weight: 900;
+letter-spacing: -0.03em;
+color: #E8E4DC;
 }
-#splash-text em { font-style: normal; color: #E07A3A; }
-
+#splash-text em { font-style: normal; color: #6C63FF; }
 /* wallpaper picker */
 #picker {
-  position: fixed;
-  inset: 0;
-  z-index: 9997;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #12110F;
+position: fixed;
+inset: 0;
+z-index: 9997;
+display: none;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: #12110F;
 }
-
 #picker-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: #5a5750;
-  text-transform: uppercase;
-  margin-bottom: 10px;
+font-family: 'DM Mono', monospace;
+font-size: 9px;
+color: #5a5750;
+text-transform: uppercase;
+letter-spacing: 0.12em;
+margin-bottom: 10px;
 }
-
 #picker h2 {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #E8E4DC;
-  margin-bottom: 28px;
+font-size: 26px;
+font-weight: 700;
+letter-spacing: -0.02em;
+color: #E8E4DC;
+margin-bottom: 28px;
 }
-
 .wp-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 140px);
-  gap: 8px;
-  margin-bottom: 28px;
+display: grid;
+grid-template-columns: repeat(4, 140px);
+gap: 8px;
+margin-bottom: 28px;
 }
-
 .wp-thumb {
-  width: 140px;
-  height: 88px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: 1px solid #2a2820;
-  transition: border-color 0.15s, transform 0.15s;
-  position: relative;
-  overflow: hidden;
+width: 140px;
+height: 88px;
+border-radius: 5px;
+cursor: pointer;
+border: 1px solid #2a2820;
+transition: border-color 0.15s, transform 0.15s;
+position: relative;
+overflow: hidden;
 }
-.wp-thumb:hover { border-color: #E07A3A; transform: scale(1.03); }
+.wp-thumb:hover { border-color: #6C63FF; transform: scale(1.03); }
 .wp-thumb.selected {
-  border-color: #E07A3A;
-  box-shadow: 0 0 0 2px rgba(224,122,58,0.25);
+border-color: #6C63FF;
+box-shadow: 0 0 0 2px rgba(108,99,255,0.25);
 }
 .wp-thumb span {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: #E8E4DC;
-  background: rgba(18,17,15,0.85);
-  padding: 3px 0;
+position: absolute;
+bottom: 0; left: 0; right: 0;
+text-align: center;
+font-family: 'DM Mono', monospace;
+font-size: 9px;
+color: #E8E4DC;
+background: rgba(18,17,15,0.85);
+padding: 3px 0;
 }
-
 #pick-btn {
-  background: #E07A3A;
-  color: #12110F;
-  border: none;
-  border-radius: 5px;
-  padding: 11px 36px;
-  font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.15s;
+background: #6C63FF;
+color: #12110F;
+border: none;
+border-radius: 5px;
+padding: 11px 36px;
+font-family: 'Cabinet Grotesk', sans-serif;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+transition: opacity 0.15s;
 }
 #pick-btn:hover { opacity: 0.85; }
-
 /* desktop */
 #desktop { position: fixed; inset: 0; display: none; overflow: hidden; }
 #desktop-bg { position: absolute; inset: 0; background: #12110F; }
 #matrix-canvas { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
-
 .scanline-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px);
+position: absolute;
+inset: 0;
+pointer-events: none;
+z-index: 1;
+background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px);
 }
-
 /* topbar */
 #topbar {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 34px;
-  background: rgba(18,17,15,0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid #2a2820;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  z-index: 1000;
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 34px;
+background: rgba(18,17,15,0.9);
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+border-bottom: 1px solid #2a2820;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 16px;
+z-index: 1000;
 }
-
 .tl { display: flex; align-items: center; gap: 12px; }
-
 .tlogo {
-  font-weight: 900;
-  font-size: 13px;
-  color: #E8E4DC;
-  letter-spacing: -0.03em;
+font-weight: 900;
+font-size: 13px;
+color: #E8E4DC;
+letter-spacing: -0.03em;
 }
-.tlogo .acc { color: #E07A3A; }
-
-.thandle { font-size: 11px; color: #5a5750; }
-
+.tlogo .acc { color: #6C63FF; }
+.thandle { font-size: 10px; color: #5a5750; letter-spacing: 0.04em; }
 .tr { display: flex; align-items: center; gap: 10px; }
-
 #clock {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: #5a5750;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+color: #5a5750;
 }
-
 .tbtn {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: #5a5750;
-  border: 1px solid #2a2820;
-  background: transparent;
-  padding: 3px 9px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+font-family: 'DM Mono', monospace;
+font-size: 10px;
+color: #5a5750;
+border: 1px solid #2a2820;
+background: transparent;
+padding: 3px 9px;
+border-radius: 4px;
+cursor: pointer;
+transition: color 0.15s, border-color 0.15s;
 }
 .tbtn:hover { color: #E8E4DC; border-color: #444038; }
-
 /* windows */
 .win {
-  position: absolute;
-  background: #1C1B18;
-  border: 1px solid #2e2c28;
-  border-radius: 8px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-  min-width: 260px;
-  min-height: 160px;
-  display: flex;
-  flex-direction: column;
+position: absolute;
+background: #1C1B18;
+border: 1px solid #2e2c28;
+border-radius: 8px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+min-width: 260px;
+min-height: 160px;
+display: flex;
+flex-direction: column;
 }
-
 .win.focused {
-  border-color: #3d3b36;
-  box-shadow: 0 24px 72px rgba(0,0,0,0.7);
+border-color: #3d3b36;
+box-shadow: 0 24px 72px rgba(0,0,0,0.7);
 }
-
 .win.resizing { transition: none !important; }
-
 .win-tb {
-  height: 34px;
-  background: #191815;
-  border-bottom: 1px solid #2a2820;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  gap: 8px;
-  cursor: move;
-  flex-shrink: 0;
-  border-radius: 8px 8px 0 0;
+height: 34px;
+background: #191815;
+border-bottom: 1px solid #2a2820;
+display: flex;
+align-items: center;
+padding: 0 10px;
+gap: 8px;
+cursor: move;
+flex-shrink: 0;
+border-radius: 8px 8px 0 0;
 }
-
 .wb {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
-  flex-shrink: 0;
-  transition: filter 0.15s;
+width: 11px;
+height: 11px;
+border-radius: 50%;
+cursor: pointer;
+border: none;
+flex-shrink: 0;
+transition: filter 0.15s;
 }
 .wb:hover { filter: brightness(1.2); }
 .wbc { background: #ff5f57; }
 .wbm { background: #febc2e; }
 .wbx { background: #28c840; }
-
 .wt {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: #5a5750;
-  flex: 1;
-  text-align: center;
+font-family: 'DM Mono', monospace;
+font-size: 10px;
+color: #5a5750;
+letter-spacing: 0.06em;
+flex: 1;
+text-align: center;
 }
-
 .win-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  color: #E8E4DC;
-  font-size: 12px;
-  line-height: 1.7;
+flex: 1;
+overflow-y: auto;
+padding: 16px;
+color: #E8E4DC;
+font-size: 12px;
+line-height: 1.7;
 }
 .win-body::-webkit-scrollbar { width: 3px; }
 .win-body::-webkit-scrollbar-thumb { background: #2a2820; }
-
 /* tags */
 .tag {
-  display: inline-block;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  padding: 2px 7px;
-  margin: 2px;
-  border: 1px solid #2e2c28;
-  border-radius: 3px;
-  color: #7a7570;
-  transition: border-color 0.15s, color 0.15s;
+display: inline-block;
+font-family: 'DM Mono', monospace;
+font-size: 10px;
+padding: 2px 7px;
+margin: 2px;
+border: 1px solid #2e2c28;
+border-radius: 3px;
+color: #7a7570;
+transition: border-color 0.15s, color 0.15s;
 }
-.tag:hover { border-color: #E07A3A; color: #E07A3A; }
-
+.tag:hover { border-color: #6C63FF; color: #6C63FF; }
 /* project cards */
 .pcard {
-  border: 1px solid #2e2c28;
-  border-left: 2px solid #E07A3A;
-  border-radius: 0 5px 5px 0;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  transition: background 0.15s;
+border: 1px solid #2e2c28;
+border-left: 2px solid #6C63FF;
+border-radius: 0 5px 5px 0;
+padding: 10px 12px;
+margin-bottom: 8px;
+transition: background 0.15s;
 }
 .pcard:hover { background: rgba(255,255,255,0.02); }
 .pcard h4 { color: #E8E4DC; font-size: 12px; font-weight: 700; margin-bottom: 3px; }
-.pcard p { color: #7a7570; font-size: 11px; line-height: 1.6; }
-
+.pcard p { color: #7a7570; font-size: 11px; line-height: 1.55; letter-spacing: 0.01em; }
 /* skills */
 .sbar { margin-bottom: 10px; }
-.sl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; color: #7a7570; font-family: 'DM Mono', monospace; }
+.sl { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; color: #7a7570; font-family: 'DM Mono', monospace; letter-spacing: 0.02em; }
 .st { height: 2px; background: #2a2820; }
-.sf { height: 2px; background: #E07A3A; }
-
+.sf { height: 2px; background: #6C63FF; }
 /* contact rows */
 .crow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 0;
-  border-bottom: 1px solid #2a2820;
-  font-size: 11px;
-  color: #7a7570;
-  font-family: 'DM Mono', monospace;
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 7px 0;
+border-bottom: 1px solid #2a2820;
+font-size: 11px;
+color: #7a7570;
+font-family: 'DM Mono', monospace;
+letter-spacing: 0.02em;
 }
 .crow:last-child { border-bottom: none; }
-.crow::before { content: '$'; color: #E07A3A; }
-
+.crow::before { content: '$'; color: #6C63FF; }
 /* guide steps */
 .guide-step {
-  display: flex;
-  gap: 10px;
-  border-left: 2px solid #2e2c28;
-  padding: 7px 12px;
-  margin-bottom: 8px;
+display: flex;
+gap: 10px;
+border-left: 2px solid #2e2c28;
+padding: 7px 12px;
+margin-bottom: 8px;
 }
 .guide-num {
-  color: #E07A3A;
-  font-weight: 700;
-  flex-shrink: 0;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
+color: #6C63FF;
+font-weight: 700;
+flex-shrink: 0;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
 }
 .guide-step h4 { font-size: 12px; color: #E8E4DC; font-weight: 700; margin-bottom: 2px; }
 .guide-step p { font-size: 11px; color: #7a7570; line-height: 1.55; }
 .guide-step code {
-  color: #E07A3A;
-  background: rgba(224,122,58,0.08);
-  padding: 1px 4px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
+color: #6C63FF;
+background: rgba(108,99,255,0.08);
+padding: 1px 4px;
+font-family: 'DM Mono', monospace;
+font-size: 10px;
 }
-
 /* notes */
 #notes-board { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px; }
 .sticky {
-  width: 128px;
-  height: 128px;
-  background: #191815;
-  border: 1px solid #2e2c28;
-  border-radius: 4px;
-  padding: 9px;
-  position: relative;
+width: 128px;
+height: 128px;
+background: #191815;
+border: 1px solid #2e2c28;
+border-radius: 4px;
+padding: 9px;
+position: relative;
 }
-/* alternating accent borders so they feel hand-placed */
-.sticky:nth-child(2n) { border-color: rgba(224,122,58,0.3); }
-.sticky:nth-child(3n) { border-color: rgba(201,168,76,0.25); }
+.sticky:nth-child(2n) { border-color: rgba(108,99,255,0.3); }
+.sticky:nth-child(3n) { border-color: rgba(139,143,168,0.25); }
 .sticky textarea {
-  width: 100%;
-  height: 90px;
-  background: transparent;
-  border: none;
-  outline: none;
-  resize: none;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: #E8E4DC;
-  line-height: 1.5;
+width: 100%;
+height: 90px;
+background: transparent;
+border: none;
+outline: none;
+resize: none;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+color: #E8E4DC;
+line-height: 1.5;
 }
 .sticky-del {
-  position: absolute;
-  top: 4px; right: 6px;
-  cursor: pointer;
-  font-size: 10px;
-  color: #3a3830;
-  border: none;
-  background: none;
-  transition: color 0.15s;
+position: absolute;
+top: 4px; right: 6px;
+cursor: pointer;
+font-size: 10px;
+color: #3a3830;
+border: none;
+background: none;
+transition: color 0.15s;
 }
 .sticky-del:hover { color: #ff5f57; }
-
 #notes-add {
-  width: 128px;
-  height: 128px;
-  border: 1px dashed #2a2820;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: #3a3830;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+width: 128px;
+height: 128px;
+border: 1px dashed #2a2820;
+border-radius: 4px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+color: #3a3830;
+cursor: pointer;
+transition: border-color 0.15s, color 0.15s;
 }
-#notes-add:hover { border-color: #E07A3A; color: #E07A3A; }
-
+#notes-add:hover { border-color: #6C63FF; color: #6C63FF; }
 /* right-click menu */
 #ctx-menu {
-  position: fixed;
-  display: none;
-  z-index: 5000;
-  background: #1C1B18;
-  border: 1px solid #2e2c28;
-  border-radius: 6px;
-  padding: 3px;
-  min-width: 180px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+position: fixed;
+display: none;
+z-index: 5000;
+background: #1C1B18;
+border: 1px solid #2e2c28;
+border-radius: 6px;
+padding: 3px;
+min-width: 180px;
+box-shadow: 0 12px 40px rgba(0,0,0,0.5);
 }
 .ctx-item {
-  padding: 7px 11px;
-  cursor: pointer;
-  font-size: 12px;
-  color: #7a7570;
-  border-radius: 4px;
-  transition: background 0.1s, color 0.1s;
+padding: 7px 11px;
+cursor: pointer;
+font-size: 12px;
+color: #7a7570;
+border-radius: 4px;
+transition: background 0.1s, color 0.1s;
 }
-.ctx-item:hover { background: rgba(224,122,58,0.12); color: #E8E4DC; }
+.ctx-item:hover { background: rgba(108,99,255,0.12); color: #E8E4DC; }
 .ctx-sep { height: 1px; background: #2a2820; margin: 3px 0; }
-
-/* the guide hint tooltip — has to be outside dock-row or the transform breaks position:fixed */
 #guide-hint {
-  position: fixed;
-  bottom: 78px;
-  left: 0;
-  transform: translateX(-50%) translateY(6px);
-  background: #E07A3A;
-  color: #12110F;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 7px 14px;
-  border-radius: 5px;
-  white-space: nowrap;
-  z-index: 1001;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s, transform 0.35s;
+position: fixed;
+bottom: 78px;
+left: 0;
+transform: translateX(-50%) translateY(6px);
+background: #6C63FF;
+color: #12110F;
+font-size: 12px;
+font-weight: 600;
+padding: 7px 14px;
+border-radius: 5px;
+white-space: nowrap;
+z-index: 1001;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.35s, transform 0.35s;
 }
 #guide-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
 #guide-hint::after {
-  content: '';
-  position: absolute;
-  top: 100%; left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: #E07A3A;
+content: '';
+position: absolute;
+top: 100%; left: 50%;
+transform: translateX(-50%);
+border: 5px solid transparent;
+border-top-color: #6C63FF;
 }
 #guide-hint .close-hint { margin-left: 8px; cursor: pointer; opacity: 0.6; }
 #guide-hint .close-hint:hover { opacity: 1; }
-
 /* dock */
 #dock-row {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  z-index: 1000;
+position: absolute;
+bottom: 12px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+align-items: flex-end;
+gap: 8px;
+z-index: 1000;
 }
-
 #dock {
-  background: rgba(18,17,15,0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #2a2820;
-  padding: 7px 10px;
-  display: flex;
-  gap: 6px;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+background: rgba(18,17,15,0.88);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+border: 1px solid #2a2820;
+padding: 7px 10px;
+display: flex;
+gap: 6px;
+border-radius: 12px;
+box-shadow: 0 8px 30px rgba(0,0,0,0.5);
 }
-
 .di {
-  width: 44px;
-  height: 44px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 2px;
-  cursor: pointer;
-  position: relative;
-  border: 1px solid #2a2820;
-  background: #1C1B18;
-  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
+width: 44px;
+height: 44px;
+border-radius: 9px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+gap: 2px;
+cursor: pointer;
+position: relative;
+border: 1px solid #2a2820;
+background: #1C1B18;
+transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
 }
 .di:hover {
-  transform: translateY(-8px) scale(1.07);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.4);
-  border-color: #3d3b36;
+transform: translateY(-8px) scale(1.07);
+box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+border-color: #3d3b36;
 }
-
 .di .tip {
-  position: absolute;
-  bottom: 56px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1C1B18;
-  color: #E8E4DC;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  padding: 3px 7px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s;
-  border-radius: 3px;
-  border: 1px solid #2e2c28;
+position: absolute;
+bottom: 56px;
+left: 50%;
+transform: translateX(-50%);
+background: #1C1B18;
+color: #E8E4DC;
+font-family: 'DM Mono', monospace;
+font-size: 9px;
+padding: 3px 7px;
+white-space: nowrap;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.15s;
+border-radius: 3px;
+border: 1px solid #2e2c28;
 }
 .di:hover .tip { opacity: 1; }
-
 .di .dot {
-  position: absolute;
-  bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: #E07A3A;
-  display: none;
+position: absolute;
+bottom: -5px;
+left: 50%;
+transform: translateX(-50%);
+width: 3px; height: 3px;
+border-radius: 50%;
+background: #6C63FF;
+display: none;
 }
 .di.open .dot { display: block; }
-
 .di .di-icon { width: 19px; height: 19px; }
-.di .di-label { font-size: 7px; color: #5a5750; font-family: 'DM Mono', monospace; }
-
+.di .di-label { font-size: 7px; color: #3a3830; letter-spacing: 0.05em; font-family: 'DM Mono', monospace; }
 /* minimized tray */
 #min-tray {
-  display: flex;
-  gap: 6px;
-  border: 1px solid #2a2820;
-  padding: 7px 8px;
-  border-radius: 10px;
-  background: rgba(18,17,15,0.85);
-  backdrop-filter: blur(16px);
-  transition: opacity 0.2s;
+display: flex;
+gap: 6px;
+border: 1px solid #2a2820;
+padding: 7px 8px;
+border-radius: 10px;
+background: rgba(18,17,15,0.85);
+backdrop-filter: blur(16px);
+transition: opacity 0.2s;
 }
 #min-tray:empty { opacity: 0; padding: 0; border: none; background: none; }
-
 .min-tile {
-  width: 44px; height: 44px;
-  border-radius: 9px;
-  background: #1C1B18;
-  border: 1px solid #2a2820;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  animation: pop-in 0.22s cubic-bezier(.34,1.56,.64,1);
-  transition: transform 0.15s;
+width: 44px; height: 44px;
+border-radius: 9px;
+background: #1C1B18;
+border: 1px solid #2a2820;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+position: relative;
+animation: pop-in 0.22s cubic-bezier(.34,1.56,.64,1);
+transition: transform 0.15s;
 }
 .min-tile:hover { transform: translateY(-5px); border-color: #3d3b36; }
-/* orange dot on minimized tiles so you know they're waiting */
 .min-tile::after {
-  content: '';
-  position: absolute;
-  bottom: 3px; left: 50%;
-  transform: translateX(-50%);
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: #E07A3A;
+content: '';
+position: absolute;
+bottom: 3px; left: 50%;
+transform: translateX(-50%);
+width: 3px; height: 3px;
+border-radius: 50%;
+background: #6C63FF;
 }
 @keyframes pop-in { from { transform: scale(0.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
 /* resize corner */
 .resize-handle {
-  position: absolute;
-  width: 14px; height: 14px;
-  bottom: 0; right: 0;
-  cursor: nwse-resize;
-  z-index: 5;
+position: absolute;
+width: 14px; height: 14px;
+bottom: 0; right: 0;
+cursor: nwse-resize;
+z-index: 5;
 }
 .resize-handle::after {
-  content: '';
-  position: absolute;
-  right: 4px; bottom: 4px;
-  width: 5px; height: 5px;
-  border-right: 1px solid #3d3b36;
-  border-bottom: 1px solid #3d3b36;
+content: '';
+position: absolute;
+right: 4px; bottom: 4px;
+width: 5px; height: 5px;
+border-right: 1px solid #3d3b36;
+border-bottom: 1px solid #3d3b36;
 }
 .win.maximized .resize-handle { display: none; }
 .win.animating { transition: top 0.25s, left 0.25s, width 0.25s, height 0.25s, transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.25s; }
-
 /* terminal */
 #term-body {
-  background: #111009;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: #7a7570;
-  padding: 12px;
-  overflow-y: auto;
-  flex: 1;
+background: #111009;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+color: #7a7570;
+padding: 12px;
+overflow-y: auto;
+flex: 1;
 }
 #term-body::-webkit-scrollbar { width: 3px; }
 #term-body::-webkit-scrollbar-thumb { background: #2a2820; }
 .tline { margin-bottom: 3px; line-height: 1.6; }
-.tprompt { color: #E07A3A; }
-.tout { color: #7a7570; }
-
+.tprompt { color: #6C63FF; }
+.tout { color: #6a6660; }
 #term-input-row {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  background: #111009;
-  border-top: 1px solid #2a2820;
-  gap: 6px;
-  flex-shrink: 0;
+display: flex;
+align-items: center;
+padding: 8px 12px;
+background: #111009;
+border-top: 1px solid #2a2820;
+gap: 6px;
+flex-shrink: 0;
 }
-#term-input-row span { color: #E07A3A; font-family: 'DM Mono', monospace; font-size: 11px; }
+#term-input-row span { color: #6C63FF; font-family: 'DM Mono', monospace; font-size: 11px; }
 #term-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #E8E4DC;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  flex: 1;
-  caret-color: #E07A3A;
+background: transparent;
+border: none;
+outline: none;
+color: #E8E4DC;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+flex: 1;
+caret-color: #6C63FF;
 }
-
 @keyframes guide-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(224,122,58,0.4); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(108,99,255,0.4); }
   50% { box-shadow: 0 0 0 7px transparent; }
 }
-.di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; border-color: #E07A3A; }
-
+.di.guide-pulsing { animation: guide-pulse 1.4s ease-out infinite; border-color: #6C63FF; }
 </style>
 </head>
 <body>
-
 <!-- BOOT -->
 <div id="boot">
-  <div id="boot-eyebrow">initializing</div>
-  <div id="boot-logo">rino<span class="acc">OS</span></div>
-  <div id="boot-tagline">live like rino</div>
-  <div id="boot-lines"></div>
-  <div id="boot-bar-wrap"><div id="boot-bar"></div></div>
+<div id="boot-eyebrow">initializing</div>
+<div id="boot-logo">rino<span class="acc">OS</span></div>
+<div id="boot-tagline">live like rino</div>
+<div id="boot-lines"></div>
+<div id="boot-bar-wrap"><div id="boot-bar"></div></div>
 </div>
-
 <!-- SPLASH -->
 <div id="splash">
-  <div id="splash-text">live like <em>rino</em></div>
+<div id="splash-text">live like <em>rino</em></div>
 </div>
-
 <!-- WALLPAPER PICKER -->
 <div id="picker">
-  <div id="picker-label">appearance</div>
-  <h2>choose your wallpaper</h2>
-  <div class="wp-grid" id="wp-grid"></div>
-  <button id="pick-btn" onclick="confirmWallpaper()">launch rinoOS</button>
+<div id="picker-label">appearance</div>
+<h2>choose your wallpaper</h2>
+<div class="wp-grid" id="wp-grid"></div>
+<button id="pick-btn" onclick="confirmWallpaper()">launch rinoOS</button>
 </div>
-
 <!-- DESKTOP -->
 <div id="desktop">
-  <div id="desktop-bg"></div>
-  <canvas id="matrix-canvas"></canvas>
-  <div class="scanline-overlay"></div>
-
-  <div id="topbar">
-    <div class="tl">
-      <span class="tlogo">rino<span class="acc">OS</span></span>
-      <span class="thandle">@officiallyrino</span>
-    </div>
-    <div class="tr">
-      <span class="tbtn" onclick="showPicker()">wallpaper</span>
-      <span id="clock"></span>
-    </div>
-  </div>
-
-  <!-- ABOUT -->
-  <div id="win-about" class="win" style="top:55px;left:24px;width:290px;height:330px;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-about')">
-      <button class="wb wbc" onclick="closeWin('win-about')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-about')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-about')"></button>
-      <span class="wt">about.txt</span>
-    </div>
-    <div class="win-body">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-        <div style="width:48px;height:48px;border-radius:8px;background:#E07A3A;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#12110F;flex-shrink:0;">R</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#E8E4DC;letter-spacing:-0.02em;">Rivaan</div>
-          <div style="font-size:11px;color:#5a5750;margin-top:2px;">@officiallyrino</div>
-          <div style="font-size:10px;color:#3a3830;margin-top:1px;">India</div>
-        </div>
-      </div>
-      <p style="font-size:11px;color:#7a7570;line-height:1.8;margin-bottom:14px;">Coder & GFX designer. Building things at 2am. F1 obsessed. Always in the terminal.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:4px;">
-        <span class="tag">coder</span><span class="tag">GFX designer</span><span class="tag">AI tools</span><span class="tag">game dev</span><span class="tag">F1</span><span class="tag">python</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- PROJECTS -->
-  <div id="win-projects" class="win" style="top:55px;left:340px;width:300px;height:370px;display:none;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-projects')">
-      <button class="wb wbc" onclick="closeWin('win-projects')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-projects')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-projects')"></button>
-      <span class="wt">projects/</span>
-    </div>
-    <div class="win-body">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:12px;">$ ls -la ~/projects</div>
-      <div class="pcard"><h4>Jarvis AI</h4><p>Voice assistant — Whisper STT, Ollama/qwen, WhatsApp, screen control & wake word.</p></div>
-      <div class="pcard"><h4>F1 Live Dashboard</h4><p>Real-time race leaderboard + telemetry via OpenF1 API and Streamlit.</p></div>
-      <div class="pcard"><h4>Time Debt</h4><p>Roblox time-based collecting game. Race the clock to collect as much as possible.</p></div>
-      <div class="pcard"><h4>Roblox CarGame</h4><p>Custom car controller welded over default character rig with size-agnostic alignment.</p></div>
-    </div>
-  </div>
-
-  <!-- SKILLS -->
-  <div id="win-skills" class="win" style="top:55px;left:340px;width:275px;height:310px;display:none;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-skills')">
-      <button class="wb wbc" onclick="closeWin('win-skills')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-skills')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-skills')"></button>
-      <span class="wt">skills.sh</span>
-    </div>
-    <div class="win-body">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:14px;">$ cat skills.log</div>
-      <div class="sbar"><div class="sl"><span>GFX Design</span><span>88%</span></div><div class="st"><div class="sf" style="width:88%"></div></div></div>
-      <div class="sbar"><div class="sl"><span>Python</span><span>85%</span></div><div class="st"><div class="sf" style="width:85%"></div></div></div>
-      <div class="sbar"><div class="sl"><span>AI / LLMs</span><span>80%</span></div><div class="st"><div class="sf" style="width:80%"></div></div></div>
-      <div class="sbar"><div class="sl"><span>Web Dev</span><span>75%</span></div><div class="st"><div class="sf" style="width:75%"></div></div></div>
-      <div class="sbar"><div class="sl"><span>Roblox / Lua</span><span>70%</span></div><div class="st"><div class="sf" style="width:70%"></div></div></div>
-      <div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:9px;color:#3a3830;">macbook air m1 · macos · always in terminal</div>
-    </div>
-  </div>
-
-  <!-- F1 -->
-  <div id="win-f1" class="win" style="top:55px;left:340px;width:275px;height:330px;display:none;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-f1')">
-      <button class="wb wbc" onclick="closeWin('win-f1')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-f1')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-f1')"></button>
-      <span class="wt">f1.log</span>
-    </div>
-    <div class="win-body">
-      <div style="text-align:center;margin-bottom:10px;"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#E07A3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#E07A3A"/><circle cx="19" cy="19" r="1" fill="#E07A3A"/></svg></div>
-      <div style="text-align:center;font-size:14px;font-weight:700;color:#E8E4DC;margin-bottom:4px;letter-spacing:-0.02em;">Formula 1 Obsessed</div>
-      <div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:16px;">watches every race. built a live dashboard.</div>
-      <div class="pcard"><h4>F1 Live Dashboard</h4><p>Streamlit + OpenF1 API. Real-time telemetry, lap times & leaderboard.</p></div>
-      <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:10px;color:#3a3830;text-align:center;">lights out and away we go</div>
-    </div>
-  </div>
-
-  <!-- CONTACT -->
-  <div id="win-contact" class="win" style="top:55px;left:340px;width:260px;height:280px;display:none;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-contact')">
-      <button class="wb wbc" onclick="closeWin('win-contact')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-contact')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-contact')"></button>
-      <span class="wt">contact.cfg</span>
-    </div>
-    <div class="win-body">
-      <div class="crow"><span>github: @officiallyrino</span></div>
-      <div class="crow"><span>device: MacBook Air M1</span></div>
-      <div class="crow"><span>location: India</span></div>
-      <div class="crow"><span>role: Coder / GFX Designer</span></div>
-      <div style="margin-top:14px;padding:10px;border:1px solid #2e2c28;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;text-align:center;line-height:1.9;">
-        open to collabs & cool projects<br><span style="color:#E07A3A;">always building something</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- TERMINAL -->
-  <div id="win-terminal" class="win" style="top:55px;left:340px;width:360px;height:320px;display:none;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-terminal')">
-      <button class="wb wbc" onclick="closeWin('win-terminal')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-terminal')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-terminal')"></button>
-      <span class="wt">jarvis@rinoOS:~</span>
-    </div>
-    <div id="term-body"></div>
-    <div id="term-input-row">
-      <span>rino@rinoOS:~$</span>
-      <input id="term-input" placeholder="" autocomplete="off" onkeydown="handleTerminalKey(event)">
-    </div>
-  </div>
-
-  <!-- NOTES -->
-  <div id="win-notes" class="win" style="top:55px;left:340px;width:330px;height:280px;display:none;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-notes')">
-      <button class="wb wbc" onclick="closeWin('win-notes')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-notes')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-notes')"></button>
-      <span class="wt">notes.txt</span>
-    </div>
-    <div class="win-body">
-      <div id="notes-board"><div id="notes-add" onclick="addStickyNote()">+</div></div>
-    </div>
-  </div>
-
-  <!-- GUIDE -->
-  <div id="win-guide" class="win" style="top:55px;left:340px;width:330px;height:420px;display:none;">
-    <div class="win-tb" onmousedown="startDrag(event,'win-guide')">
-      <button class="wb wbc" onclick="closeWin('win-guide')"></button>
-      <button class="wb wbm" onclick="minimizeWin('win-guide')"></button>
-      <button class="wb wbx" onclick="toggleMaximize('win-guide')"></button>
-      <span class="wt">README.md</span>
-    </div>
-    <div class="win-body">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:14px;">$ cat README.md</div>
-      <div class="guide-step"><div class="guide-num">01</div><div><h4>open apps</h4><p>click any icon in the dock at the bottom.</p></div></div>
-      <div class="guide-step"><div class="guide-num">02</div><div><h4>move windows</h4><p>drag by the top bar.</p></div></div>
-      <div class="guide-step"><div class="guide-num">03</div><div><h4>resize</h4><p>drag the bottom-right corner.</p></div></div>
-      <div class="guide-step"><div class="guide-num">04</div><div><h4>window controls</h4><p>red closes, yellow minimizes to tray, green fullscreens.</p></div></div>
-      <div class="guide-step"><div class="guide-num">05</div><div><h4>right click</h4><p>right click empty desktop for shortcuts.</p></div></div>
-      <div class="guide-step"><div class="guide-num">06</div><div><h4>terminal</h4><p>try <code>hey jarvis, help</code> or <code>neofetch</code>.</p></div></div>
-      <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:#3a3830;text-align:center;">that's it. have fun.</div>
-    </div>
-  </div>
-
-  <!-- DOCK -->
-  <div id="dock-row">
-    <div id="dock">
-      <div class="di" id="di-guide"    onclick="openWin('win-guide','di-guide')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#E07A3A" stroke="none"/></svg>
-        <span class="di-label">guide</span><span class="tip">README</span><span class="dot"></span>
-      </div>
-      <div class="di" id="di-about"    onclick="openWin('win-about','di-about')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        <span class="di-label">about</span><span class="tip">about.txt</span><span class="dot"></span>
-      </div>
-      <div class="di" id="di-projects" onclick="openWin('win-projects','di-projects')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        <span class="di-label">projects</span><span class="tip">projects/</span><span class="dot"></span>
-      </div>
-      <div class="di" id="di-skills"   onclick="openWin('win-skills','di-skills')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        <span class="di-label">skills</span><span class="tip">skills.sh</span><span class="dot"></span>
-      </div>
-      <div class="di" id="di-f1"       onclick="openWin('win-f1','di-f1')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#E07A3A"/><circle cx="19" cy="19" r="1" fill="#E07A3A"/></svg>
-        <span class="di-label">f1</span><span class="tip">f1.log</span><span class="dot"></span>
-      </div>
-      <div class="di" id="di-notes"    onclick="openWin('win-notes','di-notes')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <span class="di-label">notes</span><span class="tip">notes.txt</span><span class="dot"></span>
-      </div>
-      <div class="di" id="di-terminal" onclick="openWin('win-terminal','di-terminal')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-        <span class="di-label">terminal</span><span class="tip">bash</span><span class="dot"></span>
-      </div>
-      <div class="di" id="di-contact"  onclick="openWin('win-contact','di-contact')">
-        <svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        <span class="di-label">contact</span><span class="tip">contact.cfg</span><span class="dot"></span>
-      </div>
-    </div>
-    <div id="min-tray"></div>
-  </div>
-
-  <div id="guide-hint">new here? open README <span class="close-hint" onclick="dismissGuideHint()">✕</span></div>
-
-  <div id="ctx-menu">
-    <div class="ctx-item" onclick="ctxAction('terminal')">open terminal</div>
-    <div class="ctx-item" onclick="ctxAction('notes')">new sticky note</div>
-    <div class="ctx-item" onclick="ctxAction('guide')">open guide</div>
-    <div class="ctx-sep"></div>
-    <div class="ctx-item" onclick="ctxAction('wallpaper')">change wallpaper</div>
-  </div>
+<div id="desktop-bg"></div>
+<canvas id="matrix-canvas"></canvas>
+<div class="scanline-overlay"></div>
+<div id="topbar">
+<div class="tl">
+<span class="tlogo">rino<span class="acc">OS</span></span>
+<span class="thandle">@officiallyrino</span>
 </div>
-
+<div class="tr">
+<span class="tbtn" onclick="showPicker()">wallpaper</span>
+<span id="clock"></span>
+</div>
+</div>
+<!-- ABOUT -->
+<div id="win-about" class="win" style="top:55px;left:24px;width:290px;height:330px;">
+<div class="win-tb" onmousedown="startDrag(event,'win-about')">
+<button class="wb wbc" onclick="closeWin('win-about')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-about')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-about')"></button>
+<span class="wt">about.txt</span>
+</div>
+<div class="win-body">
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+<div style="width:48px;height:48px;border-radius:8px;background:#6C63FF;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#12110F;flex-shrink:0;">R</div>
+<div>
+<div style="font-size:14px;font-weight:700;color:#E8E4DC;letter-spacing:-0.02em;">Rivaan</div>
+<div style="font-size:11px;color:#5a5750;margin-top:2px;">@officiallyrino</div>
+<div style="font-size:10px;color:#3a3830;margin-top:1px;">India</div>
+</div>
+</div>
+<p style="font-size:11px;color:#7a7570;line-height:1.8;margin-bottom:14px;">Coder & GFX designer. Building things at 2am. F1 obsessed. Always in the terminal.</p>
+<div style="display:flex;flex-wrap:wrap;gap:4px;">
+<span class="tag">coder</span><span class="tag">GFX designer</span><span class="tag">AI tools</span><span class="tag">game dev</span><span class="tag">F1</span><span class="tag">python</span>
+</div>
+</div>
+</div>
+<!-- PROJECTS -->
+<div id="win-projects" class="win" style="top:55px;left:340px;width:300px;height:370px;display:none;">
+<div class="win-tb" onmousedown="startDrag(event,'win-projects')">
+<button class="wb wbc" onclick="closeWin('win-projects')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-projects')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-projects')"></button>
+<span class="wt">projects/</span>
+</div>
+<div class="win-body">
+<div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:12px;">$ ls -la ~/projects</div>
+<div class="pcard"><h4>Jarvis AI</h4><p>Voice assistant — Whisper STT, Ollama/qwen, WhatsApp, screen control & wake word.</p></div>
+<div class="pcard"><h4>F1 Live Dashboard</h4><p>Real-time race leaderboard + telemetry via OpenF1 API and Streamlit.</p></div>
+<div class="pcard"><h4>Time Debt</h4><p>Roblox time-based collecting game. Race the clock to collect as much as possible.</p></div>
+<div class="pcard"><h4>Roblox CarGame</h4><p>Custom car controller welded over default character rig with size-agnostic alignment.</p></div>
+</div>
+</div>
+<!-- SKILLS -->
+<div id="win-skills" class="win" style="top:55px;left:340px;width:275px;height:310px;display:none;">
+<div class="win-tb" onmousedown="startDrag(event,'win-skills')">
+<button class="wb wbc" onclick="closeWin('win-skills')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-skills')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-skills')"></button>
+<span class="wt">skills.sh</span>
+</div>
+<div class="win-body">
+<div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:14px;">$ cat skills.log</div>
+<div class="sbar"><div class="sl"><span>GFX Design</span><span>88%</span></div><div class="st"><div class="sf" style="width:88%"></div></div></div>
+<div class="sbar"><div class="sl"><span>Python</span><span>85%</span></div><div class="st"><div class="sf" style="width:85%"></div></div></div>
+<div class="sbar"><div class="sl"><span>AI / LLMs</span><span>80%</span></div><div class="st"><div class="sf" style="width:80%"></div></div></div>
+<div class="sbar"><div class="sl"><span>Web Dev</span><span>75%</span></div><div class="st"><div class="sf" style="width:75%"></div></div></div>
+<div class="sbar"><div class="sl"><span>Roblox / Lua</span><span>70%</span></div><div class="st"><div class="sf" style="width:70%"></div></div></div>
+<div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:9px;color:#3a3830;letter-spacing:0.08em;">m1 air · built half this stuff past midnight</div>
+</div>
+</div>
+<!-- F1 -->
+<div id="win-f1" class="win" style="top:55px;left:340px;width:275px;height:330px;display:none;">
+<div class="win-tb" onmousedown="startDrag(event,'win-f1')">
+<button class="wb wbc" onclick="closeWin('win-f1')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-f1')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-f1')"></button>
+<span class="wt">f1.log</span>
+</div>
+<div class="win-body">
+<div style="text-align:center;margin-bottom:10px;"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#6C63FF"/><circle cx="19" cy="19" r="1" fill="#6C63FF"/></svg></div>
+<div style="text-align:center;font-size:14px;font-weight:700;color:#E8E4DC;margin-bottom:4px;letter-spacing:-0.02em;">Formula 1 Obsessed</div>
+<div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:16px;">every race. every quali. no skips.</div>
+<div class="pcard"><h4>F1 Live Dashboard</h4><p>Streamlit + OpenF1 API. Real-time telemetry, lap times & leaderboard.</p></div>
+<div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:9px;color:#3a3830;letter-spacing:0.08em;text-align:center;">lights out and away we go</div>
+</div>
+</div>
+<!-- CONTACT -->
+<div id="win-contact" class="win" style="top:55px;left:340px;width:260px;height:280px;display:none;">
+<div class="win-tb" onmousedown="startDrag(event,'win-contact')">
+<button class="wb wbc" onclick="closeWin('win-contact')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-contact')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-contact')"></button>
+<span class="wt">contact.cfg</span>
+</div>
+<div class="win-body">
+<div class="crow"><span>github: @officiallyrino</span></div>
+<div class="crow"><span>device: MacBook Air M1</span></div>
+<div class="crow"><span>location: India</span></div>
+<div class="crow"><span>role: Coder / GFX Designer</span></div>
+<div style="margin-top:14px;padding:10px;border:1px solid #2e2c28;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;text-align:center;line-height:1.9;">
+        open to collabs & cool projects<br><span style="color:#6C63FF;">always building something</span>
+</div>
+</div>
+</div>
+<!-- TERMINAL -->
+<div id="win-terminal" class="win" style="top:55px;left:340px;width:360px;height:320px;display:none;">
+<div class="win-tb" onmousedown="startDrag(event,'win-terminal')">
+<button class="wb wbc" onclick="closeWin('win-terminal')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-terminal')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-terminal')"></button>
+<span class="wt">jarvis@rinoOS:~</span>
+</div>
+<div id="term-body"></div>
+<div id="term-input-row">
+<span>rino@rinoOS:~$</span>
+<input id="term-input" placeholder="" autocomplete="off" onkeydown="handleTerminalKey(event)">
+</div>
+</div>
+<!-- NOTES -->
+<div id="win-notes" class="win" style="top:55px;left:340px;width:330px;height:280px;display:none;">
+<div class="win-tb" onmousedown="startDrag(event,'win-notes')">
+<button class="wb wbc" onclick="closeWin('win-notes')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-notes')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-notes')"></button>
+<span class="wt">notes.txt</span>
+</div>
+<div class="win-body">
+<div id="notes-board"><div id="notes-add" onclick="addStickyNote()">+</div></div>
+</div>
+</div>
+<!-- GUIDE -->
+<div id="win-guide" class="win" style="top:55px;left:340px;width:330px;height:420px;display:none;">
+<div class="win-tb" onmousedown="startDrag(event,'win-guide')">
+<button class="wb wbc" onclick="closeWin('win-guide')"></button>
+<button class="wb wbm" onclick="minimizeWin('win-guide')"></button>
+<button class="wb wbx" onclick="toggleMaximize('win-guide')"></button>
+<span class="wt">README.md</span>
+</div>
+<div class="win-body">
+<div style="font-family:'DM Mono',monospace;font-size:10px;color:#5a5750;margin-bottom:14px;">$ cat README.md</div>
+<div class="guide-step"><div class="guide-num">01</div><div><h4>open apps</h4><p>click any icon in the dock at the bottom.</p></div></div>
+<div class="guide-step"><div class="guide-num">02</div><div><h4>move windows</h4><p>drag by the top bar.</p></div></div>
+<div class="guide-step"><div class="guide-num">03</div><div><h4>resize</h4><p>drag the bottom-right corner.</p></div></div>
+<div class="guide-step"><div class="guide-num">04</div><div><h4>window controls</h4><p>red closes, yellow minimizes to tray, green fullscreens.</p></div></div>
+<div class="guide-step"><div class="guide-num">05</div><div><h4>right click</h4><p>right click empty desktop for shortcuts.</p></div></div>
+<div class="guide-step"><div class="guide-num">06</div><div><h4>terminal</h4><p>try <code>hey jarvis, help</code> or <code>neofetch</code>.</p></div></div>
+<div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:#3a3830;letter-spacing:0.08em;text-align:center;">that's it. have fun.</div>
+</div>
+</div>
+<!-- DOCK -->
+<div id="dock-row">
+<div id="dock">
+<div class="di" id="di-guide"    onclick="openWin('win-guide','di-guide')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#6C63FF" stroke="none"/></svg>
+<span class="di-label">guide</span><span class="tip">README</span><span class="dot"></span>
+</div>
+<div class="di" id="di-about"    onclick="openWin('win-about','di-about')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+<span class="di-label">about</span><span class="tip">about.txt</span><span class="dot"></span>
+</div>
+<div class="di" id="di-projects" onclick="openWin('win-projects','di-projects')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+<span class="di-label">projects</span><span class="tip">projects/</span><span class="dot"></span>
+</div>
+<div class="di" id="di-skills"   onclick="openWin('win-skills','di-skills')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+<span class="di-label">skills</span><span class="tip">skills.sh</span><span class="dot"></span>
+</div>
+<div class="di" id="di-f1"       onclick="openWin('win-f1','di-f1')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="5" cy="19" r="1" fill="#6C63FF"/><circle cx="19" cy="19" r="1" fill="#6C63FF"/></svg>
+<span class="di-label">f1</span><span class="tip">f1.log</span><span class="dot"></span>
+</div>
+<div class="di" id="di-notes"    onclick="openWin('win-notes','di-notes')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+<span class="di-label">notes</span><span class="tip">notes.txt</span><span class="dot"></span>
+</div>
+<div class="di" id="di-terminal" onclick="openWin('win-terminal','di-terminal')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+<span class="di-label">terminal</span><span class="tip">bash</span><span class="dot"></span>
+</div>
+<div class="di" id="di-contact"  onclick="openWin('win-contact','di-contact')">
+<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+<span class="di-label">contact</span><span class="tip">contact.cfg</span><span class="dot"></span>
+</div>
+</div>
+<div id="min-tray"></div>
+</div>
+<div id="guide-hint">new here? open README <span class="close-hint" onclick="dismissGuideHint()">✕</span></div>
+<div id="ctx-menu">
+<div class="ctx-item" onclick="ctxAction('terminal')">open terminal</div>
+<div class="ctx-item" onclick="ctxAction('notes')">new sticky note</div>
+<div class="ctx-item" onclick="ctxAction('guide')">open guide</div>
+<div class="ctx-sep"></div>
+<div class="ctx-item" onclick="ctxAction('wallpaper')">change wallpaper</div>
+</div>
+</div>
 <script>
 // ════════════════════════════════════════════
 //  WALLPAPERS
 // ════════════════════════════════════════════
-
 const wallpapers = [
   { name: 'void',       type: 'solid',    color: '#12110F' },
   { name: 'scanlines',  type: 'scanlines' },
@@ -922,160 +849,146 @@ const wallpapers = [
   { name: 'warm fog',   type: 'fog'       },
   { name: 'diagonal',   type: 'diagonal'  },
 ]
-
 let matrixRAF = null
 let selectedWallpaper = 0
-
 function drawWallpaperThumb(canvas, wp) {
-  const ctx = canvas.getContext('2d')
-  const w = canvas.width, h = canvas.height
-  ctx.fillStyle = '#12110F'
-  ctx.fillRect(0, 0, w, h)
-
-  if (wp.type === 'solid') {
-    ctx.fillStyle = wp.color
-    ctx.fillRect(0, 0, w, h)
+const ctx = canvas.getContext('2d')
+const w = canvas.width, h = canvas.height
+ctx.fillStyle = '#12110F'
+ctx.fillRect(0, 0, w, h)
+if (wp.type === 'solid') {
+ctx.fillStyle = wp.color
+ctx.fillRect(0, 0, w, h)
   } else if (wp.type === 'scanlines') {
-    for (let y = 0; y < h; y += 4) {
-      ctx.fillStyle = y % 8 === 0 ? 'rgba(224,122,58,0.18)' : 'rgba(224,122,58,0.04)'
-      ctx.fillRect(0, y, w, 2)
+for (let y = 0; y < h; y += 4) {
+ctx.fillStyle = y % 8 === 0 ? 'rgba(108,99,255,0.18)' : 'rgba(108,99,255,0.04)'
+ctx.fillRect(0, y, w, 2)
     }
   } else if (wp.type === 'matrix') {
-    ctx.font = '8px monospace'
-    const chars = '01アイウエオカキ'
-    for (let x = 0; x < w; x += 8) {
-      for (let y = 0; y < h; y += 10) {
-        if (Math.random() > 0.7) {
-          ctx.globalAlpha = Math.random() * 0.5 + 0.1
-          ctx.fillStyle = Math.random() > 0.85 ? '#c9a84c' : '#E07A3A'
-          ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y)
+ctx.font = '8px monospace'
+const chars = '01アイウエオカキ'
+for (let x = 0; x < w; x += 8) {
+for (let y = 0; y < h; y += 10) {
+if (Math.random() > 0.7) {
+ctx.globalAlpha = Math.random() * 0.5 + 0.1
+ctx.fillStyle = Math.random() > 0.85 ? '#8B8FA8' : '#6C63FF'
+ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y)
         }
       }
     }
-    ctx.globalAlpha = 1
+ctx.globalAlpha = 1
   } else if (wp.type === 'grid') {
-    ctx.strokeStyle = 'rgba(224,122,58,0.3)'; ctx.lineWidth = 1
-    for (let x = 0; x < w; x += 14) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
-    for (let y = 0; y < h; y += 14) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
-    ctx.strokeStyle = 'rgba(224,122,58,0.7)'
-    for (let x = 0; x < w; x += 56) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
-    for (let y = 0; y < h; y += 56) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
+ctx.strokeStyle = 'rgba(108,99,255,0.3)'; ctx.lineWidth = 1
+for (let x = 0; x < w; x += 14) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
+for (let y = 0; y < h; y += 14) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
+ctx.strokeStyle = 'rgba(108,99,255,0.7)'
+for (let x = 0; x < w; x += 56) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke() }
+for (let y = 0; y < h; y += 56) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke() }
   } else if (wp.type === 'dots') {
-    ctx.fillStyle = 'rgba(224,122,58,0.6)'
-    for (let x = 8; x < w; x += 12) {
-      for (let y = 8; y < h; y += 12) {
-        ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill()
+ctx.fillStyle = 'rgba(108,99,255,0.6)'
+for (let x = 8; x < w; x += 12) {
+for (let y = 8; y < h; y += 12) {
+ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill()
       }
     }
   } else if (wp.type === 'noise') {
-    const imgData = ctx.getImageData(0, 0, w, h)
-    for (let i = 0; i < imgData.data.length; i += 4) {
-      const v = Math.random() > 0.9 ? Math.floor(Math.random() * 140 + 60) : Math.floor(Math.random() * 20)
-      imgData.data[i] = v; imgData.data[i+1] = Math.floor(v * 0.55)
-      imgData.data[i+2] = Math.floor(v * 0.22); imgData.data[i+3] = 255
+const imgData = ctx.getImageData(0, 0, w, h)
+for (let i = 0; i < imgData.data.length; i += 4) {
+const v = Math.random() > 0.9 ? Math.floor(Math.random() * 140 + 60) : Math.floor(Math.random() * 20)
+imgData.data[i] = Math.floor(v * 0.42); imgData.data[i+1] = Math.floor(v * 0.39)
+imgData.data[i+2] = v; imgData.data[i+3] = 255
     }
-    ctx.putImageData(imgData, 0, 0)
+ctx.putImageData(imgData, 0, 0)
   } else if (wp.type === 'fog') {
-    const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w,h)*0.6)
-    grad.addColorStop(0, 'rgba(224,122,58,0.15)')
-    grad.addColorStop(0.5, 'rgba(224,122,58,0.05)')
-    grad.addColorStop(1, 'rgba(18,17,15,0)')
-    ctx.fillStyle = grad
-    ctx.fillRect(0, 0, w, h)
+const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w,h)*0.6)
+grad.addColorStop(0, 'rgba(108,99,255,0.15)')
+grad.addColorStop(0.5, 'rgba(108,99,255,0.05)')
+grad.addColorStop(1, 'rgba(18,17,15,0)')
+ctx.fillStyle = grad
+ctx.fillRect(0, 0, w, h)
   } else if (wp.type === 'diagonal') {
-    ctx.strokeStyle = 'rgba(224,122,58,0.25)'; ctx.lineWidth = 1
-    for (let i = -h; i < w + h; i += 14) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
-    ctx.strokeStyle = 'rgba(201,168,76,0.45)'
-    for (let i = -h; i < w + h; i += 56) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
+ctx.strokeStyle = 'rgba(108,99,255,0.25)'; ctx.lineWidth = 1
+for (let i = -h; i < w + h; i += 14) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
+ctx.strokeStyle = 'rgba(139,143,168,0.45)'
+for (let i = -h; i < w + h; i += 56) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+h,h); ctx.stroke() }
   }
 }
-
 function applyWallpaper(idx) {
-  const wp = wallpapers[idx]
-  const bg = document.getElementById('desktop-bg')
-  const mc = document.getElementById('matrix-canvas')
-
-  if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null }
-  mc.style.opacity = '0'
-  bg.style.background = '#12110F'
-  bg.style.backgroundImage = ''
-
-  if (wp.type === 'solid') { bg.style.background = wp.color; return }
-  if (wp.type === 'matrix') { startMatrixRain(mc); return }
-  if (wp.type === 'fog') {
-    bg.style.background = 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(224,122,58,0.12) 0%, #12110F 70%)'
-    return
+const wp = wallpapers[idx]
+const bg = document.getElementById('desktop-bg')
+const mc = document.getElementById('matrix-canvas')
+if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null }
+mc.style.opacity = '0'
+bg.style.background = '#12110F'
+bg.style.backgroundImage = ''
+if (wp.type === 'solid') { bg.style.background = wp.color; return }
+if (wp.type === 'matrix') { startMatrixRain(mc); return }
+if (wp.type === 'fog') {
+bg.style.background = 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(108,99,255,0.12) 0%, #12110F 70%)'
+return
   }
-
-  const offscreen = document.createElement('canvas')
-  offscreen.width = window.innerWidth; offscreen.height = window.innerHeight
-  drawWallpaperThumb(offscreen, wp)
-  bg.style.backgroundImage = `url(${offscreen.toDataURL()})`
-  bg.style.backgroundSize = 'cover'
+const offscreen = document.createElement('canvas')
+offscreen.width = window.innerWidth; offscreen.height = window.innerHeight
+drawWallpaperThumb(offscreen, wp)
+bg.style.backgroundImage = `url(${offscreen.toDataURL()})`
+bg.style.backgroundSize = 'cover'
 }
-
 function startMatrixRain(canvas) {
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight
-  canvas.style.opacity = '1'
-  const ctx = canvas.getContext('2d')
-  const cols = Math.floor(canvas.width / 16)
-  const drops = Array(cols).fill(1)
-  const chars = '01アイウエオカキabcdefghijklmnopqrstuvwxyz><|_=-+*'
-
-  function drawFrame() {
-    ctx.fillStyle = 'rgba(18,17,15,0.06)'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.font = '14px monospace'
-    drops.forEach((y, i) => {
-      const ch = chars[Math.floor(Math.random() * chars.length)]
-      const accent = Math.random() > 0.92
-      ctx.fillStyle = accent ? '#c9a84c' : '#E07A3A'
-      ctx.globalAlpha = accent ? 0.9 : 0.5
-      ctx.fillText(ch, i * 16, y * 16)
-      ctx.globalAlpha = 1
-      if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0
-      drops[i]++
+canvas.width = window.innerWidth; canvas.height = window.innerHeight
+canvas.style.opacity = '1'
+const ctx = canvas.getContext('2d')
+const cols = Math.floor(canvas.width / 16)
+const drops = Array(cols).fill(1)
+const chars = '01アイウエオカキabcdefghijklmnopqrstuvwxyz><|_=-+*'
+function drawFrame() {
+ctx.fillStyle = 'rgba(18,17,15,0.06)'
+ctx.fillRect(0, 0, canvas.width, canvas.height)
+ctx.font = '14px monospace'
+drops.forEach((y, i) => {
+const ch = chars[Math.floor(Math.random() * chars.length)]
+const accent = Math.random() > 0.92
+ctx.fillStyle = accent ? '#8B8FA8' : '#6C63FF'
+ctx.globalAlpha = accent ? 0.9 : 0.5
+ctx.fillText(ch, i * 16, y * 16)
+ctx.globalAlpha = 1
+if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0
+drops[i]++
     })
-    matrixRAF = requestAnimationFrame(drawFrame)
+matrixRAF = requestAnimationFrame(drawFrame)
   }
-  drawFrame()
+drawFrame()
 }
-
 const grid = document.getElementById('wp-grid')
 wallpapers.forEach((wp, i) => {
-  const thumb = document.createElement('div')
-  thumb.className = 'wp-thumb' + (i === 0 ? ' selected' : '')
-  const preview = document.createElement('canvas')
-  preview.width = 140; preview.height = 88
-  drawWallpaperThumb(preview, wp)
-  thumb.appendChild(preview)
-  const label = document.createElement('span')
-  label.textContent = wp.name
-  thumb.appendChild(label)
-  thumb.onclick = () => {
-    document.querySelectorAll('.wp-thumb').forEach(t => t.classList.remove('selected'))
-    thumb.classList.add('selected')
-    selectedWallpaper = i
+const thumb = document.createElement('div')
+thumb.className = 'wp-thumb' + (i === 0 ? ' selected' : '')
+const preview = document.createElement('canvas')
+preview.width = 140; preview.height = 88
+drawWallpaperThumb(preview, wp)
+thumb.appendChild(preview)
+const label = document.createElement('span')
+label.textContent = wp.name
+thumb.appendChild(label)
+thumb.onclick = () => {
+document.querySelectorAll('.wp-thumb').forEach(t => t.classList.remove('selected'))
+thumb.classList.add('selected')
+selectedWallpaper = i
   }
-  grid.appendChild(thumb)
+grid.appendChild(thumb)
 })
-
 function showPicker() {
-  document.getElementById('desktop').style.display = 'none'
-  document.getElementById('picker').style.display = 'flex'
+document.getElementById('desktop').style.display = 'none'
+document.getElementById('picker').style.display = 'flex'
 }
 function confirmWallpaper() {
-  applyWallpaper(selectedWallpaper)
-  document.getElementById('picker').style.display = 'none'
-  document.getElementById('desktop').style.display = 'block'
-  setTimeout(showGuideHint, 900)
+applyWallpaper(selectedWallpaper)
+document.getElementById('picker').style.display = 'none'
+document.getElementById('desktop').style.display = 'block'
+setTimeout(showGuideHint, 900)
 }
-
-
 // ════════════════════════════════════════════
 //  BOOT SEQUENCE
 // ════════════════════════════════════════════
-
 const bootMessages = [
   { text: '[  OK  ] loaded kernel modules',       delay: 0    },
   { text: '[  OK  ] started jarvis daemon',       delay: 280  },
@@ -1084,407 +997,351 @@ const bootMessages = [
   { text: '[  OK  ] brewing chai...',             delay: 960  },
   { text: '[  OK  ] rinoOS ready.',               delay: 1180 },
 ]
-
 const bootLogEl = document.getElementById('boot-lines')
 const bootBarEl = document.getElementById('boot-bar')
 const bootTagEl = document.getElementById('boot-tagline')
 const bootEyeEl = document.getElementById('boot-eyebrow')
 const BOOT_DURATION = 2200
 const bootStart = performance.now()
-
 setTimeout(() => { bootEyeEl.style.opacity = '1'; bootTagEl.style.opacity = '1' }, 300)
-
 bootMessages.forEach(msg => {
-  setTimeout(() => {
-    const line = document.createElement('div')
-    line.className = 'boot-line'
-    line.innerHTML = msg.text
+setTimeout(() => {
+const line = document.createElement('div')
+line.className = 'boot-line'
+line.innerHTML = msg.text
       .replace('[  OK  ]', '<span class="ok">[  OK  ]</span>')
       .replace('[ WARN ]', '<span class="warn">[ WARN ]</span>')
-    bootLogEl.appendChild(line)
+bootLogEl.appendChild(line)
   }, msg.delay)
 })
-
-// rewritten from setInterval to rAF — smooth progress bar with no jank
 function tickBootProgress(now) {
-  const progress = Math.min(100, ((now - bootStart) / BOOT_DURATION) * 100)
-  bootBarEl.style.width = progress + '%'
-  if (progress < 100) { requestAnimationFrame(tickBootProgress); return }
-
-  setTimeout(() => {
-    const bootEl = document.getElementById('boot')
-    bootEl.style.opacity = '0'
-    setTimeout(() => {
-      bootEl.style.display = 'none'
-      const splashEl = document.getElementById('splash')
-      splashEl.style.display = 'flex'
-      setTimeout(() => {
-        splashEl.style.opacity = '0'
-        setTimeout(() => {
-          splashEl.style.display = 'none'
-          document.getElementById('picker').style.display = 'flex'
+const progress = Math.min(100, ((now - bootStart) / BOOT_DURATION) * 100)
+bootBarEl.style.width = progress + '%'
+if (progress < 100) { requestAnimationFrame(tickBootProgress); return }
+setTimeout(() => {
+const bootEl = document.getElementById('boot')
+bootEl.style.opacity = '0'
+setTimeout(() => {
+bootEl.style.display = 'none'
+const splashEl = document.getElementById('splash')
+splashEl.style.display = 'flex'
+setTimeout(() => {
+splashEl.style.opacity = '0'
+setTimeout(() => {
+splashEl.style.display = 'none'
+document.getElementById('picker').style.display = 'flex'
         }, 600)
       }, 1400)
     }, 700)
   }, 400)
 }
 requestAnimationFrame(tickBootProgress)
-
-
 // ════════════════════════════════════════════
 //  CLOCK
 // ════════════════════════════════════════════
-
 function updateClock() {
-  document.getElementById('clock').textContent =
-    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+document.getElementById('clock').textContent =
+new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 }
 updateClock()
 setInterval(updateClock, 1000)
-
-
 // ════════════════════════════════════════════
 //  DRAG & RESIZE
 // ════════════════════════════════════════════
-
 let dragState   = null
 let resizeState = null
 let zTop = 200
-
 function focusWindow(win) {
-  document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'))
-  win.classList.add('focused')
-  win.style.zIndex = ++zTop
+document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'))
+win.classList.add('focused')
+win.style.zIndex = ++zTop
 }
-
 function startDrag(e, winId) {
-  if (resizeState) return
-  const win = document.getElementById(winId)
-  focusWindow(win)
-  const rect = win.getBoundingClientRect()
-  dragState = { win, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top }
-  e.preventDefault()
+if (resizeState) return
+const win = document.getElementById(winId)
+focusWindow(win)
+const rect = win.getBoundingClientRect()
+dragState = { win, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top }
+e.preventDefault()
 }
-
 document.querySelectorAll('.win').forEach(win => {
-  const handle = document.createElement('div')
-  handle.className = 'resize-handle'
-  handle.addEventListener('mousedown', e => {
-    if (dragState) return
-    const rect = win.getBoundingClientRect()
-    resizeState = { win, startW: rect.width, startH: rect.height, startMouseX: e.clientX, startMouseY: e.clientY }
-    win.classList.add('resizing')
-    focusWindow(win)
-    e.preventDefault(); e.stopPropagation()
+const handle = document.createElement('div')
+handle.className = 'resize-handle'
+handle.addEventListener('mousedown', e => {
+if (dragState) return
+const rect = win.getBoundingClientRect()
+resizeState = { win, startW: rect.width, startH: rect.height, startMouseX: e.clientX, startMouseY: e.clientY }
+win.classList.add('resizing')
+focusWindow(win)
+e.preventDefault(); e.stopPropagation()
   })
-  win.appendChild(handle)
+win.appendChild(handle)
 })
-
 document.addEventListener('mousemove', e => {
-  if (dragState) {
-    const { win, offsetX, offsetY } = dragState
-    win.style.left = Math.max(0, e.clientX - offsetX) + 'px'
-    win.style.top  = Math.max(34, e.clientY - offsetY) + 'px'
+if (dragState) {
+const { win, offsetX, offsetY } = dragState
+win.style.left = Math.max(0, e.clientX - offsetX) + 'px'
+win.style.top  = Math.max(34, e.clientY - offsetY) + 'px'
   } else if (resizeState) {
-    const { win, startW, startH, startMouseX, startMouseY } = resizeState
-    win.style.width  = Math.max(260, startW + (e.clientX - startMouseX)) + 'px'
-    win.style.height = Math.max(160, startH + (e.clientY - startMouseY)) + 'px'
+const { win, startW, startH, startMouseX, startMouseY } = resizeState
+win.style.width  = Math.max(260, startW + (e.clientX - startMouseX)) + 'px'
+win.style.height = Math.max(160, startH + (e.clientY - startMouseY)) + 'px'
   }
 })
-
 document.addEventListener('mouseup', () => {
-  dragState = null
-  if (resizeState) resizeState.win.classList.remove('resizing')
-  resizeState = null
+dragState = null
+if (resizeState) resizeState.win.classList.remove('resizing')
+resizeState = null
 })
-
-
 // ════════════════════════════════════════════
 //  WINDOW MANAGEMENT
 // ════════════════════════════════════════════
-
 const winDockMap = {}
-
 const winIcons = {
-  'win-about':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
-  'win-projects': `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
-  'win-skills':   `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-  'win-f1':       `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/></svg>`,
-  'win-notes':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
-  'win-terminal': `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`,
-  'win-contact':  `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
-  'win-guide':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#E07A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#E07A3A" stroke="none"/></svg>`,
+'win-about':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
+'win-projects': `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
+'win-skills':   `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+'win-f1':       `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/></svg>`,
+'win-notes':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+'win-terminal': `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`,
+'win-contact':  `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+'win-guide':    `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#6C63FF" stroke="none"/></svg>`,
 }
-
 function openWin(winId, dockId) {
-  if (dockId) winDockMap[winId] = dockId
-  document.getElementById('tray-' + winId)?.remove()
-
-  const win = document.getElementById(winId)
-  win.style.display = 'flex'
-  focusWindow(win)
-
-  if (winId !== 'win-guide') {
-    win.style.top  = (60 + Math.random() * 60)  + 'px'
-    win.style.left = (60 + Math.random() * 250) + 'px'
+if (dockId) winDockMap[winId] = dockId
+document.getElementById('tray-' + winId)?.remove()
+const win = document.getElementById(winId)
+win.style.display = 'flex'
+focusWindow(win)
+if (winId !== 'win-guide') {
+win.style.top  = (60 + Math.random() * 60)  + 'px'
+win.style.left = (60 + Math.random() * 250) + 'px'
   }
-
-  document.getElementById(dockId)?.classList.add('open')
-
-  if (winId === 'win-terminal') {
-    setTimeout(() => {
-      printToTerminal('output', 'rinoOS v1.0 — live like rino')
-      printToTerminal('output', 'type `help` or `hey jarvis, help`')
-      printToTerminal('output', '')
+document.getElementById(dockId)?.classList.add('open')
+if (winId === 'win-terminal') {
+setTimeout(() => {
+printToTerminal('output', 'rinoOS v1.0 — live like rino')
+printToTerminal('output', 'type `help` or `hey jarvis, help`')
+printToTerminal('output', '')
     }, 150)
   }
-
-  if (winId === 'win-guide') dismissGuideHint()
+if (winId === 'win-guide') dismissGuideHint()
 }
-
 function closeWin(winId) {
-  document.getElementById(winId).style.display = 'none'
-  document.getElementById(winDockMap[winId])?.classList.remove('open')
+document.getElementById(winId).style.display = 'none'
+document.getElementById(winDockMap[winId])?.classList.remove('open')
 }
-
 function minimizeWin(winId) {
-  const win = document.getElementById(winId)
-  win.classList.add('animating')
-  win.style.transform = 'scale(0.05) translateY(400px)'
-  win.style.opacity = '0'
-
-  setTimeout(() => {
-    win.style.display = 'none'; win.style.transform = ''; win.style.opacity = ''
-    win.classList.remove('animating')
-    if (document.getElementById('tray-' + winId)) return
-
-    const tile = document.createElement('div')
-    tile.className = 'min-tile'; tile.id = 'tray-' + winId
-    tile.innerHTML = winIcons[winId] || '🪟'
-    tile.onclick = () => { tile.remove(); win.style.display = 'flex'; focusWindow(win) }
-    document.getElementById('min-tray').appendChild(tile)
+const win = document.getElementById(winId)
+win.classList.add('animating')
+win.style.transform = 'scale(0.05) translateY(400px)'
+win.style.opacity = '0'
+setTimeout(() => {
+win.style.display = 'none'; win.style.transform = ''; win.style.opacity = ''
+win.classList.remove('animating')
+if (document.getElementById('tray-' + winId)) return
+const tile = document.createElement('div')
+tile.className = 'min-tile'; tile.id = 'tray-' + winId
+tile.innerHTML = winIcons[winId] || '🪟'
+tile.onclick = () => { tile.remove(); win.style.display = 'flex'; focusWindow(win) }
+document.getElementById('min-tray').appendChild(tile)
   }, 320)
 }
-
 function toggleMaximize(winId) {
-  const win = document.getElementById(winId)
-  win.classList.add('animating')
-  setTimeout(() => win.classList.remove('animating'), 260)
-
-  if (win.classList.contains('maximized')) {
-    win.classList.remove('maximized')
-    win.style.top    = win.dataset.savedTop    || '70px'
-    win.style.left   = win.dataset.savedLeft   || '100px'
-    win.style.width  = win.dataset.savedWidth  || ''
-    win.style.height = win.dataset.savedHeight || ''
-    win.style.borderRadius = ''
+const win = document.getElementById(winId)
+win.classList.add('animating')
+setTimeout(() => win.classList.remove('animating'), 260)
+if (win.classList.contains('maximized')) {
+win.classList.remove('maximized')
+win.style.top    = win.dataset.savedTop    || '70px'
+win.style.left   = win.dataset.savedLeft   || '100px'
+win.style.width  = win.dataset.savedWidth  || ''
+win.style.height = win.dataset.savedHeight || ''
+win.style.borderRadius = ''
   } else {
-    win.dataset.savedTop    = win.style.top
-    win.dataset.savedLeft   = win.style.left
-    win.dataset.savedWidth  = win.style.width
-    win.dataset.savedHeight = win.style.height
-    win.classList.add('maximized')
-    win.style.top = '34px'; win.style.left = '0'
-    win.style.width = '100vw'; win.style.height = 'calc(100vh - 34px)'
-    win.style.borderRadius = '0'
+win.dataset.savedTop    = win.style.top
+win.dataset.savedLeft   = win.style.left
+win.dataset.savedWidth  = win.style.width
+win.dataset.savedHeight = win.style.height
+win.classList.add('maximized')
+win.style.top = '34px'; win.style.left = '0'
+win.style.width = '100vw'; win.style.height = 'calc(100vh - 34px)'
+win.style.borderRadius = '0'
   }
 }
-
-
 // ════════════════════════════════════════════
 //  STICKY NOTES
 // ════════════════════════════════════════════
-
 function addStickyNote() {
-  const board = document.getElementById('notes-board')
-  const addBtn = document.getElementById('notes-add')
-  const note = document.createElement('div')
-  note.className = 'sticky'
-  note.innerHTML = `<button class="sticky-del" onclick="this.parentElement.remove()">✕</button><textarea placeholder="// write here..."></textarea>`
-  board.insertBefore(note, addBtn)
+const board = document.getElementById('notes-board')
+const addBtn = document.getElementById('notes-add')
+const note = document.createElement('div')
+note.className = 'sticky'
+note.innerHTML = `<button class="sticky-del" onclick="this.parentElement.remove()">✕</button><textarea placeholder="// write here..."></textarea>`
+board.insertBefore(note, addBtn)
 }
-
-
 // ════════════════════════════════════════════
 //  CONTEXT MENU
 // ════════════════════════════════════════════
-
 const ctxMenu = document.getElementById('ctx-menu')
-
 const ctxActions = {
-  terminal:  () => openWin('win-terminal', 'di-terminal'),
-  guide:     () => openWin('win-guide', 'di-guide'),
-  wallpaper: () => showPicker(),
-  notes:     () => { openWin('win-notes', 'di-notes'); setTimeout(addStickyNote, 150) },
+terminal:  () => openWin('win-terminal', 'di-terminal'),
+guide:     () => openWin('win-guide', 'di-guide'),
+wallpaper: () => showPicker(),
+notes:     () => { openWin('win-notes', 'di-notes'); setTimeout(addStickyNote, 150) },
 }
-
 document.getElementById('desktop').addEventListener('contextmenu', e => {
-  if (e.target.closest('.win') || e.target.closest('#dock-row')) return
-  e.preventDefault()
-  ctxMenu.style.display = 'block'
-  ctxMenu.style.left = Math.min(e.clientX, window.innerWidth  - 200) + 'px'
-  ctxMenu.style.top  = Math.min(e.clientY, window.innerHeight - 170) + 'px'
+if (e.target.closest('.win') || e.target.closest('#dock-row')) return
+e.preventDefault()
+ctxMenu.style.display = 'block'
+ctxMenu.style.left = Math.min(e.clientX, window.innerWidth  - 200) + 'px'
+ctxMenu.style.top  = Math.min(e.clientY, window.innerHeight - 170) + 'px'
 })
-
 document.addEventListener('click', () => ctxMenu.style.display = 'none')
-
 function ctxAction(type) {
-  ctxMenu.style.display = 'none'
-  ctxActions[type]?.()
+ctxMenu.style.display = 'none'
+ctxActions[type]?.()
 }
-
-
 // ════════════════════════════════════════════
 //  GUIDE HINT
 // ════════════════════════════════════════════
-
 function positionGuideHint() {
-  const rect = document.getElementById('di-guide').getBoundingClientRect()
-  document.getElementById('guide-hint').style.left = (rect.left + rect.width / 2) + 'px'
+const rect = document.getElementById('di-guide').getBoundingClientRect()
+document.getElementById('guide-hint').style.left = (rect.left + rect.width / 2) + 'px'
 }
 function showGuideHint() {
-  positionGuideHint()
-  document.getElementById('guide-hint').classList.add('show')
-  document.getElementById('di-guide').classList.add('guide-pulsing')
+positionGuideHint()
+document.getElementById('guide-hint').classList.add('show')
+document.getElementById('di-guide').classList.add('guide-pulsing')
 }
 function dismissGuideHint() {
-  document.getElementById('guide-hint').classList.remove('show')
-  document.getElementById('di-guide').classList.remove('guide-pulsing')
+document.getElementById('guide-hint').classList.remove('show')
+document.getElementById('di-guide').classList.remove('guide-pulsing')
 }
 window.addEventListener('resize', () => {
-  if (document.getElementById('guide-hint').classList.contains('show')) positionGuideHint()
+if (document.getElementById('guide-hint').classList.contains('show')) positionGuideHint()
 })
-
-
 // ════════════════════════════════════════════
 //  TERMINAL
 // ════════════════════════════════════════════
-
 function printToTerminal(type, text) {
-  const body = document.getElementById('term-body')
-  const line = document.createElement('div')
-  line.className = 'tline'
-  if (type === 'cmd') {
-    line.innerHTML = `<span class="tprompt">rino@rinoOS:~$ </span><span style="color:#E8E4DC">${text}</span>`
+const body = document.getElementById('term-body')
+const line = document.createElement('div')
+line.className = 'tline'
+if (type === 'cmd') {
+line.innerHTML = `<span class="tprompt">rino@rinoOS:~$ </span><span style="color:#E8E4DC">${text}</span>`
   } else {
-    line.innerHTML = `<span class="tout">${text}</span>`
+line.innerHTML = `<span class="tout">${text}</span>`
   }
-  body.appendChild(line)
-  body.scrollTop = body.scrollHeight
+body.appendChild(line)
+body.scrollTop = body.scrollHeight
 }
-
 const termCommands = {
-  help: () => [
-    '── rinoOS terminal ──────────────────',
-    '  neofetch       system info',
-    '  whoami         who is rino',
-    '  ls             list projects',
-    '  cat about.txt  read my bio',
-    '  sudo make me a sandwich',
-    '  matrix         toggle matrix rain',
-    '  clear          clear terminal',
-    '─────────────────────────────────────',
-    '  hey jarvis, open [app]',
-    '  hey jarvis, help',
+help: () => [
+'── rinoOS terminal ──────────────────',
+'  neofetch       system info',
+'  whoami         who is rino',
+'  ls             list projects',
+'  cat about.txt  read my bio',
+'  sudo make me a sandwich',
+'  matrix         toggle matrix rain',
+'  clear          clear terminal',
+'─────────────────────────────────────',
+'  hey jarvis, open [app]',
+'  hey jarvis, help',
   ],
-  neofetch: () => [
-    "         .'.",
-    "      .'   '.",
-    "    .'  rino  '.",
-    "   /  @official \\",
-    "   \\     rino   /",
-    "    '.  OS  .'",
-    "      '._.'",
-    '',
-    '  <span style="color:#E07A3A">OS</span>          rinoOS v1.0',
-    '  <span style="color:#E07A3A">Host</span>        MacBook Air M1',
-    '  <span style="color:#E07A3A">Shell</span>       jarvis + bash',
-    '  <span style="color:#E07A3A">Theme</span>       warm dark / orange',
-    '  <span style="color:#E07A3A">Role</span>        Coder / GFX Designer',
-    '  <span style="color:#E07A3A">Location</span>    India',
-    '  <span style="color:#E07A3A">Status</span>      always building',
-    '',
-    '  <span style="background:#E07A3A;color:#12110F;padding:0 6px">  </span><span style="background:#c9a84c;color:#12110F;padding:0 6px">  </span><span style="background:#E8E4DC;color:#12110F;padding:0 6px">  </span><span style="background:#5a5750;color:#E8E4DC;padding:0 6px">  </span>',
+neofetch: () => [
+"         .'.",
+"      .'   '.",
+"    .'  rino  '.",
+"   /  @official \\",
+"   \\     rino   /",
+"    '.  OS  .'",
+"      '._.'",
+'',
+'  <span style="color:#6C63FF">OS</span>          rinoOS v1.0',
+'  <span style="color:#6C63FF">Host</span>        MacBook Air M1',
+'  <span style="color:#6C63FF">Shell</span>       jarvis + bash',
+'  <span style="color:#6C63FF">Theme</span>       dark / indigo',
+'  <span style="color:#6C63FF">Role</span>        Coder / GFX Designer',
+'  <span style="color:#6C63FF">Location</span>    India',
+'  <span style="color:#6C63FF">Status</span>      always building',
+'',
+'  <span style="background:#6C63FF;color:#12110F;padding:0 6px">  </span><span style="background:#8B8FA8;color:#12110F;padding:0 6px">  </span><span style="background:#E8E4DC;color:#12110F;padding:0 6px">  </span><span style="background:#5a5750;color:#E8E4DC;padding:0 6px">  </span>',
   ],
-  whoami: () => [
-    'rino',
-    '// coder. gfx designer. terminal geek. f1 head.',
-    '// always in the terminal, always shipping something.',
+whoami: () => [
+'rino',
+'// coder. gfx designer. terminal geek. f1 head.',
+'// always in the terminal, always shipping something.',
   ],
-  ls: () => [
-    'total 4',
-    'drwxr-xr-x  jarvis-ai/',
-    'drwxr-xr-x  f1-dashboard/',
-    'drwxr-xr-x  time-debt-roblox/',
-    'drwxr-xr-x  roblox-cargame/',
-    '-rw-r--r--  about.txt',
-    '-rw-r--r--  skills.log',
+ls: () => [
+'total 4',
+'drwxr-xr-x  jarvis-ai/',
+'drwxr-xr-x  f1-dashboard/',
+'drwxr-xr-x  time-debt-roblox/',
+'drwxr-xr-x  roblox-cargame/',
+'-rw-r--r--  about.txt',
+'-rw-r--r--  skills.log',
   ],
-  'cat about.txt': () => [
-    '# rivaan / @officiallyrino',
-    '# coder, gfx designer, terminal geek',
-    '# building jarvis, f1 dashboards, roblox games',
-    '# always 2am, always in the terminal',
-    '# india · macbook air m1',
+'cat about.txt': () => [
+'# rivaan / @officiallyrino',
+'# coder, gfx designer, terminal geek',
+'# building jarvis, f1 dashboards, roblox games',
+'# always 2am, always in the terminal',
+'# india · macbook air m1',
   ],
-  'sudo make me a sandwich': () => ['[sudo] password for rino: ', '...', 'ok fine. here you go.'],
-  matrix: () => {
-    const mc = document.getElementById('matrix-canvas')
-    if (matrixRAF) {
-      cancelAnimationFrame(matrixRAF); matrixRAF = null; mc.style.opacity = '0'
-      return ['matrix rain off']
+'sudo make me a sandwich': () => ['[sudo] password for rino: ', '...', 'ok fine. here you go.'],
+matrix: () => {
+const mc = document.getElementById('matrix-canvas')
+if (matrixRAF) {
+cancelAnimationFrame(matrixRAF); matrixRAF = null; mc.style.opacity = '0'
+return ['matrix rain off']
     }
-    startMatrixRain(mc); return ['matrix rain on']
+startMatrixRain(mc); return ['matrix rain on']
   },
 }
-
 const jarvisCommands = {
-  'open projects':  () => { openWin('win-projects',  'di-projects');  return ['opening projects/'] },
-  'open about':     () => { openWin('win-about',     'di-about');     return ['opening about.txt'] },
-  'open skills':    () => { openWin('win-skills',    'di-skills');    return ['opening skills.sh'] },
-  'open f1':        () => { openWin('win-f1',        'di-f1');        return ['opening f1.log'] },
-  'open contact':   () => { openWin('win-contact',   'di-contact');   return ['opening contact.cfg'] },
-  'open terminal':  () => { openWin('win-terminal',  'di-terminal');  return ['opening terminal'] },
-  'open notes':     () => { openWin('win-notes',     'di-notes');     return ['opening notes.txt'] },
-  'open guide':     () => { openWin('win-guide',     'di-guide');     return ['opening README.md'] },
-  'what time is it':() => [new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })],
-  'status':         () => ['all systems nominal', 'jarvis: online', 'chai: brewing', 'always building'],
-  'hello':          () => ['hey rino'],
-  'close all': () => {
+'open projects':  () => { openWin('win-projects',  'di-projects');  return ['opening projects/'] },
+'open about':     () => { openWin('win-about',     'di-about');     return ['opening about.txt'] },
+'open skills':    () => { openWin('win-skills',    'di-skills');    return ['opening skills.sh'] },
+'open f1':        () => { openWin('win-f1',        'di-f1');        return ['opening f1.log'] },
+'open contact':   () => { openWin('win-contact',   'di-contact');   return ['opening contact.cfg'] },
+'open terminal':  () => { openWin('win-terminal',  'di-terminal');  return ['opening terminal'] },
+'open notes':     () => { openWin('win-notes',     'di-notes');     return ['opening notes.txt'] },
+'open guide':     () => { openWin('win-guide',     'di-guide');     return ['opening README.md'] },
+'what time is it':() => [new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })],
+'status':         () => ['all systems nominal', 'jarvis: online', 'chai: brewing', 'always building'],
+'hello':          () => ['hey rino'],
+'close all': () => {
     ['win-about','win-projects','win-skills','win-f1','win-contact','win-notes','win-guide'].forEach(closeWin)
-    return ['closed all windows']
+return ['closed all windows']
   },
-  'help': () => [
-    'hey jarvis commands:',
-    '  hey jarvis, open [about|projects|skills|f1|contact|notes|terminal|guide]',
-    '  hey jarvis, what time is it',
-    '  hey jarvis, status',
-    '  hey jarvis, close all',
+'help': () => [
+'hey jarvis commands:',
+'  hey jarvis, open [about|projects|skills|f1|contact|notes|terminal|guide]',
+'  hey jarvis, what time is it',
+'  hey jarvis, status',
+'  hey jarvis, close all',
   ],
 }
-
 function handleTerminalKey(e) {
-  if (e.key !== 'Enter') return
-  const input = document.getElementById('term-input')
-  const raw = input.value.trim(); input.value = ''
-  if (!raw) return
-
-  printToTerminal('cmd', raw)
-  const cmd = raw.toLowerCase()
-
-  if (cmd === 'clear') { document.getElementById('term-body').innerHTML = ''; return }
-
-  if (cmd.startsWith('hey jarvis')) {
-    const sub = cmd.replace(/^hey jarvis[,\s]*/, '').trim()
-    const handler = jarvisCommands[sub]
-    if (handler) { handler().forEach(l => printToTerminal('output', l)) }
-    else { printToTerminal('output', `jarvis: unknown command "${sub}"`); printToTerminal('output', 'try: hey jarvis, help') }
-    return
+if (e.key !== 'Enter') return
+const input = document.getElementById('term-input')
+const raw = input.value.trim(); input.value = ''
+if (!raw) return
+printToTerminal('cmd', raw)
+const cmd = raw.toLowerCase()
+if (cmd === 'clear') { document.getElementById('term-body').innerHTML = ''; return }
+if (cmd.startsWith('hey jarvis')) {
+const sub = cmd.replace(/^hey jarvis[,\s]*/, '').trim()
+const handler = jarvisCommands[sub]
+if (handler) { handler().forEach(l => printToTerminal('output', l)) }
+else { printToTerminal('output', `jarvis: unknown command "${sub}"`); printToTerminal('output', 'try: hey jarvis, help') }
+return
   }
-
-  const handler = termCommands[cmd]
-  if (handler) { const result = handler(); if (result) result.forEach(l => printToTerminal('output', l)) }
-  else { printToTerminal('output', `command not found: ${cmd}`); printToTerminal('output', "type 'help' to see available commands") }
+const handler = termCommands[cmd]
+if (handler) { const result = handler(); if (result) result.forEach(l => printToTerminal('output', l)) }
+else { printToTerminal('output', `command not found: ${cmd}`); printToTerminal('output', "type 'help' to see available commands") }
 }
 </script>
 </body>
